@@ -1,2 +1,12 @@
 server:
   port: 8001
+  servlet:
+    context-path: /provider01
+spring:
+  application:
+    name: provider-8001
+eureka:
+  #客户端注册进服务列表内
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:7001/eureka/
