@@ -78,10 +78,30 @@
     </dependencyManagement>
 
     <build>
+        <!--info信息-->
+        <finalName>springcloud-experiment</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
+            <!--原有-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>
+                        <delimit>@</delimit>
+                    </delimiters>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -15,3 +15,6 @@ eureka:
     service-url:
       #设置eureka server的交互地址查询服务和注册服务都需要依赖这个地址
       defaultZone: http://127.0.0.1:${server.port}/eureka/
+  server:
+    #自我保护,false-关闭
+    enable-self-preservation: true

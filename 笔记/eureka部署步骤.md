@@ -57,3 +57,90 @@ eureka:
 ```
 
 此时先启动eureka项目，再启动client项目，能够在eureka界面中看到client项目的信息。
+
+### 优化
+
+#### info信息
+
+1.在eureka界面中，已注册的客户端有一个连接能够点进去了解情况，可以在client的yml中添加下面的配置信息完善页面上的信息
+
+```yaml
+eureka:
+  instance:
+    #在注册处连接显示的名称
+    instance-id: eurek-aname-provider-8001
+    #访问路径可以显示IP地址
+    prefer-ip-address: true
+```
+
+2.点击进连接为404，
+
+1.需要在client项目中添加依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+在yml中添加(YML需要使用@来获取pom中的内容)
+
+```yaml
+info:
+  app.name: atguigu-microservicecloud
+  company.name: www.atguigu.com
+  build.artifactId: @project.artifactId@
+  build.version: @project.version@
+```
+
+2.在总的pom文件中添加
+
+```xml
+<!--info信息-->
+<finalName>springcloud-experiment</finalName>
+<resources>
+    <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+    </resource>
+</resources>
+<plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+            <delimiters>
+                <delimit>$</delimit>
+            </delimiters>
+        </configuration>
+    </plugin></plugins>
+```
+
+#### 自我保护
+
+默认开启，关闭可在eureka的yml中添加
+
+```yml
+server:
+  #自我保护,false-关闭
+  enable-self-preservation: false
+```
+
+## 服务发现
+
+在client的Controller中自动实例化DiscoveryClient
+
+```java
+@Autowired
+    private DiscoveryClient discoveryClient;
+```
+
+然后使用
+
+```java
+discoveryClient.getServices();
+//和
+discoveryClient.getInstances(/*大写的Client名称*/)
+```
+
