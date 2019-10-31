@@ -51,3 +51,5 @@ eureka:
 
 ### 正式配置
 
+新建另外两个新的provider，注意修改port，name等配置
+
