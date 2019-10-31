@@ -8,14 +8,20 @@ spring:
 eureka:
   #客户端注册进服务列表内
   client:
-    service-url:
-      defaultZone: http://127.0.0.1:7001/eureka/
     instance:
       instance-id: provider-8001
       #访问路径可以显示IP地址
       prefer-ip-address: true
+    service-url:
+      defaultZone: ${service.eureka02-url},${service.eureka02-url},${service.eureka03-url}
 info:
   app.name: atguigu-microservicecloud
   company.name: www.atguigu.com
   build.artifactId: $project.artifactId$
   build.version: $project.version$
+
+#自定义信息
+service:
+  eureka01-url: http://eureka7001:7001/eureka/
+  eureka02-url: http://eureka7002:7002/eureka/
+  eureka03-url: http://eureka7003:7003/eureka/
