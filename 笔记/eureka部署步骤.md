@@ -10,7 +10,7 @@
 ```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-eureka-server</artifactId>
+    <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
 </dependency>
 ```
 
@@ -46,7 +46,7 @@ eureka:
 ```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-eureka</artifactId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 </dependency>
 ```
 
