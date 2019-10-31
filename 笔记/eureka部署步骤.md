@@ -129,6 +129,8 @@ server:
 
 ## 服务发现
 
+能够发现已注册到eureka中的client信息
+
 在client的Controller中自动实例化DiscoveryClient
 
 ```java
@@ -143,4 +145,72 @@ discoveryClient.getServices();
 //和
 discoveryClient.getInstances(/*大写的Client名称*/)
 ```
+
+
+
+# 多点
+
+多点eureka服务
+
+1.新建多个eureka项目，新建过程与单点相同。
+
+2.配置项
+
+若在defaultZone中添加的是ip，则在eureka网页中DS Replicas只有一个，因为这里的ip相同。避免只出现一个，修改host，添加
+
+```json
+#学习springcloud主机名
+127.0.0.1 eureka7001
+127.0.0.1 eureka7002
+127.0.0.1 eureka7003
+```
+
+配置项：
+
+```yaml
+server:
+  port: 700Xxx
+spring:
+  application:
+    name: eureka-700Xxx
+
+eureka:
+  instance:
+    # eureka服务端实例名称
+    hostname: eureka02
+  client:
+    #不向注册中心注册自己
+    register-with-eureka: false
+    #自己端就是注册中心，职责是维护服务实例，不是检索服务
+    fetch-registry: false
+    service-url:
+      #设置eureka server的交互地址查询服务和注册服务都需要依赖这个地址
+      defaultZone: ${service.eureka01-url},${service.eureka03-url}
+
+#自定义信息
+service:
+  eureka01-url: http://eureka7001:7001/eureka/
+  eureka02-url: http://eureka7002:7002/eureka/
+  eureka03-url: http://eureka7003:7003/eureka/
+```
+
+三个都启动后，能够看到互相注册到eureka中
+
+
+
+## 记事
+
+ACID （Atomicity 原子性；Consistency 一致性；Isolation 独立性；Durability 持久性）
+
+与
+
+CAP （Consistency 强一致性；Avaibility 可用性；Partition Tolerance 分区容错性）
+
+分布式系统都是CAP，且只能三选二，
+
+zookeeper属于CP，
+
+eureka属于AP，各个结点是平等的
+
+**（关注zookeeper与eureka的区别）**
 
