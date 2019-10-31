@@ -169,23 +169,23 @@ discoveryClient.getInstances(/*大写的Client名称*/)
 
 ```yaml
 server:
-  port: 700Xxx
+  port: 7003
 spring:
   application:
-    name: eureka-700Xxx
+    name: service-eureka
 
 eureka:
   instance:
     # eureka服务端实例名称
-    hostname: eureka02
+    hostname: eureka7003
   client:
-    #不向注册中心注册自己
-    register-with-eureka: false
-    #自己端就是注册中心，职责是维护服务实例，不是检索服务
+    #false不向注册中心注册自己
+    register-with-eureka: true
+    #false自己端就是注册中心，职责是维护服务实例，不是检索服务
     fetch-registry: false
     service-url:
       #设置eureka server的交互地址查询服务和注册服务都需要依赖这个地址
-      defaultZone: ${service.eureka01-url},${service.eureka03-url}
+      defaultZone: ${service.eureka01-url},${service.eureka02-url}
 
 #自定义信息
 service:
@@ -196,7 +196,17 @@ service:
 
 三个都启动后，能够看到互相注册到eureka中
 
+#### **注意一个大坑：**
 
+高可用集群部署中
+
+spring.application.name要么不设置要么必须一致
+
+register-with-eureka要么不设置要么必须为true
+
+hostname必须为自己的域名
+
+缺一项都不能出现在eureka的 available-replicas 列表里
 
 ## 记事
 
