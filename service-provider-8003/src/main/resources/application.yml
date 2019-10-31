@@ -1,10 +1,10 @@
 server:
   port: 8003
   servlet:
-    context-path: /provider03
+    context-path: /provider
 spring:
   application:
-    name: provider-8003
+    name: provider
 eureka:
   #客户端注册进服务列表内
   client:

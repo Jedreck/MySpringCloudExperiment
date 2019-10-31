@@ -24,9 +24,13 @@ BL（负载均衡）
 </dependency>
 ```
 
-2.修改yml,添加eureka信息
+2.修改yml，添加eureka信息
 
 ```yaml
+spring:
+  application:
+    name: provider
+    
 eureka:
   #客户端注册进服务列表内
   client:
@@ -51,5 +55,9 @@ eureka:
 
 ### 正式配置
 
-新建另外两个新的provider，注意修改port，name等配置
+新建另外两个新的provider，注意修改port，name等配置，**spring.application.name、server.port.context-path要一样**，修改这三个provider同一个接口返回的信息，这样有助于分辨是哪个provider提供的数据。
+
+
+
+此时，能够通过Ribbon和Eureka访问同一个consumer接口得到不同provider的数据
 

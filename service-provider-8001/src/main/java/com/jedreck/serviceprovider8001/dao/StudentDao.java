@@ -18,13 +18,13 @@ public class StudentDao {
         students = new ArrayList<>();
         Student student = new Student(1, "黎明");
         students.add(student);
-        student = new Student(1, "黎明");
+        student = new Student(2, "李华");
         students.add(student);
-        student = new Student(2, "大明");
+        student = new Student(3, "李云龙");
         students.add(student);
-        student = new Student(3, "肖华");
+        student = new Student(4, "李涛");
         students.add(student);
-        student = new Student(4, "李玉刚");
+        student = new Student(5, "李玉刚");
         students.add(student);
     }
 }

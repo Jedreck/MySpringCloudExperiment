@@ -16,15 +16,15 @@ public class StudentDao {
 
     public StudentDao() {
         students = new ArrayList<>();
-        Student student = new Student(1, "黎明");
+        Student student = new Student(11, "周杰伦");
         students.add(student);
-        student = new Student(1, "黎明");
+        student = new Student(12, "周大侠");
         students.add(student);
-        student = new Student(2, "大明");
+        student = new Student(13, "周思彤");
         students.add(student);
-        student = new Student(3, "肖华");
+        student = new Student(14, "周天子");
         students.add(student);
-        student = new Student(4, "李玉刚");
+        student = new Student(15, "周期表");
         students.add(student);
     }
 }
