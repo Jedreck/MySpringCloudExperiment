@@ -1,4 +1,4 @@
-package com.jedreck.serviceconsumer80.dao;
+package com.jedreck.serviceprovider8001.dao;
 
 import com.jedreck.serviceapi.entities.Student;
 import org.springframework.stereotype.Repository;

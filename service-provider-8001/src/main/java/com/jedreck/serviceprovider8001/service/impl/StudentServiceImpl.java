@@ -1,8 +1,8 @@
-package com.jedreck.serviceconsumer80.service.impl;
+package com.jedreck.serviceprovider8001.service.impl;
 
 import com.jedreck.serviceapi.entities.Student;
-import com.jedreck.serviceconsumer80.dao.StudentDao;
-import com.jedreck.serviceconsumer80.service.StudentService;
+import com.jedreck.serviceprovider8001.dao.StudentDao;
+import com.jedreck.serviceprovider8001.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

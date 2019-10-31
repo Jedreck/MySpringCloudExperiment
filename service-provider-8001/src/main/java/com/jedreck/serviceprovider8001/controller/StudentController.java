@@ -1,7 +1,7 @@
-package com.jedreck.serviceconsumer80.controller;
+package com.jedreck.serviceprovider8001.controller;
 
 import com.jedreck.serviceapi.entities.Student;
-import com.jedreck.serviceconsumer80.service.StudentService;
+import com.jedreck.serviceprovider8001.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

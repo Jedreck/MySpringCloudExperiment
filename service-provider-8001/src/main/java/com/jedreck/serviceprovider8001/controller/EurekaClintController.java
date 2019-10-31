@@ -1,4 +1,4 @@
-package com.jedreck.serviceconsumer80.controller;
+package com.jedreck.serviceprovider8001.controller;
 
 
 import lombok.extern.slf4j.Slf4j;

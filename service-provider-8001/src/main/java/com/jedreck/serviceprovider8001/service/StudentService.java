@@ -1,4 +1,4 @@
-package com.jedreck.serviceconsumer80.service;
+package com.jedreck.serviceprovider8001.service;
 
 import com.jedreck.serviceapi.entities.Student;
 
