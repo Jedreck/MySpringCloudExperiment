@@ -16,6 +16,7 @@ provider01:
   #此处必须有http，没有会报格式错误
 #  url: http://127.0.0.1:8001/provider01
   url: http://PROVIDER/provider
+  name: PROVIDER
 
 service:
   eureka01-url: http://eureka7001:7001/eureka/
