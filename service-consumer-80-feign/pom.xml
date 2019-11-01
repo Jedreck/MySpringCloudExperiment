@@ -9,9 +9,26 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>service-api</artifactId>
+    <artifactId>service-consumer-80-feign</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.jedreck</groupId>
+            <artifactId>service-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--Ribbon相关-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+
         <!--Feign相关-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -19,6 +36,5 @@
             <version>2.2.0.RC1</version>
         </dependency>
     </dependencies>
-
 
 </project>

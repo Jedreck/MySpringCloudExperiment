@@ -16,7 +16,7 @@ eureka:
       defaultZone: ${service.eureka02-url},${service.eureka02-url},${service.eureka03-url}
 info:
   app.name: springcloud-experiment
-  company.name: jedreck
+  company.name: com.jedreck
   build.artifactId: @project.artifactId@
   build.version: @project.version@
 
