@@ -13,6 +13,7 @@
         <module>service-provider-8002</module>
         <module>service-provider-8003</module>
         <module>service-consumer-80-feign</module>
+        <module>service-provider-8011</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
