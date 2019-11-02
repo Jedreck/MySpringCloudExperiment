@@ -14,6 +14,20 @@ eureka:
       prefer-ip-address: true
     service-url:
       defaultZone: ${service.eureka02-url},${service.eureka02-url},${service.eureka03-url}
+
+#zuul配置
+zuul:
+  routes:
+    #这个可以将provider的路径，转移到/pro上，隐藏真实信息
+    provide:
+      serviceId: provider
+      path: /pro/**
+  #列出的服务将不能使用原url进行访问，或使用 "*"
+  #ignored-services: provider
+  ignored-services: "*"
+  #同意前缀
+  prefix: /jedreck
+
 info:
   app.name: springcloud-experiment
   company.name: com.jedreck

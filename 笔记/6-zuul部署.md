@@ -82,7 +82,7 @@ host中添加
 
 启动eureka，8001的provider，zuul则可以通过路由访问到信息
 
- http://192.168.1.100:9527/zuul/provider/provider/student/getAll 
+ http://127.0.0.1.100:9527/zuul/provider/provider/student/getAll 
 
 
 
@@ -90,3 +90,58 @@ host中添加
 
 ### 增强配置
 
+yml:
+
+```yaml
+#zuul配置
+zuul:
+  routes:
+    #这个可以将provider的路径，转移到/pro上，隐藏真实信息
+    provide:
+      serviceId: provider
+      path: /pro/**
+```
+
+此时可以同时使用两种路径进行访问
+
+ http://127.0.0.1:9527/zuul/pro/provider/student/getAll 
+
+ http://192.168.1.100:9527/zuul/provider/provider/student/getAll 
+
+yml：
+
+```yaml
+#zuul配置
+zuul:
+  routes:
+    #这个可以将provider的路径，转移到/pro上，隐藏真实信息
+    provide:
+      serviceId: provider
+      path: /pro/**
+  #列出的服务将不能使用原url进行访问，或使用 "*"
+  #ignored-services: provider
+  ignored-services: "*"
+```
+
+此时，只能用被代理之后的路径进行访问
+
+ http://192.168.1.100:9527/zuul**/pro**/provider/student/getAll 
+
+```yaml
+#zuul配置
+zuul:
+  routes:
+    #这个可以将provider的路径，转移到/pro上，隐藏真实信息
+    provide:
+      serviceId: provider
+      path: /pro/**
+  #列出的服务将不能使用原url进行访问，或使用 "*"
+  #ignored-services: provider
+  ignored-services: "*"
+  #同意前缀
+  prefix: /jedreck
+```
+
+添加统一前缀，需要在服务名前加上前缀
+
+ http://127.0.0.1:9527/zuul**/jedreck**/pro/provider/student/getAll 
