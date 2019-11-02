@@ -159,7 +159,4 @@ management:
 
 此时启动eureka、dashboard和有hystrix的服务端，能够得到数据……
 
-
-
-
-
+ http://127.0.0.1:9001/hystrix 
