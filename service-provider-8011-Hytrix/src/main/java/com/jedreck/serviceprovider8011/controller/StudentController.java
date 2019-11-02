@@ -22,7 +22,7 @@ public class StudentController {
     @GetMapping("/getAll")
     @HystrixCommand(fallbackMethod = "getAllFallback")
     public List getAll() {
-        if (LocalTime.now().getMinute() % 2 == 0) {
+        if (LocalTime.now().getSecond() % 10 > 5) {
             throw new RuntimeException("抛出异常");
         }
         return studentService.getAll();

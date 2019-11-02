@@ -14,6 +14,14 @@ eureka:
       prefer-ip-address: true
     service-url:
       defaultZone: ${service.eureka02-url},${service.eureka02-url},${service.eureka03-url}
+
+#dashboard访问：http://127.0.0.1:8011/provider/actuator/hystrix.stream
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
 info:
   app.name: springcloud-experiment
   company.name: com.jedreck

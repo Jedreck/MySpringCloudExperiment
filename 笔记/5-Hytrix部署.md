@@ -95,9 +95,69 @@ feign:
 
 
 
+## Hystrix Dashboard 搭建
 
+新建一个maven工程
 
+pom：
 
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+</dependencies>
+```
+
+yml:
+
+```yaml
+server:
+  port: 9001
+```
+
+正常的启动类上添加：@EnableHystrixDashboard
+
+### 其他工程
+
+在有Hytrix的服务端中，添加
+
+```xml
+<!--info网页信息/dashboard-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+在yml中添加
+
+```yaml
+management:
+    endpoints:
+        web:
+            exposure:
+            	include: hystrix.stream
+```
+
+此时启动eureka、dashboard和有hystrix的服务端，能够得到数据……
 
 
 

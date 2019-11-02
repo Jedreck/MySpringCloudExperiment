@@ -12,8 +12,8 @@ import java.util.Map;
 public class HelloWorldController {
     @GetMapping()
     public Map getAll() {
-        HashMap<String,String> map = new HashMap<>(1);
-        map.put("8011","Hello World");
+        HashMap<String, String> map = new HashMap<>(1);
+        map.put("8011", "Hello World");
         return map;
     }
 }

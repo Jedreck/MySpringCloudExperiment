@@ -1,6 +1,7 @@
 package com.jedreck.serviceprovider8011.controller;
 
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,7 @@ public class EurekaClintController {
     private String appName;
 
     @GetMapping("/getAllClient")
+    @HystrixCommand
     public Object getAllClient() {
         List<String> list = discoveryClient.getServices();
         log.info("\nlist--" + list.toString());
