@@ -49,7 +49,49 @@ public List getAllFallback() {
 
 接下来进行解耦，让熔断与服务端无关
 
+- 在客户端使用的API中新建一个工厂类来提供错误的返回值，继承FallbackFactory，添加需要代理的泛型
 
+```java
+package com.jedreck.serviceapi.service;
+
+@Component
+public class StudentClientServiceFallbackFactory implements FallbackFactory<StudentClientService> {
+    @Override
+    public StudentClientService create(Throwable throwable) {
+        return new StudentClientService() {
+            @Override
+            public List getAll() {
+                ArrayList<HashMap> arrayList = new ArrayList<>();
+                HashMap<String,String> map = new HashMap<>(1);
+                map.put("接口","服务暂停，稍后再试。。。");
+                arrayList.add(map);
+                return arrayList;
+            }
+        };
+    }
+}
+```
+
+
+
+- 在被代理的接口中，添加
+
+```java
+@FeignClient(value = "${provider01.name}",fallbackFactory = StudentClientServiceFallbackFactory.class)
+```
+
+
+
+- feign的consumer中yml添加
+
+```yaml
+feign:
+  hystrix:
+    #启动hystrix
+    enabled: true
+```
+
+此时启动8001，eureka，feign的consumer，访问成功，关闭8001后，有提示
 
 
 

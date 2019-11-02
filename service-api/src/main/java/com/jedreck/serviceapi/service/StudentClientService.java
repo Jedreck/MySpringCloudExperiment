@@ -10,7 +10,7 @@ import java.util.List;
  * @author LanJun
  * 2019/11/1 14:29
  */
-@FeignClient(value = "PROVIDER")
+@FeignClient(value = "${provider01.name}", fallbackFactory = StudentClientServiceFallbackFactory.class)
 public interface StudentClientService {
     @GetMapping(value = "provider/student/getAll")
     List<Student> getAll();

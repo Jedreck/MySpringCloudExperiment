@@ -10,6 +10,10 @@ eureka:
     service-url:
       defaultZone: ${service.eureka02-url},${service.eureka02-url},${service.eureka03-url}
 
+feign:
+  hystrix:
+    #启动hystrix
+    enabled: true
 
 #自定义参数
 provider01:
