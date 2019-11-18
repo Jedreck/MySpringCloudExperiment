@@ -16,6 +16,7 @@
         <module>service-provider-8011-Hytrix</module>
         <module>service-dashboard-hystrix-9001</module>
         <module>service-gateway-zuul-9527</module>
+        <module>service-gateway-cloudgateway-9528</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
