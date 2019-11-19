@@ -1,0 +1,46 @@
+server:
+  port: 9528
+
+spring:
+  application:
+    name: sc-gateway-9528
+  cloud:
+    gateway:
+      routes:
+      - id: toProvider
+        #这里走eureka
+        # 访问 http://localhost:9528/aa/bb/student/getAll 可跳转到实际地址
+        uri: lb://${provider01.name}
+#        uri: http://localhost:8001/
+        predicates:
+        - Path=/aa/bb/**
+        filters:
+        #删除前两个前缀
+        - StripPrefix=2
+        #增加一个前缀
+        - PrefixPath=/provider
+
+
+info:
+  app.name: springcloud-experiment
+  company.name: com.jedreck
+  build.artifactId: @project.artifactId@
+  build.version: @project.version@
+
+eureka:
+  #客户端注册进服务列表内
+  client:
+    instance:
+      instance-id: gateway-9528
+      #访问路径可以显示IP地址
+      prefer-ip-address: true
+    service-url:
+      defaultZone: ${service.eureka02-url},${service.eureka02-url},${service.eureka03-url}
+#自定义信息
+service:
+  eureka01-url: http://eureka7001:7001/eureka/
+  eureka02-url: http://eureka7002:7002/eureka/
+  eureka03-url: http://eureka7003:7003/eureka/
+
+provider01:
+  name: PROVIDER
