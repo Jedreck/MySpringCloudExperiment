@@ -25,6 +25,7 @@
     </profiles>
     <modules>
         <module>spring-security-oauth2-server</module>
+        <module>spring-security-oauth2-resource</module>
     </modules>
 
 </project>
