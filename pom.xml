@@ -18,6 +18,8 @@
         <module>service-gateway-zuul-9527</module>
         <module>service-gateway-cloudgateway-9528</module>
         <module>spring-security-oauth2</module>
+        <module>activiti-demo</module>
+        <module>activiti-demo/activiti-demo-impl</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
