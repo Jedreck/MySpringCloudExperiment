@@ -1,0 +1,18 @@
+spring:
+  mail:
+    # 邮件服务地址
+    host: smtp.qq.com
+    # 端口
+    port: 587
+    # 用户名
+    username: aaa@qq.com
+    # 授权码
+    password: aaa
+    # 编码格式
+    default-encoding: UTF-8
+    # 其它参数
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        debug: true

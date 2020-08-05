@@ -20,6 +20,8 @@
         <module>spring-security-oauth2</module>
         <module>activiti-demo</module>
         <module>activiti-demo/activiti-demo-impl</module>
+        <module>test-mail-demo</module>
+        <module>test-mail-demo/mail-demo-impl</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
