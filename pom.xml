@@ -22,6 +22,7 @@
         <module>activiti-demo/activiti-demo-impl</module>
         <module>test-mail-demo</module>
         <module>test-mail-demo/mail-demo-impl</module>
+        <module>test-elasticsearch</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
