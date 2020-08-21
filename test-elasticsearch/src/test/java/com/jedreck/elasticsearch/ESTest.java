@@ -22,11 +22,12 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,13 +84,28 @@ public class ESTest {
      */
     @Test
     public void test04() throws IOException {
-        //新建对象
-        Man man = Man.builder().id(111).name("name 1").des("111 name1 name 1, 下一个是2").tag(Arrays.asList("111", "first", "第一个", "下一个是二")).build();
-        //构建请求
-        IndexRequest request = new IndexRequest("jedreck_index")
-                .id("1")
-                .timeout(TimeValue.timeValueSeconds(1))
-                .source(JSON.toJSONString(man), XContentType.JSON);
+        //方式-1
+//        //新建对象
+//        Man man = Man.builder().id(111).name("name 1").des("111 name1 name 1, 下一个是2").tag(Arrays.asList("111", "first", "第一个", "下一个是二")).build();
+//        //构建请求
+//        IndexRequest request = new IndexRequest("jedreck_index")
+//                .id("1")
+//                .timeout(TimeValue.timeValueSeconds(1))
+//                .source(JSON.toJSONString(man), XContentType.JSON);
+
+        //方式-2
+//        IndexRequest request = new IndexRequest("jedreck_index").source("id",111,"name","name 1","des","...","tag","...");
+
+        //方式-3
+        XContentBuilder xContentBuilder = XContentFactory.jsonBuilder();
+        xContentBuilder.startObject();
+        xContentBuilder.field("id", 1001);
+        xContentBuilder.field("name", "name 1001");
+        xContentBuilder.field("des").value("aaa");
+        xContentBuilder.endObject();
+        IndexRequest request = new IndexRequest("jedreck_index").id("1001").timeout("1s").source(xContentBuilder);
+
+
         //发送请求
         IndexResponse response = esClient.index(request, RequestOptions.DEFAULT);
 
