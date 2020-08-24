@@ -13,6 +13,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.IndicesOptions;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
@@ -118,9 +119,11 @@ public class ESTest {
      */
     @Test
     public void test05() throws IOException {
-        GetRequest request = new GetRequest("jedreck_index", "1");
+        GetRequest request = new GetRequest("jedreck_index", "1001");
 
-        //不获取上下文  不返回"_source"
+        //不获取上下文  不返回"_source"1
+//        request.fetchSourceContext(FetchSourceContext.DO_NOT_FETCH_SOURCE);
+        //不获取上下文  不返回"_source"2
 //        request.fetchSourceContext(new FetchSourceContext(false));
 //        request.storedFields("_none_");
 
@@ -205,6 +208,44 @@ public class ESTest {
         searchSource.query(matchQueryBuilder);
         request.source(searchSource);
         //查询
+        SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
+        System.out.println(response.toString());
+    }
+
+    private static final String KEY = "jedreck_index";
+
+    /**
+     * 搜索全部
+     */
+    @Test
+    public void test10() throws IOException {
+        // 1
+        SearchRequest request = new SearchRequest();
+        // 2
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        // 默认会搜索出 top 10,所以需要添加偏移量和页大小
+        searchSourceBuilder.from(0);
+        searchSourceBuilder.size(9999);
+        // 3
+        request.source(searchSourceBuilder);
+        // 4
+        SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
+        System.out.println(response.toString());
+    }
+
+    /**
+     * 搜索全部
+     * 指定索引
+     */
+    @Test
+    public void test11() throws IOException {
+        // 1
+        SearchRequest request = new SearchRequest(KEY);
+        // 2
+        request.routing("routing");
+        request.indicesOptions(IndicesOptions.lenientExpandOpen());
+        // 4
         SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
         System.out.println(response.toString());
     }
