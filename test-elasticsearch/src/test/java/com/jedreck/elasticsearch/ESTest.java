@@ -53,10 +53,37 @@ public class ESTest {
     @Test
     public void test01() throws IOException {
         //1.创建索引请求
-        CreateIndexRequest request = new CreateIndexRequest("jedreck_index");
+//        CreateIndexRequest request = new CreateIndexRequest("jedreck_index");
         //2.客户端执行请求 IndicesClient,请求后获得响应
-        CreateIndexResponse createIndexResponse = esClient.indices().create(request, RequestOptions.DEFAULT);
+//        CreateIndexResponse createIndexResponse = esClient.indices().create(request, RequestOptions.DEFAULT);
         //3.打印
+//        System.out.println(createIndexResponse.index());
+
+        //使用 XContentBuilder
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        builder.startObject();
+        {
+            builder.startObject("properties");
+            {
+                builder.startObject("title");
+                {
+                    builder.field("type", "text");
+                    builder.field("analyzer", "ik_smart");
+                }
+                builder.endObject();
+
+                builder.startObject("content")
+                        .field("type", "text")
+                        .field("analyzer", "ik_smart")
+                        .endObject();
+            }
+            builder.endObject();
+        }
+        builder.endObject();
+
+        CreateIndexRequest request = new CreateIndexRequest("article_index");
+        request.mapping(builder);
+        CreateIndexResponse createIndexResponse = esClient.indices().create(request, RequestOptions.DEFAULT);
         System.out.println(createIndexResponse.index());
     }
 
@@ -75,7 +102,7 @@ public class ESTest {
      */
     @Test
     public void test03() throws IOException {
-        DeleteIndexRequest request = new DeleteIndexRequest("jedreck_index");
+        DeleteIndexRequest request = new DeleteIndexRequest("article_index");
         AcknowledgedResponse delete = esClient.indices().delete(request, RequestOptions.DEFAULT);
         System.out.println(delete.isAcknowledged() ? "删除成功" : "删除失败");
     }
@@ -220,7 +247,7 @@ public class ESTest {
     @Test
     public void test10() throws IOException {
         // 1
-        SearchRequest request = new SearchRequest();
+        SearchRequest request = new SearchRequest("jedreck_index");
         // 2
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());
