@@ -101,7 +101,8 @@ public class ArticleServiceImpl implements ArticleService {
                 QueryBuilders.boolQuery()
                         .should(QueryBuilders.matchQuery(ARTICLE_CONTENT, queryText))
                         .should(QueryBuilders.matchQuery(ARTICLE_NAME, queryText))
-        );
+        )
+                .fetchSource(new String[]{ARTICLE_NAME}, null);
 
         request.source(searchSource);
         //查询
@@ -117,13 +118,15 @@ public class ArticleServiceImpl implements ArticleService {
         for (SearchHit hit : hits) {
             StringBuilder stringBuilder = new StringBuilder();
             if (hit.getHighlightFields().get(ARTICLE_NAME) != null) {
+                stringBuilder.append("<p>---title begin<p>");
                 for (Text h : hit.getHighlightFields().get(ARTICLE_NAME).getFragments()) {
-                    stringBuilder.append(h).append("\n");
+                    stringBuilder.append(h).append("<p>");
                 }
+                stringBuilder.append("<p>---title end<p>");
             }
             if (hit.getHighlightFields().get(ARTICLE_CONTENT) != null) {
                 for (Text h : hit.getHighlightFields().get(ARTICLE_CONTENT).getFragments()) {
-                    stringBuilder.append(h).append("\n");
+                    stringBuilder.append(h).append("<p>");
                 }
             }
             result.put(hit.getSourceAsString(), stringBuilder.toString());
