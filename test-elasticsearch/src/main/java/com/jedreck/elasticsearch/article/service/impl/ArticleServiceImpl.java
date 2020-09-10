@@ -91,14 +91,17 @@ public class ArticleServiceImpl implements ArticleService {
                 .from(pageSize * (pageNum - 1))
                 .size(pageSize);
 
-        HighlightBuilder highlightBuilder = new HighlightBuilder().preTags("  <!!!>")
-                .postTags("</!!!>   ")
+        HighlightBuilder highlightBuilder = new HighlightBuilder().preTags("  <span style='color: red'>")
+                .postTags("</span>   ")
                 .field(ARTICLE_NAME)
                 .field(ARTICLE_CONTENT);
         searchSource.highlighter(highlightBuilder);
 
-        searchSource.query(QueryBuilders.matchQuery(ARTICLE_NAME, queryText))
-                .query(QueryBuilders.matchQuery(ARTICLE_CONTENT, queryText));
+        searchSource.query(
+                QueryBuilders.boolQuery()
+                        .should(QueryBuilders.matchQuery(ARTICLE_CONTENT, queryText))
+                        .should(QueryBuilders.matchQuery(ARTICLE_NAME, queryText))
+        );
 
         request.source(searchSource);
         //查询
@@ -113,8 +116,15 @@ public class ArticleServiceImpl implements ArticleService {
         Map<String, String> result = new HashMap<>(hits.length);
         for (SearchHit hit : hits) {
             StringBuilder stringBuilder = new StringBuilder();
-            for (Text h : hit.getHighlightFields().get("content").getFragments()) {
-                stringBuilder.append(h).append("\n");
+            if (hit.getHighlightFields().get(ARTICLE_NAME) != null) {
+                for (Text h : hit.getHighlightFields().get(ARTICLE_NAME).getFragments()) {
+                    stringBuilder.append(h).append("\n");
+                }
+            }
+            if (hit.getHighlightFields().get(ARTICLE_CONTENT) != null) {
+                for (Text h : hit.getHighlightFields().get(ARTICLE_CONTENT).getFragments()) {
+                    stringBuilder.append(h).append("\n");
+                }
             }
             result.put(hit.getSourceAsString(), stringBuilder.toString());
         }
