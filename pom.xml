@@ -23,6 +23,10 @@
         <module>test-mail-demo</module>
         <module>test-mail-demo/mail-demo-impl</module>
         <module>test-elasticsearch</module>
+        <module>test-transational-seate</module>
+        <module>test-transational-seate/springcloud-eureka-feign/eureka-server</module>
+        <module>test-transational-seate/springcloud-eureka-feign/tester-1</module>
+        <module>test-transational-seate/springcloud-eureka-feign/tester-2</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
