@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSON;
 import com.jedreck.tester2.dao.PersonDao;
 import com.jedreck.tester2.entitys.PersonEntity;
 import com.jedreck.tester2.feign.Tester2Test1Service;
+import io.seata.spring.annotation.GlobalLock;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * AT 模式和 Spring @Transactional 注解连用时需要注意什么 ？
@@ -25,6 +27,8 @@ public class Test1Service {
     private Tester2Test1Service tester2Test1Service;
 
     @GlobalTransactional(name = "fsp-create-order", rollbackFor = Exception.class)
+    @GlobalLock
+    @Transactional
     public boolean step1() {
         // 修改数据库
         PersonEntity personEntity = new PersonEntity();
@@ -34,7 +38,7 @@ public class Test1Service {
         personEntity.setHeight(i);
         personDao.updateByPrimaryKeySelective(personEntity);
 
-        PersonEntity person = personDao.selectByPrimaryKey(id);
+        PersonEntity person = personDao.getById(id);
         System.out.println(111);
         System.out.println(JSON.toJSONString(person));
 
@@ -63,6 +67,25 @@ public class Test1Service {
 
         // 调用其他服务修改数据库
         tester2Test1Service.insertPerson(personEntity);
+        return true;
+    }
+
+    /**
+     * 配合step1
+     * 测试是否脏读
+     */
+    public boolean step3() {
+//        PersonEntity person = personDao.getById(2L);
+//        System.out.println(555);
+//        System.out.println(JSON.toJSONString(person));
+
+        Example example = new Example(PersonEntity.class);
+        example.setForUpdate(true);
+        example.createCriteria().andEqualTo("id", 2L);
+        PersonEntity person = personDao.selectOneByExample(example);
+        System.out.println(555);
+        System.out.println(JSON.toJSONString(person));
+
         return true;
     }
 }

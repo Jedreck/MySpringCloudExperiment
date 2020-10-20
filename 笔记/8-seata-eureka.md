@@ -102,3 +102,11 @@ public class DataSourceConfiguration {
 
   
 
+### 使用注意 ---- AT
+
+1. 查询语句为避免脏读、脏写：
+
+   - 在代理 写方法 增加 `@GlobalLock` + `@Transactional` 或 `@GlobalTransaction` ；
+   - 在代理 读方法 的 SQL 语句后添加 `FOR UPDATE` ；
+
+   *在同一事务中仍不能避免脏读，如：在执行修改语句的方法中，马上执行查询语句，则查出来的是修改后的数据。此时如果在其他查询事务中不添加 `FOR UPDATE` ，也会读出修改后的数据。*

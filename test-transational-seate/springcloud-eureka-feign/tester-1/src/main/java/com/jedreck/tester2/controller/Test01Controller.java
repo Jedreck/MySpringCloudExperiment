@@ -22,4 +22,9 @@ public class Test01Controller {
     public Boolean test2() {
         return test1Service.step2();
     }
+
+    @GetMapping("/3")
+    public Boolean test3() {
+        return test1Service.step3();
+    }
 }

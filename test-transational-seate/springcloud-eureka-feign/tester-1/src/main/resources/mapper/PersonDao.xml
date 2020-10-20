@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jedreck.tester2.dao.PersonDao">
+    <resultMap id="BaseResultMap" type="com.jedreck.tester2.entitys.PersonEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="height" jdbcType="INTEGER" property="height"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `name`, height
+    </sql>
+    <select id="getById" resultType="com.jedreck.tester2.entitys.PersonEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `person` WHERE `id` = #{id} FOR UPDATE;
+    </select>
+
+
+</mapper>

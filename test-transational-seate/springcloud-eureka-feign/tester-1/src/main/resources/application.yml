@@ -38,3 +38,7 @@ eureka:
 mybatis:
   type-aliases-package: com.jedreck.**.entitys
   mapper-locations: classpath:mapper/*.xml
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
