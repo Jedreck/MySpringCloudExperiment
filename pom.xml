@@ -29,6 +29,7 @@
         <module>test-transational-seate/springcloud-eureka-feign/tester-2</module>
         <module>test-mysql-property</module>
         <module>test-QRcode</module>
+        <module>test-rocketmq</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
