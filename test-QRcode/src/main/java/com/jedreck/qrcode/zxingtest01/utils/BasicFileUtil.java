@@ -1,11 +1,12 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
-
-import com.jedreck.qrcode.zxingtest01.base.constants.MediaType;
+import com.jedreck.qrcode.zxingtest01.constants.MediaType;
 import org.apache.commons.lang3.StringUtils;
 
 
 public class BasicFileUtil {
+    private BasicFileUtil() {
+    }
 
     public static boolean isAbsFile(String fileName) {
         if (OSUtil.isWinOS()) {

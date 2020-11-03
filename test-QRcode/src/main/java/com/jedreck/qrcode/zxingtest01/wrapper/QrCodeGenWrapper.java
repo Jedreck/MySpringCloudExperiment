@@ -1,21 +1,20 @@
 package com.jedreck.qrcode.zxingtest01.wrapper;
 
-import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.img.ImgUtil;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.jedreck.qrcode.zxingtest01.base.Base64Util;
-import com.jedreck.qrcode.zxingtest01.base.ColorUtil;
-import com.jedreck.qrcode.zxingtest01.base.FileReadUtil;
-import com.jedreck.qrcode.zxingtest01.base.FileWriteUtil;
-import com.jedreck.qrcode.zxingtest01.base.ImageLoadUtil;
-import com.jedreck.qrcode.zxingtest01.base.IoUtil;
-import com.jedreck.qrcode.zxingtest01.base.constants.MediaType;
-import com.jedreck.qrcode.zxingtest01.base.gif.GifDecoder;
-import com.jedreck.qrcode.zxingtest01.base.gif.GifHelper;
-import com.jedreck.qrcode.zxingtest01.constants.QuickQrUtil;
+import com.jedreck.qrcode.zxingtest01.constants.MediaType;
+import com.jedreck.qrcode.zxingtest01.constants.QuickQrFont;
 import com.jedreck.qrcode.zxingtest01.helper.QrCodeGenerateHelper;
+import com.jedreck.qrcode.zxingtest01.utils.Base64Util;
+import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
+import com.jedreck.qrcode.zxingtest01.utils.FileReadUtil;
+import com.jedreck.qrcode.zxingtest01.utils.FileWriteUtil;
+import com.jedreck.qrcode.zxingtest01.utils.ImageLoadUtil;
+import com.jedreck.qrcode.zxingtest01.utils.IoUtil;
+import com.jedreck.qrcode.zxingtest01.utils.gif.GifDecoder;
+import com.jedreck.qrcode.zxingtest01.utils.gif.GifHelper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,21 +28,25 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class QrCodeGenWrapper {
+    private QrCodeGenWrapper() {
+    }
+
     public static Builder of(String content) {
         return new Builder().setMsg(content);
     }
 
     public static class Builder {
         private static Logger log = LoggerFactory.getLogger(Builder.class);
-        private static final MatrixToImageConfig DEFAULT_CONFIG = new MatrixToImageConfig();
 
         /**
-         * The message to put into QrCode
+         * 生成二维码的字符串
          */
         private String msg;
 
@@ -52,36 +55,30 @@ public class QrCodeGenWrapper {
          */
         private Integer w;
 
-
         /**
          * qrcode image height
          */
         private Integer h;
 
-
         /**
-         * qrcode message's code, default UTF-8
+         * 默认字符编码, default UTF-8
          */
-        private String code = CharsetUtil.UTF_8;
-
+        private String code = StandardCharsets.UTF_8.toString();
 
         /**
-         * 0 - 4
+         * 二维码与边框间距 0 - 4
          */
         private Integer padding;
 
+        /**
+         * 容错级别
+         */
+        private ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.H;
 
         /**
-         * error level, default Q
+         * 输出二维码图片格式，默认为 png
          */
-        private ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.Q;
-
-
-        /**
-         * output qrcode image type, default png
-         */
-        private String picType = "png";
-
+        private String picType = MediaType.ImagePng.getExt();
 
         private QrCodeOptions.BgImgOptions.BgImgOptionsBuilder bgImgOptions;
 
@@ -91,17 +88,14 @@ public class QrCodeGenWrapper {
 
         private QrCodeOptions.DetectOptions.DetectOptionsBuilder detectOptions;
 
-
         public Builder() {
             // 背景图默认采用覆盖方式
             bgImgOptions =
                     QrCodeOptions.BgImgOptions.builder().bgImgStyle(QrCodeOptions.BgImgStyle.OVERRIDE).opacity(0.85f);
 
-
             // 默认采用普通格式的logo， 无边框
             logoOptions = QrCodeOptions.LogoOptions.builder().logoStyle(QrCodeOptions.LogoStyle.NORMAL).border(false)
                     .rate(12);
-
 
             // 绘制信息，默认黑白方块
             drawOptions =
@@ -112,11 +106,13 @@ public class QrCodeGenWrapper {
             detectOptions = QrCodeOptions.DetectOptions.builder();
         }
 
-
         public String getMsg() {
             return msg;
         }
 
+        /**
+         * 生成二维码的字符串
+         */
         public Builder setMsg(String msg) {
             this.msg = msg;
             return this;
@@ -126,6 +122,9 @@ public class QrCodeGenWrapper {
             return w == null ? (h == null ? 200 : h) : w;
         }
 
+        /**
+         * 宽
+         */
         public Builder setW(Integer w) {
             if (w != null && w <= 0) {
                 throw new IllegalArgumentException("生成二维码的宽必须大于0");
@@ -138,6 +137,9 @@ public class QrCodeGenWrapper {
             return h == null ? (w == null ? 200 : w) : h;
         }
 
+        /**
+         * 高
+         */
         public Builder setH(Integer h) {
             if (h != null && h <= 0) {
                 throw new IllegalArgumentException("生成功能二维码的搞必须大于0");
@@ -146,6 +148,9 @@ public class QrCodeGenWrapper {
             return this;
         }
 
+        /**
+         * 二维码字符编码
+         */
         public Builder setCode(String code) {
             this.code = code;
             return this;
@@ -167,24 +172,37 @@ public class QrCodeGenWrapper {
             return padding;
         }
 
+        /**
+         * 二维码与边框间距 0 - 4
+         */
         public Builder setPadding(Integer padding) {
             this.padding = padding;
             return this;
         }
 
+        /**
+         * 二维码图片格式
+         */
         public Builder setPicType(String picType) {
             this.picType = picType;
             return this;
         }
 
+        /**
+         * 设置二维码容错级别
+         */
         public Builder setErrorCorrection(ErrorCorrectionLevel errorCorrection) {
             this.errorCorrection = errorCorrection;
             return this;
         }
 
-
         /////////////// logo 相关配置 ///////////////
 
+        /**
+         * 设置logo路径
+         *
+         * @param logo 本地路径 or 网络地址
+         */
         public Builder setLogo(String logo) throws IOException {
             try {
                 return setLogo(ImageLoadUtil.getImageByPath(logo));
@@ -194,6 +212,9 @@ public class QrCodeGenWrapper {
             }
         }
 
+        /**
+         * logo
+         */
         public Builder setLogo(InputStream inputStream) throws IOException {
             try {
                 return setLogo(ImageIO.read(inputStream));
@@ -203,16 +224,27 @@ public class QrCodeGenWrapper {
             }
         }
 
+        /**
+         * logo图片
+         */
         public Builder setLogo(BufferedImage img) {
             logoOptions.logo(img);
             return this;
         }
 
+        /**
+         * logo样式
+         */
         public Builder setLogoStyle(QrCodeOptions.LogoStyle logoStyle) {
             logoOptions.logoStyle(logoStyle);
             return this;
         }
 
+        /**
+         * logo背景颜色
+         *
+         * @param color 0xffffffff  前两位为透明读， 三四位 R， 五六位 G， 七八位 B
+         */
         public Builder setLogoBgColor(Integer color) {
             if (color == null) {
                 return this;
@@ -223,9 +255,6 @@ public class QrCodeGenWrapper {
 
         /**
          * logo 背景颜色
-         *
-         * @param color
-         * @return
          */
         public Builder setLogoBgColor(Color color) {
             logoOptions.border(true);
@@ -233,6 +262,11 @@ public class QrCodeGenWrapper {
             return this;
         }
 
+        /**
+         * logo 外层边框颜色
+         *
+         * @param color 0xffffffff  前两位为透明读， 三四位 R， 五六位 G， 七八位 B
+         */
         public Builder setLogoBorderBgColor(Integer color) {
             if (color == null) {
                 return this;
@@ -253,11 +287,20 @@ public class QrCodeGenWrapper {
             return this;
         }
 
+        /**
+         * logo 是否有边框
+         */
         public Builder setLogoBorder(boolean border) {
             logoOptions.border(border);
             return this;
         }
 
+        /**
+         * logo 占二维码的比例
+         *
+         * @param rate 0~100，推荐小于30的整数
+         *             todo 测试
+         */
         public Builder setLogoRate(int rate) {
             logoOptions.rate(rate);
             return this;
@@ -265,9 +308,9 @@ public class QrCodeGenWrapper {
 
         /**
          * logo透明度
+         * todo 测试
          *
-         * @param opacity
-         * @return
+         * @param opacity 0.xx的小数
          */
         public Builder setLogoOpacity(float opacity) {
             logoOptions.opacity(opacity);
@@ -276,22 +319,27 @@ public class QrCodeGenWrapper {
 
         ///////////////// logo配置结束 ///////////////
 
-
         // ------------------------------------------
-
 
         /////////////// 背景 相关配置 ///////////////
 
-        public Builder setBgImg(String bgImg) throws IOException {
+        /**
+         * 设置背景图片路径
+         *
+         * @param path @param logo 本地路径 or 网络地址
+         */
+        public Builder setBgImg(String path) throws IOException {
             try {
-                return setBgImg(FileReadUtil.getStreamByFileName(bgImg));
+                return setBgImg(FileReadUtil.getStreamByFileName(path));
             } catch (IOException e) {
                 log.error("load backgroundImg error! e:{}", e);
                 throw new IOException("load backgroundImg error!", e);
             }
         }
 
-
+        /**
+         * 设置背景图片路径
+         */
         public Builder setBgImg(InputStream inputStream) throws IOException {
             try {
                 ByteArrayInputStream target = IoUtil.toByteArrayInputStream(inputStream);
@@ -310,52 +358,70 @@ public class QrCodeGenWrapper {
             }
         }
 
-
+        /**
+         * 设置背景图片路径
+         */
         public Builder setBgImg(BufferedImage bufferedImage) {
             bgImgOptions.bgImg(bufferedImage);
             return this;
         }
 
-
+        /**
+         * 背景图样式
+         *
+         * @param bgImgStyle {@link QrCodeOptions.BgImgStyle}
+         */
         public Builder setBgStyle(QrCodeOptions.BgImgStyle bgImgStyle) {
             bgImgOptions.bgImgStyle(bgImgStyle);
             return this;
         }
 
-
+        /**
+         * 背景图宽
+         */
         public Builder setBgW(int w) {
             bgImgOptions.bgW(w);
             return this;
         }
 
+        /**
+         * 背景图高
+         */
         public Builder setBgH(int h) {
             bgImgOptions.bgH(h);
             return this;
         }
 
-
+        /**
+         * 用于设置二维码的透明度
+         * 前提是 bgImgStyle ==  {@link QrCodeOptions.BgImgStyle#OVERRIDE}
+         */
         public Builder setBgOpacity(float opacity) {
             bgImgOptions.opacity(opacity);
             return this;
         }
 
-
+        /**
+         * 用于设置二维码的绘制在背景图上的X坐标
+         * 前提是 bgImgStyle ==  {@link QrCodeOptions.BgImgStyle#FILL}
+         */
         public Builder setBgStartX(int startX) {
             bgImgOptions.startX(startX);
             return this;
         }
 
+        /**
+         * 用于设置二维码的绘制在背景图上的Y坐标
+         * 前提是 bgImgStyle ==  {@link QrCodeOptions.BgImgStyle#FILL}
+         */
         public Builder setBgStartY(int startY) {
             bgImgOptions.startY(startY);
             return this;
         }
 
-
         /////////////// logo 配置结束 ///////////////
 
-
         // ------------------------------------------
-
 
         /////////////// 探测图形 相关配置 ///////////////
         public Builder setDetectImg(String detectImg) throws IOException {
@@ -367,7 +433,6 @@ public class QrCodeGenWrapper {
             }
         }
 
-
         public Builder setDetectImg(InputStream detectImg) throws IOException {
             try {
                 return setDetectImg(ImageIO.read(detectImg));
@@ -377,7 +442,6 @@ public class QrCodeGenWrapper {
             }
         }
 
-
         public Builder setDetectImg(BufferedImage detectImg) {
             detectOptions.detectImg(detectImg);
             detectOptions.special(true);
@@ -386,10 +450,6 @@ public class QrCodeGenWrapper {
 
         /**
          * 左上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
          */
         public Builder setLTDetectImg(String detectImg) throws IOException {
             try {
@@ -402,10 +462,6 @@ public class QrCodeGenWrapper {
 
         /**
          * 左上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
          */
         public Builder setLTDetectImg(InputStream detectImg) throws IOException {
             try {
@@ -418,10 +474,6 @@ public class QrCodeGenWrapper {
 
         /**
          * 左上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
          */
         public Builder setLTDetectImg(BufferedImage detectImg) {
             detectOptions.detectImgLT(detectImg);
@@ -430,11 +482,7 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * 左上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
+         * 右上角探测图形
          */
         public Builder setRTDetectImg(String detectImg) throws IOException {
             try {
@@ -446,11 +494,7 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * 左上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
+         * 右上角探测图形
          */
         public Builder setRTDetectImg(InputStream detectImg) throws IOException {
             try {
@@ -463,10 +507,6 @@ public class QrCodeGenWrapper {
 
         /**
          * 右上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
          */
         public Builder setRTDetectImg(BufferedImage detectImg) {
             detectOptions.detectImgRT(detectImg);
@@ -475,11 +515,7 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * 左上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
+         * 左下角探测图形
          */
         public Builder setLDDetectImg(String detectImg) throws IOException {
             try {
@@ -491,11 +527,7 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * 左上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
+         * 左下角探测图形
          */
         public Builder setLDDetectImg(InputStream detectImg) throws IOException {
             try {
@@ -507,11 +539,7 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * 左上角探测图形
-         *
-         * @param detectImg
-         * @return
-         * @throws IOException
+         * 左下角探测图形
          */
         public Builder setLDDetectImg(BufferedImage detectImg) {
             detectOptions.detectImgLD(detectImg);
@@ -557,45 +585,57 @@ public class QrCodeGenWrapper {
 
         /////////////// 探测图形 配置结束 ///////////////
 
-
         // ------------------------------------------
-
 
         /////////////// 二维码绘制 相关配置 ///////////////
 
-        public Builder setDrawStyle(String style) {
-            return setDrawStyle(QrCodeOptions.DrawStyle.getDrawStyle(style));
-        }
-
-
+        /**
+         * 二维码绘制样式
+         */
         public Builder setDrawStyle(QrCodeOptions.DrawStyle drawStyle) {
             drawOptions.drawStyle(drawStyle);
             return this;
         }
 
-
         /**
-         * 透明度填充，如绘制二维码的图片中存在透明区域，若这个参数为true，则会用bgColor填充透明的区域；若为false，则透明区域依旧是透明的
+         * 透明度填充，如绘制二维码的图片中存在透明区域
+         *
+         * @param fill true，则会用bgColor填充透明的区域；false，则透明区域依旧是透明的
          */
         public Builder setDiaphaneityFill(boolean fill) {
             drawOptions.diaphaneityFill(fill);
             return this;
         }
 
+        /**
+         * 二维码矩阵中 1对应的着色颜色
+         *
+         * @param color 0xffffffff  前两位为透明读， 三四位 R， 五六位 G， 七八位 B
+         */
         public Builder setDrawPreColor(int color) {
             return setDrawPreColor(ColorUtil.int2color(color));
         }
 
-
+        /**
+         * 二维码矩阵中 1对应的着色颜色
+         *
+         * @param color 0xffffffff  前两位为透明读， 三四位 R， 五六位 G， 七八位 B
+         */
         public Builder setDrawPreColor(Color color) {
             drawOptions.preColor(color);
             return this;
         }
 
+        /**
+         * 二维码矩阵中 0对应的背景颜色
+         */
         public Builder setDrawBgColor(int color) {
             return setDrawBgColor(ColorUtil.int2color(color));
         }
 
+        /**
+         * 二维码矩阵中 0对应的背景颜色
+         */
         public Builder setDrawBgColor(Color color) {
             drawOptions.bgColor(color);
             return this;
@@ -619,16 +659,22 @@ public class QrCodeGenWrapper {
             }
         }
 
+        /**
+         * 二维码矩阵中，0点对应绘制的背景图片， 1点对应绘制的图片在 imgMapper 中
+         */
         public Builder setDrawBgImg(BufferedImage img) {
             drawOptions.bgImg(img);
             return this;
         }
 
+        /**
+         * true 时表示支持对相邻的着色点进行合并处理 （即用一个大图来绘制相邻的两个着色点）
+         * 说明： 三角形样式关闭该选项，因为留白过多，对识别有影响
+         */
         public Builder setDrawEnableScale(boolean enable) {
             drawOptions.enableScale(enable);
             return this;
         }
-
 
         public Builder setDrawImg(String img) throws IOException {
             try {
@@ -652,7 +698,6 @@ public class QrCodeGenWrapper {
             addImg(1, 1, img);
             return this;
         }
-
 
         public Builder addImg(int row, int col, BufferedImage img) {
             if (img == null) {
@@ -682,10 +727,9 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * 文字二维码的渲染字符串
+         * 渲染文字二维码的字符串
          *
          * @param text
-         * @return
          */
         public Builder setQrText(String text) {
             drawOptions.text(text);
@@ -699,9 +743,6 @@ public class QrCodeGenWrapper {
 
         /**
          * 字体名
-         *
-         * @param fontName
-         * @return
          */
         public Builder setQrDotFontName(String fontName) {
             drawOptions.fontName(fontName);
@@ -712,7 +753,6 @@ public class QrCodeGenWrapper {
          * 字体样式
          *
          * @param fontStyle 0 {@link Font#PLAIN} 1 {@link Font#BOLD} 2 {@link Font#ITALIC}
-         * @return
          */
         public Builder setQrDotFontStyle(int fontStyle) {
             drawOptions.fontStyle(fontStyle);
@@ -721,13 +761,11 @@ public class QrCodeGenWrapper {
 
         /////////////// 二维码绘制 配置结束 ///////////////
 
-
         private void validate() {
             if (msg == null || msg.length() == 0) {
                 throw new IllegalArgumentException("生成二维码的内容不能为空!");
             }
         }
-
 
         private QrCodeOptions build() {
             this.validate();
@@ -735,17 +773,13 @@ public class QrCodeGenWrapper {
             QrCodeOptions qrCodeConfig = new QrCodeOptions();
             qrCodeConfig.setMsg(getMsg());
             qrCodeConfig.setH(getH());
-            qrCodeConfig.setW(getW());
-
-
-            // 设置背景信息
+            qrCodeConfig.setW(getW());// 设置背景信息
             QrCodeOptions.BgImgOptions bgOp = bgImgOptions.build();
             if (bgOp.getBgImg() == null && bgOp.getGifDecoder() == null) {
                 qrCodeConfig.setBgImgOptions(null);
             } else {
                 qrCodeConfig.setBgImgOptions(bgOp);
             }
-
 
             // 设置logo信息
             QrCodeOptions.LogoOptions logoOp = logoOptions.build();
@@ -755,11 +789,9 @@ public class QrCodeGenWrapper {
                 qrCodeConfig.setLogoOptions(logoOp);
             }
 
-
             // 绘制信息
             QrCodeOptions.DrawOptions drawOp = drawOptions.build();
             qrCodeConfig.setDrawOptions(drawOp);
-
 
             // 设置detect绘制信息
             QrCodeOptions.DetectOptions detectOp = detectOptions.build();
@@ -772,7 +804,6 @@ public class QrCodeGenWrapper {
                 detectOp.setInColor(detectOp.getInColor());
             }
             qrCodeConfig.setDetectOptions(detectOp);
-
 
             if (qrCodeConfig.getBgImgOptions() != null &&
                     qrCodeConfig.getBgImgOptions().getBgImgStyle() == QrCodeOptions.BgImgStyle.PENETRATE) {
@@ -796,11 +827,9 @@ public class QrCodeGenWrapper {
             return qrCodeConfig;
         }
 
-
         public String asString() throws IOException, WriterException {
             return QrCodeGenWrapper.asString(build());
         }
-
 
         public BufferedImage asBufferedImage() throws IOException, WriterException {
             return QrCodeGenWrapper.asBufferedImage(build());
@@ -822,6 +851,11 @@ public class QrCodeGenWrapper {
             return QrCodeGenWrapper.asFile(build(), absFileName);
         }
 
+        public void writeBufferedImage2Stream(OutputStream out) throws IOException, WriterException {
+            BufferedImage image = QrCodeGenWrapper.asBufferedImage(build());
+            ImgUtil.write(image, picType, out);
+        }
+
         @Override
         public String toString() {
             return "Builder{" + "msg='" + msg + '\'' + ", w=" + w + ", h=" + h + ", code='" + code + '\'' +
@@ -840,7 +874,7 @@ public class QrCodeGenWrapper {
             GifHelper.saveGif(list, outputStream);
             return outputStream;
         } finally {
-            QuickQrUtil.clear();
+            QuickQrFont.clear();
         }
     }
 
@@ -849,7 +883,7 @@ public class QrCodeGenWrapper {
             BitMatrixEx bitMatrix = QrCodeGenerateHelper.encode(qrCodeOptions);
             return QrCodeGenerateHelper.toBufferedImage(qrCodeOptions, bitMatrix);
         } finally {
-            QuickQrUtil.clear();
+            QuickQrFont.clear();
         }
     }
 
@@ -892,5 +926,4 @@ public class QrCodeGenWrapper {
 
         return true;
     }
-
 }

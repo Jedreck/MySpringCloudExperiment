@@ -2,8 +2,8 @@ package com.jedreck.qrcode.zxingtest01.atest;
 
 
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.jedreck.qrcode.zxingtest01.base.ColorUtil;
-import com.jedreck.qrcode.zxingtest01.base.GraphicUtil;
+import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
+import com.jedreck.qrcode.zxingtest01.utils.GraphicUtil;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeGenWrapper;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import org.junit.Test;

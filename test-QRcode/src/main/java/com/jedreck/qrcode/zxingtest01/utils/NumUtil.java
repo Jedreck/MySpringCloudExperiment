@@ -1,7 +1,10 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
 
 public class NumUtil {
+    private NumUtil() {
+    }
+
     /**
      * 将(十进制,八进制,十六进制) 字符串格式数字,转换为int
      *

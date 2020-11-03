@@ -1,8 +1,7 @@
-package com.jedreck.qrcode.zxingtest01.base.constants;
+package com.jedreck.qrcode.zxingtest01.constants;
 
 /**
  * 多媒体前缀方式: http://www.cnblogs.com/del/archive/2012/03/14/2395782.html
- *
  */
 public enum MediaType {
 
@@ -77,13 +76,12 @@ public enum MediaType {
     }
 
 
-
     public static String getExtByMime(String mime) {
         if (mime.contains("jpg")) {
             mime = mime.replaceAll("jpg", "jpeg");
         }
 
-        for (MediaType type: values()) {
+        for (MediaType type : values()) {
             if (type.getMime().equals(mime)) {
                 return type.getExt();
             }

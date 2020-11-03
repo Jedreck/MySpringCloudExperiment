@@ -1,4 +1,4 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -6,11 +6,12 @@ import java.util.Optional;
 
 
 public class GraphicUtil {
+    private GraphicUtil() {
+    }
 
     public static BufferedImage createImg(int w, int h, BufferedImage img) {
         return createImg(w, h, 0, 0, img);
     }
-
 
     public static BufferedImage createImg(int w, int h, int offsetX, int offsetY, BufferedImage img) {
         BufferedImage bf = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);

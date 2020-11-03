@@ -1,9 +1,11 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
 import java.awt.*;
 
 
 public class ColorUtil {
+    private ColorUtil() {
+    }
 
     /**
      * 全透明颜色
@@ -34,7 +36,7 @@ public class ColorUtil {
 
     /**
      * 将Color对象转为html对应的颜色配置信息
-     *
+     * <p>
      * 如  Color.RED  ->  #f00
      *
      * @param color

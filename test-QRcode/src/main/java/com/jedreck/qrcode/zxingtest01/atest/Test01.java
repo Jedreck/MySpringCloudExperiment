@@ -30,12 +30,6 @@ public class Test01 {
     }
 
     public static void test03(){
-        QrCodeOptions qo = new QrCodeOptions();
-        qo.setH(400);
-        qo.setW(400);
-        qo.setMsg(T);
-        qo.setPicType("png");
-
 
     }
 }

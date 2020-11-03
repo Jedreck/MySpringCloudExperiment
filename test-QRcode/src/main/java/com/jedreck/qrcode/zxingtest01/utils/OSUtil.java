@@ -1,7 +1,9 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
 
 public class OSUtil {
+    private OSUtil() {
+    }
 
     /**
      * 是否windows系统

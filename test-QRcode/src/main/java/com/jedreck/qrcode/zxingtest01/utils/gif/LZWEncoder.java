@@ -1,4 +1,4 @@
-package com.jedreck.qrcode.zxingtest01.base.gif;
+package com.jedreck.qrcode.zxingtest01.utils.gif;
 
 import java.io.IOException;
 import java.io.OutputStream;

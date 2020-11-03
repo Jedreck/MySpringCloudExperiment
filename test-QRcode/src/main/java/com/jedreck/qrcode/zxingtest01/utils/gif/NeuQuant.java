@@ -1,4 +1,4 @@
-package com.jedreck.qrcode.zxingtest01.base.gif;
+package com.jedreck.qrcode.zxingtest01.utils.gif;
 
 /**
  * 从网上下载 <a href="https://github.com/rtyley/animated-gif-lib-for-java">源码地址</a>

@@ -1,4 +1,4 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -8,6 +8,8 @@ import java.io.InputStream;
 
 
 public class IoUtil {
+    private IoUtil() {
+    }
 
     /**
      * 转换为字节数组输入流，可以重复消费流中数据

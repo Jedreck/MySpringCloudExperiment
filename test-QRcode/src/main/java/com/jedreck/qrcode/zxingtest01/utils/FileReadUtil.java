@@ -1,5 +1,7 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import com.google.common.base.Joiner;
 
 import java.io.BufferedReader;
@@ -8,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 
 
 public class FileReadUtil {
+    private FileReadUtil() {
+    }
 
     public static String readAll(String fileName) throws IOException {
         BufferedReader reader = createLineRead(fileName);
@@ -41,7 +45,7 @@ public class FileReadUtil {
      * @param fileName 文件名
      */
     public static Reader createCharRead(String fileName) throws IOException {
-        return new InputStreamReader(getStreamByFileName(fileName), Charset.forName("UTF-8"));
+        return new InputStreamReader(getStreamByFileName(fileName), StandardCharsets.UTF_8);
     }
 
 
@@ -51,7 +55,7 @@ public class FileReadUtil {
      * @param fileName 文件名
      */
     public static BufferedReader createLineRead(String fileName) throws IOException {
-        return new BufferedReader(new InputStreamReader(getStreamByFileName(fileName), Charset.forName("UTF-8")));
+        return new BufferedReader(new InputStreamReader(getStreamByFileName(fileName), StandardCharsets.UTF_8));
     }
 
 
@@ -62,7 +66,8 @@ public class FileReadUtil {
 
         if (fileName.startsWith("http")) {
             // 网络地址
-            return HttpUtil.downFile(fileName);
+            HttpResponse httpResponse = HttpRequest.get(fileName).timeout(3000).executeAsync();
+            return httpResponse.bodyStream();
         } else if (BasicFileUtil.isAbsFile(fileName)) {
             // 绝对路径
             Path path = Paths.get(fileName);
@@ -119,6 +124,7 @@ public class FileReadUtil {
 
     /**
      * 获取流文件对应的魔数
+     *
      * @param inputStream
      * @return
      */

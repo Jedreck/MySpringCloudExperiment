@@ -6,7 +6,7 @@ import com.google.zxing.FormatException;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.jedreck.qrcode.zxingtest01.base.Base64Util;
+import com.jedreck.qrcode.zxingtest01.utils.Base64Util;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeDeWrapper;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeGenWrapper;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
@@ -181,7 +181,7 @@ public class QrCodeWrapperTest {
 //                    .setLogoStyle(QrCodeOptions.LogoStyle.ROUND)
 //                    .setLogoBgColor(0xff000000)
                     .setBgImg(bg)
-                    .setDrawStyle(QrCodeOptions.DrawStyle.IMAGE.name())
+                    .setDrawStyle(QrCodeOptions.DrawStyle.IMAGE)
                     .setDrawImg("xhr/xhrSize4.jpg")
                     .setPicType("jpg")
                     .asBufferedImage();
@@ -222,7 +222,7 @@ public class QrCodeWrapperTest {
                         .setLogoRate(15)
                         .setBgImg(bg)
                         .setBgOpacity(0.93f)
-                        .setDrawStyle(style.name())
+                        .setDrawStyle(style)
                         .setDrawImg("xhr/xhrBase.jpg")
                         .setDrawEnableScale(true)
                         .asBufferedImage();
@@ -261,7 +261,7 @@ public class QrCodeWrapperTest {
                     .setLogoStyle(QrCodeOptions.LogoStyle.ROUND)
                     .setLogoBgColor(0xff00cc00)
                     .setLogoRate(15)
-                    .setDrawStyle(QrCodeOptions.DrawStyle.CIRCLE.name())
+                    .setDrawStyle(QrCodeOptions.DrawStyle.CIRCLE)
                     .setDrawEnableScale(true)
                     .setDrawImg("xhr/xhrBase.jpg")
                     .setBgStyle(QrCodeOptions.BgImgStyle.PENETRATE)

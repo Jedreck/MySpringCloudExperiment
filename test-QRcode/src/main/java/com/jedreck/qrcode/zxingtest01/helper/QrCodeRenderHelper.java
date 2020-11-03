@@ -1,12 +1,12 @@
 package com.jedreck.qrcode.zxingtest01.helper;
 
-import com.google.zxing.qrcode.encoder.ByteMatrix;
-import com.jedreck.qrcode.zxingtest01.base.GraphicUtil;
-import com.jedreck.qrcode.zxingtest01.base.ImageOperateUtil;
-import com.jedreck.qrcode.zxingtest01.constants.QuickQrUtil;
+import com.jedreck.qrcode.zxingtest01.constants.QuickQrFont;
 import com.jedreck.qrcode.zxingtest01.entity.DotSize;
+import com.jedreck.qrcode.zxingtest01.utils.GraphicUtil;
+import com.jedreck.qrcode.zxingtest01.utils.ImageOperateUtil;
 import com.jedreck.qrcode.zxingtest01.wrapper.BitMatrixEx;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
+import com.google.zxing.qrcode.encoder.ByteMatrix;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.awt.*;
@@ -59,7 +59,8 @@ public class QrCodeRenderHelper {
         int logoRate = logoOptions.getRate();
         int calculateQrLogoWidth = (qrWidth << 1) / logoRate;
         int calculateQrLogoHeight = (qrHeight << 1) / logoRate;
-        int logoWidth, logoHeight;
+        int logoWidth;
+        int logoHeight;
         if (calculateQrLogoWidth < logoImg.getWidth()) {
             // logo实际宽大于计算的宽度，则需要等比例缩放
             logoWidth = calculateQrLogoWidth;
@@ -84,7 +85,7 @@ public class QrCodeRenderHelper {
             qrImgGraphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, logoOptions.getOpacity()));
         }
         qrImgGraphic
-                .drawImage(logoImg.getScaledInstance(logoWidth, logoHeight, BufferedImage.SCALE_SMOOTH), logoOffsetX,
+                .drawImage(logoImg.getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH), logoOffsetX,
                         logoOffsetY, null);
         qrImgGraphic.dispose();
         logoImg.flush();
@@ -121,7 +122,7 @@ public class QrCodeRenderHelper {
             bgImgGraphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0f));
             bgImgGraphic.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             bgImgGraphic.drawImage(qrImg.getScaledInstance(qrWidth, qrHeight, Image.SCALE_SMOOTH), bgImgOptions.getStartX(),
-                    bgImgOptions.getStartY(), null);
+                            bgImgOptions.getStartY(), null);
         } else {
             // 全覆盖方式
             int bgOffsetX = (bgW - qrWidth) >> 1;
@@ -146,7 +147,7 @@ public class QrCodeRenderHelper {
      * @return
      */
     public static List<ImmutablePair<BufferedImage, Integer>> drawGifBackground(BufferedImage qrImg,
-                                                                                QrCodeOptions.BgImgOptions bgImgOptions) {
+            QrCodeOptions.BgImgOptions bgImgOptions) {
         final int qrWidth = qrImg.getWidth();
         final int qrHeight = qrImg.getHeight();
 
@@ -164,7 +165,7 @@ public class QrCodeRenderHelper {
         // 背景图缩放
         for (int index = 0, len = bgImgOptions.getGifDecoder().getFrameCount(); index < len; index++) {
             BufferedImage bgImg = bgImgOptions.getGifDecoder().getFrame(index);
-            // fixme 当背景图为png时，最终透明的地方会是黑色，这里兼容处理成白色
+            // 当背景图为png时，最终透明的地方会是黑色，这里兼容处理成白色
             BufferedImage temp = new BufferedImage(bgW, bgH, BufferedImage.TYPE_INT_RGB);
             temp.getGraphics().setColor(Color.WHITE);
             temp.getGraphics().fillRect(0, 0, bgW, bgH);
@@ -245,7 +246,7 @@ public class QrCodeRenderHelper {
 
         if (qrCodeConfig.getDrawOptions().getDrawStyle() == QrCodeOptions.DrawStyle.TXT) {
             // 绘制文字时，需要设置字体
-            g2.setFont(QuickQrUtil
+            g2.setFont(QuickQrFont
                     .font(qrCodeConfig.getDrawOptions().getFontName(), qrCodeConfig.getDrawOptions().getFontStyle(),
                             infoSize));
         }
@@ -377,8 +378,8 @@ public class QrCodeRenderHelper {
      * @param detectInnerColor 探测图形内部圈的颜色
      */
     private static void drawDetectImg(QrCodeOptions qrCodeConfig, Graphics2D g2, BitMatrixEx bitMatrix, int matrixW,
-                                      int matrixH, int leftPadding, int topPadding, int infoSize, int detectCornerSize, int x, int y,
-                                      Color detectOutColor, Color detectInnerColor, DetectLocation detectLocation) {
+            int matrixH, int leftPadding, int topPadding, int infoSize, int detectCornerSize, int x, int y,
+            Color detectOutColor, Color detectInnerColor, DetectLocation detectLocation) {
 
         BufferedImage detectedImg = qrCodeConfig.getDetectOptions().chooseDetectedImg(detectLocation);
         if (detectedImg != null) {
@@ -408,7 +409,7 @@ public class QrCodeRenderHelper {
     }
 
     private static void drawQrDotBgImg(QrCodeOptions qrCodeConfig, Graphics2D g2, int leftPadding, int topPadding,
-                                       int infoSize, int x, int y) {
+            int infoSize, int x, int y) {
         // 如果没有指定二维码中0点对应的背景图，则不做任何处理
         if (qrCodeConfig.getDrawOptions().getBgImg() == null) {
             return;
@@ -435,7 +436,7 @@ public class QrCodeRenderHelper {
      * @param y            目标点y坐标
      */
     private static void drawQrDotImg(QrCodeOptions qrCodeConfig, QrCodeOptions.DrawStyle drawStyle, Graphics2D g2,
-                                     BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
+            BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
 
         if (drawStyle != QrCodeOptions.DrawStyle.IMAGE) {
             drawGeometricFigure(qrCodeConfig, drawStyle, g2, bitMatrix, leftPadding, topPadding, infoSize, x, y);
@@ -458,7 +459,7 @@ public class QrCodeRenderHelper {
      * @param y            目标点y坐标
      */
     private static void drawGeometricFigure(QrCodeOptions qrCodeConfig, QrCodeOptions.DrawStyle drawStyle,
-                                            Graphics2D g2, BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
+            Graphics2D g2, BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
         if (!qrCodeConfig.getDrawOptions().isEnableScale()) {
             // 用几何图形进行填充时，如果不支持多个像素点渲染一个几何图形时，直接返回即可
             drawStyle.draw(g2, leftPadding + x * infoSize, topPadding + y * infoSize, infoSize, infoSize,
@@ -506,7 +507,7 @@ public class QrCodeRenderHelper {
      * @param y            目标点y坐标
      */
     private static void drawSpecialImg(QrCodeOptions qrCodeConfig, QrCodeOptions.DrawStyle drawStyle, Graphics2D g2,
-                                       BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
+            BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
         // 针对图片扩展的方式，支持更加灵活的填充方式
         int maxRow = getMaxRow(bitMatrix.getByteMatrix(), x, y);
         int maxCol = getMaxCol(bitMatrix.getByteMatrix(), x, y);

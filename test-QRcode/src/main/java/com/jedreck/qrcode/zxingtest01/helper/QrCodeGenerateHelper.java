@@ -1,37 +1,32 @@
 package com.jedreck.qrcode.zxingtest01.helper;
 
-import com.google.zxing.BarcodeFormat;
+import com.jedreck.qrcode.zxingtest01.wrapper.BitMatrixEx;
+import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.encoder.ByteMatrix;
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
-import com.jedreck.qrcode.zxingtest01.wrapper.BitMatrixEx;
-import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 二维码生成辅助类，主要两个方法，一个是生成二维码矩阵，一个是渲染矩阵为图片
  */
 public class QrCodeGenerateHelper {
-    private static Logger log = LoggerFactory.getLogger(QrCodeGenerateHelper.class);
-    private static final int QUIET_ZONE_SIZE = 4;
+    private QrCodeGenerateHelper(){}
 
+    private static final int QUIET_ZONE_SIZE = 4;
 
     /**
      * 对 zxing 的 QRCodeWriter 进行扩展, 解决白边过多的问题
-     * <p/>
-     * 源码参考 {@link com.google.zxing.qrcode.QRCodeWriter#encode(String, BarcodeFormat, int, int, Map)}
+     * 源码参考 {@link com.google.zxing.qrcode.QRCodeWriter#}
      */
     public static BitMatrixEx encode(QrCodeOptions qrCodeConfig) throws WriterException {
         ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.L;
@@ -60,11 +55,8 @@ public class QrCodeGenerateHelper {
     /**
      * 对 zxing 的 QRCodeWriter 进行扩展, 解决白边过多的问题
      * <p/>
-     * 源码参考 {@link com.google.zxing.qrcode.QRCodeWriter#renderResult(QRCode, int, int, int)}
+     * 源码参考 {@link com.google.zxing.qrcode.QRCodeWriter}
      *
-     * @param code
-     * @param width
-     * @param height
      * @param quietZone 取值 [0, 4]
      * @return
      */
@@ -85,14 +77,9 @@ public class QrCodeGenerateHelper {
         int minSize = Math.min(width, height);
         int scale = calculateScale(qrWidth, minSize);
         if (scale > 0) {
-            if (log.isDebugEnabled()) {
-                log.debug("qrCode scale enable! scale: {}, qrSize:{}, expectSize:{}x{}", scale, qrWidth, width, height);
-            }
-
-            int padding, tmpValue;
             // 计算边框留白
-            padding = (minSize - qrWidth * scale) / QUIET_ZONE_SIZE * quietZone;
-            tmpValue = qrWidth * scale + padding;
+            int padding = (minSize - qrWidth * scale) / QUIET_ZONE_SIZE * quietZone;
+            int tmpValue = qrWidth * scale + padding;
             if (width == height) {
                 width = tmpValue;
                 height = tmpValue;
@@ -111,7 +98,6 @@ public class QrCodeGenerateHelper {
         int multiple = Math.min(outputWidth / qrWidth, outputHeight / qrHeight);
         int leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
         int topPadding = (outputHeight - (inputHeight * multiple)) / 2;
-
 
         BitMatrixEx res = new BitMatrixEx();
         res.setByteMatrix(input);
@@ -172,29 +158,25 @@ public class QrCodeGenerateHelper {
             qrCode = tmp;
         }
 
-
-        /**
-         * 说明
-         *  在覆盖模式下，先设置二维码的透明度，然后绘制在背景图的正中央，最后绘制logo，这样保证logo不会透明，显示清晰
-         *  在填充模式下，先绘制logo，然后绘制在背景的指定位置上；若先绘制背景，再绘制logo，则logo大小偏移量的计算会有问题
-         */
+        // 说明
+        //  在覆盖模式下，先设置二维码的透明度，然后绘制在背景图的正中央，最后绘制logo，这样保证logo不会透明，显示清晰
+        //  在填充模式下，先绘制logo，然后绘制在背景的指定位置上；若先绘制背景，再绘制logo，则logo大小偏移量的计算会有问题
         boolean logoAlreadyDraw = false;
         // 绘制背景图
         if (qrCodeConfig.getBgImgOptions() != null) {
             if (qrCodeConfig.getBgImgOptions().getBgImgStyle() == QrCodeOptions.BgImgStyle.FILL &&
                     qrCodeConfig.getLogoOptions() != null) {
                 // 此种模式，先绘制logo
-                qrCode = QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
+                QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
                 logoAlreadyDraw = true;
             }
 
             qrCode = QrCodeRenderHelper.drawBackground(qrCode, qrCodeConfig.getBgImgOptions());
         }
 
-
         // 插入logo
         if (qrCodeConfig.getLogoOptions() != null && !logoAlreadyDraw) {
-            qrCode = QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
+            QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
         }
 
         return qrCode;
@@ -202,7 +184,7 @@ public class QrCodeGenerateHelper {
 
 
     public static List<ImmutablePair<BufferedImage, Integer>> toGifImages(QrCodeOptions qrCodeConfig,
-            BitMatrixEx bitMatrix) {
+                                                                          BitMatrixEx bitMatrix) {
         if (qrCodeConfig.getBgImgOptions() == null ||
                 qrCodeConfig.getBgImgOptions().getGifDecoder().getFrameCount() <= 0) {
             throw new IllegalArgumentException("animated background image should not be null!");
@@ -227,7 +209,7 @@ public class QrCodeGenerateHelper {
         if (qrCodeConfig.getBgImgOptions().getBgImgStyle() == QrCodeOptions.BgImgStyle.FILL &&
                 qrCodeConfig.getLogoOptions() != null) {
             // 此种模式，先绘制logo
-            qrCode = QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
+            QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
             logoAlreadyDraw = true;
         }
 

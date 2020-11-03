@@ -1,10 +1,10 @@
 package com.jedreck.qrcode.zxingtest01.wrapper;
 
 import com.google.zxing.EncodeHintType;
-import com.jedreck.qrcode.zxingtest01.base.gif.GifDecoder;
-import com.jedreck.qrcode.zxingtest01.constants.QuickQrUtil;
+import com.jedreck.qrcode.zxingtest01.constants.QuickQrFont;
 import com.jedreck.qrcode.zxingtest01.entity.DotSize;
 import com.jedreck.qrcode.zxingtest01.helper.QrCodeRenderHelper;
+import com.jedreck.qrcode.zxingtest01.utils.gif.GifDecoder;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,18 +26,15 @@ public class QrCodeOptions {
      */
     private Integer w;
 
-
     /**
      * 生成二维码的高
      */
     private Integer h;
 
-
     /**
      * 二维码信息(即传统二维码中的黑色方块) 绘制选项
      */
     private DrawOptions drawOptions;
-
 
     /**
      * 背景图样式选项
@@ -49,31 +46,24 @@ public class QrCodeOptions {
      */
     private LogoOptions logoOptions;
 
-
     /**
      * 三个探测图形的样式选项
      */
     private DetectOptions detectOptions;
 
-
     private Map<EncodeHintType, Object> hints;
-
 
     /**
      * 生成二维码图片的格式 png, jpg
      */
     private String picType;
 
-
     /**
      * true 表示生成的是动图
-     *
-     * @return
      */
     public boolean gifQrCode() {
         return bgImgOptions != null && bgImgOptions.getGifDecoder() != null;
     }
-
 
     public String getMsg() {
         return msg;
@@ -396,7 +386,6 @@ public class QrCodeOptions {
         }
     }
 
-
     /**
      * 背景图的配置信息
      */
@@ -427,23 +416,19 @@ public class QrCodeOptions {
         private BgImgStyle bgImgStyle;
 
         /**
-         * if {@link #bgImgStyle} ==  QrCodeOptions.BgImgStyle.OVERRIDE，
+         * if {@link #bgImgStyle} ==  {@link BgImgStyle#OVERRIDE}
          * 用于设置二维码的透明度
          */
         private float opacity;
 
-
         /**
-         * if {@link #bgImgStyle} ==  QrCodeOptions.BgImgStyle.FILL
-         * <p>
+         * if {@link #bgImgStyle} ==  {@link BgImgStyle#FILL}
          * 用于设置二维码的绘制在背景图上的x坐标
          */
         private int startX;
 
-
         /**
-         * if {@link #bgImgStyle} ==  QrCodeOptions.BgImgStyle.FILL
-         * <p>
+         * if {@link #bgImgStyle} ==  {@link BgImgStyle#FILL}
          * 用于设置二维码的绘制在背景图上的y坐标
          */
         private int startY;
@@ -599,23 +584,21 @@ public class QrCodeOptions {
             private BgImgStyle bgImgStyle;
 
             /**
-             * if {@link #bgImgStyle} ==  QrCodeOptions.BgImgStyle.OVERRIDE，
+             * if {@link #bgImgStyle} ==  {@link BgImgStyle#OVERRIDE}
              * 用于设置二维码的透明度
              */
             private float opacity;
 
 
             /**
-             * if {@link #bgImgStyle} ==  QrCodeOptions.BgImgStyle.FILL
-             * <p>
+             * if {@link #bgImgStyle} ==  {@link BgImgStyle#FILL}
              * 用于设置二维码的绘制在背景图上的x坐标
              */
             private int startX;
 
 
             /**
-             * if {@link #bgImgStyle} ==  QrCodeOptions.BgImgStyle.FILL
-             * <p>
+             * if {@link #bgImgStyle} ==  {@link BgImgStyle#FILL}
              * 用于设置二维码的绘制在背景图上的y坐标
              */
             private int startY;
@@ -666,11 +649,11 @@ public class QrCodeOptions {
         }
     }
 
-
     /**
      * 探测图形的配置信息
      */
     public static class DetectOptions {
+
         private Color outColor;
 
         private Color inColor;
@@ -952,7 +935,7 @@ public class QrCodeOptions {
          * @return
          */
         public String getDrawQrTxt() {
-            return QuickQrUtil.qrTxt(text, txtMode != null && txtMode == TxtMode.RANDOM);
+            return QuickQrFont.qrTxt(text, txtMode != null && txtMode == TxtMode.RANDOM);
         }
 
         public Color getPreColor() {
@@ -1081,7 +1064,7 @@ public class QrCodeOptions {
 
         public static class DrawOptionsBuilder {
             /**
-             * 二维码居中 1对应的着色颜色
+             * 二维码矩阵中 1对应的着色颜色
              */
             private Color preColor;
 
@@ -1112,7 +1095,6 @@ public class QrCodeOptions {
 
             /**
              * 字体样式
-             * <p>
              * {@link Font#PLAIN} 0
              * {@link Font#BOLD}  1
              * {@link Font#ITALIC} 2
@@ -1210,15 +1192,14 @@ public class QrCodeOptions {
                 drawOptions.setEnableScale(this.enableScale);
                 drawOptions.setImgMapper(this.imgMapper);
                 drawOptions.setDiaphaneityFill(this.diaphaneityFill);
-                drawOptions.setText(text == null ? QuickQrUtil.DEFAULT_QR_TXT : text);
+                drawOptions.setText(text == null ? QuickQrFont.DEFAULT_QR_TXT : text);
                 drawOptions.setTxtMode(txtMode == null ? TxtMode.ORDER : txtMode);
-                drawOptions.setFontName(fontName == null ? QuickQrUtil.DEFAULT_FONT_NAME : fontName);
-                drawOptions.setFontStyle(fontStyle == null ? QuickQrUtil.DEFAULT_FONT_STYLE : fontStyle);
+                drawOptions.setFontName(fontName == null ? QuickQrFont.DEFAULT_FONT_NAME : fontName);
+                drawOptions.setFontStyle(fontStyle == null ? QuickQrFont.DEFAULT_FONT_STYLE : fontStyle);
                 return drawOptions;
             }
         }
     }
-
 
     /**
      * logo的样式
@@ -1230,7 +1211,6 @@ public class QrCodeOptions {
             return LogoStyle.valueOf(name.toUpperCase());
         }
     }
-
 
     /**
      * 背景图样式
@@ -1246,7 +1226,6 @@ public class QrCodeOptions {
          */
         FILL,
 
-
         /**
          * 背景图穿透显示, 即二维码主题色为透明，由背景图的颜色进行填充
          */
@@ -1257,7 +1236,6 @@ public class QrCodeOptions {
             return "fill".equalsIgnoreCase(name) ? FILL : OVERRIDE;
         }
     }
-
 
     /**
      * 绘制二维码信息的样式
@@ -1360,7 +1338,7 @@ public class QrCodeOptions {
             public void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt) {
                 Font oldFont = g2d.getFont();
                 if (oldFont.getSize() != w) {
-                    Font newFont = QuickQrUtil.font(oldFont.getName(), oldFont.getStyle(), w);
+                    Font newFont = QuickQrFont.font(oldFont.getName(), oldFont.getStyle(), w);
                     g2d.setFont(newFont);
                 }
                 g2d.drawString(txt, x, y + w);
@@ -1387,24 +1365,17 @@ public class QrCodeOptions {
                 return RECT;
             }
 
-
             DrawStyle style = map.get(name.toUpperCase());
             return style == null ? RECT : style;
         }
 
-
         public abstract void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt);
-
 
         /**
          * 返回是否支持绘制自定义图形的扩展
-         *
-         * @param dotSize
-         * @return
          */
         public abstract boolean expand(DotSize dotSize);
     }
-
 
     public enum TxtMode {
         /***

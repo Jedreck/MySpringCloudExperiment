@@ -1,8 +1,7 @@
-package com.jedreck.qrcode.zxingtest01.base.gif;
+package com.jedreck.qrcode.zxingtest01.utils.gif;
 
-
-import com.jedreck.qrcode.zxingtest01.base.FileReadUtil;
-import com.jedreck.qrcode.zxingtest01.base.FileWriteUtil;
+import com.jedreck.qrcode.zxingtest01.utils.FileReadUtil;
+import com.jedreck.qrcode.zxingtest01.utils.FileWriteUtil;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.awt.image.BufferedImage;

@@ -11,12 +11,10 @@ public class BitMatrixEx {
      */
     private int width;
 
-
     /**
      * 实际生成二维码的高
      */
     private int height;
-
 
     /**
      * 左白边大小

@@ -1,4 +1,4 @@
-package com.jedreck.qrcode.zxingtest01.base.gif;
+package com.jedreck.qrcode.zxingtest01.utils.gif;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -65,7 +65,7 @@ public class GifDecoder {
     protected int delay = 0; // delay in milliseconds
     protected int transIndex; // transparent color index
 
-    protected static final int MaxStackSize = 4096;
+    protected static final int MAX_STACK_SIZE = 4096;
     // max decoder pixel stack size
 
     // LZW decoder working arrays
@@ -74,7 +74,7 @@ public class GifDecoder {
     protected byte[] pixelStack;
     protected byte[] pixels;
 
-    protected ArrayList frames; // frames read from current file
+    protected ArrayList<GifFrame> frames; // frames read from current file
     protected int frameCount;
 
     static class GifFrame {
@@ -97,7 +97,7 @@ public class GifDecoder {
         //
         delay = -1;
         if ((n >= 0) && (n < frameCount)) {
-            delay = ((GifFrame) frames.get(n)).delay;
+            delay = frames.get(n).delay;
         }
         return delay;
     }
@@ -194,6 +194,8 @@ public class GifDecoder {
                         case 4:
                             iline = 1;
                             inc = 2;
+                            break;
+                        default:
                     }
                 }
                 line = iline;
@@ -229,7 +231,7 @@ public class GifDecoder {
     public BufferedImage getFrame(int n) {
         BufferedImage im = null;
         if ((n >= 0) && (n < frameCount)) {
-            im = ((GifFrame) frames.get(n)).image;
+            im = frames.get(n).image;
         }
         return im;
     }
@@ -260,13 +262,15 @@ public class GifDecoder {
                     status = STATUS_FORMAT_ERROR;
                 }
             }
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             status = STATUS_OPEN_ERROR;
         }
-        try {
-            is.close();
-        } catch (IOException e) {
-        }
+
         return status;
     }
 
@@ -289,13 +293,15 @@ public class GifDecoder {
                     status = STATUS_FORMAT_ERROR;
                 }
             }
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             status = STATUS_OPEN_ERROR;
         }
-        try {
-            is.close();
-        } catch (IOException e) {
-        }
+
         return status;
     }
 
@@ -353,9 +359,9 @@ public class GifDecoder {
         if ((pixels == null) || (pixels.length < npix)) {
             pixels = new byte[npix]; // allocate new pixel array
         }
-        if (prefix == null) prefix = new short[MaxStackSize];
-        if (suffix == null) suffix = new byte[MaxStackSize];
-        if (pixelStack == null) pixelStack = new byte[MaxStackSize + 1];
+        if (prefix == null) prefix = new short[MAX_STACK_SIZE];
+        if (suffix == null) suffix = new byte[MAX_STACK_SIZE];
+        if (pixelStack == null) pixelStack = new byte[MAX_STACK_SIZE + 1];
 
         //  Initialize GIF data stream decoder.
 
@@ -430,14 +436,14 @@ public class GifDecoder {
 
                 //  Add a new string to the string table,
 
-                if (available >= MaxStackSize)
+                if (available >= MAX_STACK_SIZE)
                     break;
                 pixelStack[top++] = (byte) first;
                 prefix[available] = (short) old_code;
                 suffix[available] = (byte) first;
                 available++;
                 if (((available & code_mask) == 0)
-                        && (available < MaxStackSize)) {
+                        && (available < MAX_STACK_SIZE)) {
                     code_size++;
                     code_mask += available;
                 }
@@ -470,7 +476,7 @@ public class GifDecoder {
     protected void init() {
         status = STATUS_OK;
         frameCount = 0;
-        frames = new ArrayList();
+        frames = new ArrayList<>();
         gct = null;
         lct = null;
     }
@@ -506,6 +512,7 @@ public class GifDecoder {
                     n += count;
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
 
             if (n < blockSize) {
@@ -529,6 +536,7 @@ public class GifDecoder {
         try {
             n = in.read(c);
         } catch (IOException e) {
+            e.printStackTrace();
         }
         if (n < nbytes) {
             status = STATUS_FORMAT_ERROR;

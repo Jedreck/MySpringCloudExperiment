@@ -1,7 +1,7 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
 
-import com.jedreck.qrcode.zxingtest01.base.gif.GifDecoder;
+import com.jedreck.qrcode.zxingtest01.utils.gif.GifDecoder;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
@@ -11,6 +11,8 @@ import java.io.InputStream;
 
 
 public class ImageLoadUtil {
+    private ImageLoadUtil() {
+    }
 
     /**
      * 根据路径获取图片

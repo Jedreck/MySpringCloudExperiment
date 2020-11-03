@@ -1,5 +1,7 @@
-package com.jedreck.qrcode.zxingtest01.base;
+package com.jedreck.qrcode.zxingtest01.utils;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -10,7 +12,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
@@ -19,25 +20,28 @@ import java.util.Random;
 
 
 public class FileWriteUtil {
+    private FileWriteUtil() {
+    }
+
     private static final Logger log = LoggerFactory.getLogger(FileWriteUtil.class);
 
-    public static String TEMP_PATH = "/tmp/quickmedia/";
+    private static String tempPath = "/tmp/quickmedia/";
 
     public static String getTmpPath() {
         // 优先从系统配置中获取获取临时目录参数，不存在时，用兜底的目录
         String tmpPathEnvProperties = System.getProperty("quick.media.tmp.path");
         if (StringUtils.isNotBlank(tmpPathEnvProperties)) {
             if (tmpPathEnvProperties.endsWith("/")) {
-                TEMP_PATH = tmpPathEnvProperties;
+                tempPath = tmpPathEnvProperties;
             } else {
-                TEMP_PATH = tmpPathEnvProperties + "/";
+                tempPath = tmpPathEnvProperties + "/";
             }
         }
 
-        return TEMP_PATH + DateFormatUtils.format(new Date(), "yyyyMMdd");
+        return tempPath + DateFormatUtils.format(new Date(), "yyyyMMdd");
     }
 
-    public static <T> FileInfo saveFile(T src, String inputType) throws Exception {
+    public static <T> FileInfo saveFile(T src, String inputType) throws FileNotFoundException {
         if (src instanceof String) {
             // 给的文件路径，区分三中，本地绝对路径，相对路径，网络地址
             return saveFileByPath((String) src);
@@ -62,7 +66,7 @@ public class FileWriteUtil {
      * @return
      * @throws Exception
      */
-    private static FileInfo saveFileByPath(String path) throws Exception {
+    private static FileInfo saveFileByPath(String path) throws FileNotFoundException {
         if (path.startsWith("http")) {
             return saveFileByURI(URI.create(path));
         }
@@ -76,7 +80,7 @@ public class FileWriteUtil {
             // 绝对路径，只是前缀为用户的根据目录如 将 ~/test.temp 转换为 /home/yihui/test/temp
             tmpAbsFile = BasicFileUtil.parseHomeDir2AbsDir(path);
         } else { // 相对路径
-            tmpAbsFile = FileWriteUtil.class.getClassLoader().getResource(path).getFile();
+            tmpAbsFile = Objects.requireNonNull(FileWriteUtil.class.getClassLoader().getResource(path)).getFile();
         }
 
         return parseAbsFileToFileInfo(tmpAbsFile);
@@ -90,7 +94,7 @@ public class FileWriteUtil {
      * @return
      * @throws Exception
      */
-    private static FileInfo saveFileByURI(URI uri) throws Exception {
+    private static FileInfo saveFileByURI(URI uri) throws FileNotFoundException {
         String path = uri.getPath();
         if (path.endsWith("/")) {
             throw new IllegalArgumentException("a select uri should be choosed! but input path is: " + path);
@@ -103,18 +107,14 @@ public class FileWriteUtil {
         extraFileName(filename, fileInfo);
         fileInfo.setPath(getTmpPath());
 
-        try {
-            InputStream inputStream = HttpUtil.downFile(uri);
-            return saveFileByStream(inputStream, fileInfo);
+        HttpResponse httpResponse = HttpRequest.get(path).timeout(3000).executeAsync();
+        InputStream inputStream = httpResponse.bodyStream();
+        return saveFileByStream(inputStream, fileInfo);
 
-        } catch (Exception e) {
-            log.error("down file from url: {} error! e: {}", uri, e);
-            throw e;
-        }
     }
 
 
-    public static FileInfo saveFileByStream(InputStream inputStream, String fileType) throws Exception {
+    public static FileInfo saveFileByStream(InputStream inputStream, String fileType) throws FileNotFoundException {
         // 临时文件生成规则  当前时间戳 + 随机数 + 后缀
         return saveFileByStream(inputStream, getTmpPath(), genTempFileName(), fileType);
     }
@@ -138,11 +138,11 @@ public class FileWriteUtil {
         }
 
         String tempAbsFile = fileInfo.getPath() + "/" + fileInfo.getFilename() + "." + fileInfo.getFileType();
-        BufferedOutputStream outputStream = null;
-        InputStream inputStream = null;
-        try {
-            inputStream = new BufferedInputStream(stream);
-            outputStream = new BufferedOutputStream(new FileOutputStream(tempAbsFile));
+        try (
+                InputStream inputStream = new BufferedInputStream(stream);
+                FileOutputStream fileOutputStream = new FileOutputStream(tempAbsFile);
+                BufferedOutputStream outputStream = new BufferedOutputStream(fileOutputStream);
+        ) {
             int len = inputStream.available();
             //判断长度是否大于4k
             if (len <= 4096) {
@@ -150,7 +150,7 @@ public class FileWriteUtil {
                 inputStream.read(bytes);
                 outputStream.write(bytes);
             } else {
-                int byteCount = 0;
+                int byteCount;
                 //1M逐个读取
                 byte[] bytes = new byte[4096];
                 while ((byteCount = inputStream.read(bytes)) != -1) {
@@ -162,26 +162,13 @@ public class FileWriteUtil {
         } catch (Exception e) {
             log.error("save stream into file error! filename: {} e: {}", tempAbsFile, e);
             return null;
-        } finally {
-            try {
-                if (outputStream != null) {
-                    outputStream.flush();
-                    outputStream.close();
-                }
-
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            } catch (IOException e) {
-                log.error("close stream error! e: {}", e);
-            }
         }
     }
 
     /**
      * 用于生成临时文件名后缀的随机生成器
      */
-    private static Random FILENAME_GEN_RANDOM = new Random();
+    private static Random filenameGenRandom = new Random();
 
     /**
      * 临时文件名生成： 时间戳 + 0-1000随机数
@@ -189,7 +176,7 @@ public class FileWriteUtil {
      * @return
      */
     private static String genTempFileName() {
-        return System.currentTimeMillis() + "_" + FILENAME_GEN_RANDOM.nextInt(1000);
+        return System.currentTimeMillis() + "_" + filenameGenRandom.nextInt(1000);
     }
 
 

@@ -2,9 +2,9 @@ package com.jedreck.qrcode.zxingtest01.atest;
 
 
 import com.google.zxing.WriterException;
-import com.jedreck.qrcode.zxingtest01.base.Base64Util;
-import com.jedreck.qrcode.zxingtest01.base.GraphicUtil;
-import com.jedreck.qrcode.zxingtest01.base.ImageLoadUtil;
+import com.jedreck.qrcode.zxingtest01.utils.Base64Util;
+import com.jedreck.qrcode.zxingtest01.utils.GraphicUtil;
+import com.jedreck.qrcode.zxingtest01.utils.ImageLoadUtil;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeGenWrapper;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import org.junit.Test;
