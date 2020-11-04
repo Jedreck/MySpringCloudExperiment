@@ -196,7 +196,7 @@ public class QrCodeGenWrapper {
             return this;
         }
 
-        /////////////// logo 相关配置 ///////////////
+        /////////////// 1 -- logo 相关配置 ///////////////
 
         /**
          * 设置logo路径
@@ -296,10 +296,9 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * logo 占二维码的比例
+         * logo 大小
          *
-         * @param rate 0~100，推荐小于30的整数
-         *             todo 测试
+         * @param rate (qrWidth << 1) / logoRate，数字越大logo越小，推荐10
          */
         public Builder setLogoRate(int rate) {
             logoOptions.rate(rate);
@@ -307,8 +306,7 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * logo透明度
-         * todo 测试
+         * logo透明度，数字越小越透明
          *
          * @param opacity 0.xx的小数
          */
@@ -321,7 +319,7 @@ public class QrCodeGenWrapper {
 
         // ------------------------------------------
 
-        /////////////// 背景 相关配置 ///////////////
+        /////////////// 2 -- 背景 相关配置 ///////////////
 
         /**
          * 设置背景图片路径
@@ -419,11 +417,11 @@ public class QrCodeGenWrapper {
             return this;
         }
 
-        /////////////// logo 配置结束 ///////////////
+        /////////////// 背景 配置结束 ///////////////
 
         // ------------------------------------------
 
-        /////////////// 探测图形 相关配置 ///////////////
+        /////////////// 3 -- 探测图形 相关配置 ///////////////
         public Builder setDetectImg(String detectImg) throws IOException {
             try {
                 return setDetectImg(ImageLoadUtil.getImageByPath(detectImg));
@@ -587,7 +585,7 @@ public class QrCodeGenWrapper {
 
         // ------------------------------------------
 
-        /////////////// 二维码绘制 相关配置 ///////////////
+        /////////////// 4 -- 二维码绘制 相关配置 ///////////////
 
         /**
          * 二维码绘制样式

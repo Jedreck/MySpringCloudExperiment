@@ -204,39 +204,39 @@ public class QrCodeWrapperTest {
 //        String msg = "http://weixin.qq.com/r/FS9waAPEg178rUcL93oH";
         // 根据本地文件生成待logo的二维码， 重新着色位置探测图像
 
-        for (QrCodeOptions.DrawStyle style : QrCodeOptions.DrawStyle.values()) {
-
-            try {
-                String logo = "mg.jpg";
-                String bg = "bg.png";
-                BufferedImage img = QrCodeGenWrapper.of(msg)
-                        .setW(540)
-                        .setDrawPreColor(0xff002fa7) // 宝石蓝
-                        .setDetectOutColor(0xff0000ff)
-                        .setDetectInColor(Color.RED)
-                        .setPadding(1)
-                        .setErrorCorrection(ErrorCorrectionLevel.H)
-                        .setLogo(logo)
-                        .setLogoStyle(QrCodeOptions.LogoStyle.ROUND)
-                        .setLogoBgColor(0xff00cc00)
-                        .setLogoRate(15)
-                        .setBgImg(bg)
-                        .setBgOpacity(0.93f)
-                        .setDrawStyle(style)
-                        .setDrawImg("xhr/xhrBase.jpg")
-                        .setDrawEnableScale(true)
-                        .asBufferedImage();
-
-
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                ImageIO.write(img, "png", outputStream);
-                String img64 = Base64Util.encode(outputStream);
-                System.out.println("<img src=\"data:image/png;base64," + img64 + "\" />");
-            } catch (Exception e) {
-                System.out.println("create qrcode error! e: " + e);
-                Assert.assertTrue(false);
-            }
-        }
+//        for (QrCodeOptions.DrawStyle style : QrCodeOptions.DrawStyle.values()) {
+//
+//            try {
+//                String logo = "mg.jpg";
+//                String bg = "bg.png";
+//                BufferedImage img = QrCodeGenWrapper.of(msg)
+//                        .setW(540)
+//                        .setDrawPreColor(0xff002fa7) // 宝石蓝
+//                        .setDetectOutColor(0xff0000ff)
+//                        .setDetectInColor(Color.RED)
+//                        .setPadding(1)
+//                        .setErrorCorrection(ErrorCorrectionLevel.H)
+//                        .setLogo(logo)
+//                        .setLogoStyle(QrCodeOptions.LogoStyle.ROUND)
+//                        .setLogoBgColor(0xff00cc00)
+//                        .setLogoRate(15)
+//                        .setBgImg(bg)
+//                        .setBgOpacity(0.93f)
+//                        .setDrawStyle(style)
+//                        .setDrawImg("xhr/xhrBase.jpg")
+//                        .setDrawEnableScale(true)
+//                        .asBufferedImage();
+//
+//
+//                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//                ImageIO.write(img, "png", outputStream);
+//                String img64 = Base64Util.encode(outputStream);
+//                System.out.println("<img src=\"data:image/png;base64," + img64 + "\" />");
+//            } catch (Exception e) {
+//                System.out.println("create qrcode error! e: " + e);
+//                Assert.assertTrue(false);
+//            }
+//        }
     }
 
 

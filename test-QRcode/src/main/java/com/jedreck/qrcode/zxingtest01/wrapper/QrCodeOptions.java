@@ -6,7 +6,6 @@ import com.jedreck.qrcode.zxingtest01.entity.DotSize;
 import com.jedreck.qrcode.zxingtest01.helper.QrCodeRenderHelper;
 import com.jedreck.qrcode.zxingtest01.utils.gif.GifDecoder;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -1240,9 +1239,11 @@ public class QrCodeOptions {
     /**
      * 绘制二维码信息的样式
      */
-    public enum DrawStyle {
-        RECT { // 矩形
-
+    public interface DrawStyle {
+        /**
+         * 矩形
+         */
+        DrawStyle RECT = new DrawStyle() {
             @Override
             public void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt) {
                 g2d.fillRect(x, y, w, h);
@@ -1252,8 +1253,12 @@ public class QrCodeOptions {
             public boolean expand(DotSize dotSize) {
                 return dotSize.getRow() == dotSize.getCol();
             }
-        }, CIRCLE { // 圆点
+        };
 
+        /**
+         * 圆点
+         */
+        DrawStyle CIRCLE = new DrawStyle() {
             @Override
             public void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt) {
                 g2d.fill(new Ellipse2D.Float(x, y, w, h));
@@ -1263,8 +1268,12 @@ public class QrCodeOptions {
             public boolean expand(DotSize dotSize) {
                 return dotSize.getRow() == dotSize.getCol();
             }
-        }, TRIANGLE { // 三角形
+        };
 
+        /**
+         * 三角形
+         */
+        DrawStyle TRIANGLE = new DrawStyle() {
             @Override
             public void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt) {
                 int px[] = {x, x + (w >> 1), x + w};
@@ -1276,8 +1285,12 @@ public class QrCodeOptions {
             public boolean expand(DotSize expandType) {
                 return false;
             }
-        }, DIAMOND { // 五边形-钻石
+        };
 
+        /**
+         * 五边形-钻石
+         */
+        DrawStyle DIAMOND = new DrawStyle() {
             @Override
             public void draw(Graphics2D g2d, int x, int y, int size, int h, BufferedImage img, String txt) {
                 int cell4 = size >> 2;
@@ -1291,8 +1304,12 @@ public class QrCodeOptions {
             public boolean expand(DotSize dotSize) {
                 return dotSize.getRow() == dotSize.getCol();
             }
-        }, SEXANGLE { // 六边形
+        };
 
+        /**
+         * 六边形
+         */
+        DrawStyle SEXANGLE = new DrawStyle() {
             @Override
             public void draw(Graphics2D g2d, int x, int y, int size, int h, BufferedImage img, String txt) {
                 int add = size >> 2;
@@ -1305,8 +1322,12 @@ public class QrCodeOptions {
             public boolean expand(DotSize dotSize) {
                 return dotSize.getRow() == dotSize.getCol();
             }
-        }, OCTAGON { // 八边形
+        };
 
+        /**
+         * 八边形
+         */
+        DrawStyle OCTAGON = new DrawStyle() {
             @Override
             public void draw(Graphics2D g2d, int x, int y, int size, int h, BufferedImage img, String txt) {
                 int add = size / 3;
@@ -1319,8 +1340,12 @@ public class QrCodeOptions {
             public boolean expand(DotSize dotSize) {
                 return dotSize.getRow() == dotSize.getCol();
             }
-        }, IMAGE { // 自定义图片
+        };
 
+        /**
+         * 自定义图片
+         */
+        DrawStyle IMAGE = new DrawStyle() {
             @Override
             public void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt) {
                 g2d.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
@@ -1330,10 +1355,12 @@ public class QrCodeOptions {
             public boolean expand(DotSize expandType) {
                 return true;
             }
-        },
+        };
 
-        TXT { // 文字绘制
-
+        /**
+         * 文字绘制
+         */
+        DrawStyle TXT = new DrawStyle() {
             @Override
             public void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt) {
                 Font oldFont = g2d.getFont();
@@ -1351,30 +1378,12 @@ public class QrCodeOptions {
             }
         };
 
-        private static Map<String, DrawStyle> map;
-
-        static {
-            map = new HashMap<>(10);
-            for (DrawStyle style : DrawStyle.values()) {
-                map.put(style.name(), style);
-            }
-        }
-
-        public static DrawStyle getDrawStyle(String name) {
-            if (StringUtils.isBlank(name)) { // 默认返回矩形
-                return RECT;
-            }
-
-            DrawStyle style = map.get(name.toUpperCase());
-            return style == null ? RECT : style;
-        }
-
-        public abstract void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt);
+        void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt);
 
         /**
          * 返回是否支持绘制自定义图形的扩展
          */
-        public abstract boolean expand(DotSize dotSize);
+        boolean expand(DotSize dotSize);
     }
 
     public enum TxtMode {
