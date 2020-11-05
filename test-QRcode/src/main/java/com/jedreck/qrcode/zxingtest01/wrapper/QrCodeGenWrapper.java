@@ -11,6 +11,7 @@ import com.jedreck.qrcode.zxingtest01.utils.Base64Util;
 import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
 import com.jedreck.qrcode.zxingtest01.utils.FileReadUtil;
 import com.jedreck.qrcode.zxingtest01.utils.FileWriteUtil;
+import com.jedreck.qrcode.zxingtest01.utils.GraphicUtil;
 import com.jedreck.qrcode.zxingtest01.utils.ImageLoadUtil;
 import com.jedreck.qrcode.zxingtest01.utils.IoUtil;
 import com.jedreck.qrcode.zxingtest01.utils.gif.GifDecoder;
@@ -222,6 +223,20 @@ public class QrCodeGenWrapper {
                 log.error("load backgroundImg error! e:{}", e);
                 throw new IOException("load backgroundImg error!", e);
             }
+        }
+
+        /**
+         * 设置文字logo
+         *
+         * @param logoStr logo文字
+         * @param font    字体
+         * @param color   颜色
+         * @return
+         */
+        public Builder setLogoStr(String logoStr, Font font, Color color, Color bgColor) {
+            BufferedImage image = StringPicture.createImage(logoStr, font, color, bgColor);
+            logoOptions.logo(image);
+            return this;
         }
 
         /**
