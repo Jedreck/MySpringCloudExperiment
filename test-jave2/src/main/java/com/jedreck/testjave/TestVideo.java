@@ -51,13 +51,13 @@ public class TestVideo {
 
     public static void test001() throws EncoderException, FrameGrabber.Exception {
         //源avi格式视频
-        File source = new File("D:\\Desktop\\966.MOV");
-//        File source = new File("D:\\Desktop\\VID_20201105_163804.mp4");
+//        File source = new File("D:\\Desktop\\966.MOV");
+        File source = new File("D:\\Desktop\\988.mp4");
 //        File source = new File("D:\\Desktop\\VID_20201105_174135.mp4");
         //转换后的mp4格式视频
-//        File target = new File("D:\\Desktop\\222.mp4");
-        File target = new File("D:\\Desktop\\9662.MOV");
-        File target2 = new File("D:\\Desktop\\aaa.jpg");
+        File target = new File("D:\\Desktop\\9882.mp4");
+//        File target = new File("D:\\Desktop\\9662.MOV");
+//        File target2 = new File("D:\\Desktop\\aaa.jpg");
         //获取手机是否翻转,反转多少度
         FFmpegFrameGrabber ff = FFmpegFrameGrabber.createDefault(source);
         ff.start();
@@ -87,27 +87,27 @@ public class TestVideo {
         // 视频设置
         VideoAttributes video = new VideoAttributes();
 //        video.setCodec("h264");
-        video.setBitRate(8000_000);
-        video.setFrameRate(videoInfo.getFrameRate() > 25 ? 25 : (int) videoInfo.getFrameRate());
-        video.setFaststart(true);
+        video.setBitRate(Math.min(videoInfo.getBitRate(), 8_000_000));
+        video.setFrameRate(Math.min(25, (int) videoInfo.getFrameRate()));
         // 尺寸设置
         int videoW;
         int videoH;
+        int maxSize = 1920;
         if (StringUtils.isBlank(rotate) || "180".equals(rotate)) {
             videoW = videoInfo.getSize().getWidth();
             videoH = videoInfo.getSize().getHeight();
-            if (videoW > 1920) {
-                float rat = (float) videoW / 1920;
-                video.setSize(new VideoSize(1920, (int) (videoH / rat)));
+            if (videoW > maxSize) {
+                float rat = (float) videoW / maxSize;
+                video.setSize(new VideoSize(maxSize, (int) (videoH / rat)));
             } else {
                 video.setSize(new VideoSize(videoW, videoH));
             }
         } else {
             videoW = videoInfo.getSize().getHeight();
             videoH = videoInfo.getSize().getWidth();
-            if (videoH > 1920) {
-                float rat = (float) videoH / 1920;
-                video.setSize(new VideoSize((int) (videoW / rat), 1920));
+            if (videoH > maxSize) {
+                float rat = (float) videoH / maxSize;
+                video.setSize(new VideoSize((int) (videoW / rat), maxSize));
             } else {
                 video.setSize(new VideoSize(videoW, videoH));
             }
@@ -122,7 +122,7 @@ public class TestVideo {
 
         //渲染
         EncodingAttributes encodingAttributes = new EncodingAttributes();
-        encodingAttributes.setOutputFormat("MOV");
+        encodingAttributes.setOutputFormat("mp4");
         encodingAttributes.setVideoAttributes(video);
         encodingAttributes.setAudioAttributes(audio);
         Encoder encoder = new Encoder();
