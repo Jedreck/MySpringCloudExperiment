@@ -30,6 +30,8 @@
         <module>test-mysql-property</module>
         <module>test-QRcode</module>
         <module>test-rocketmq</module>
+        <module>test-javacv</module>
+        <module>test-jave2</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

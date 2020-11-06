@@ -22,7 +22,7 @@ public class Test01 {
     public static final String P = "/tmp/aaa.png";
 
     public static void main(String[] args) throws IOException, WriterException {
-        test07();
+        test06();
     }
 
     public static void test07() throws IOException, WriterException {
