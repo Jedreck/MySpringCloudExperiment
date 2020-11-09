@@ -22,13 +22,29 @@ public class Test01 {
     public static final String P = "/tmp/aaa.png";
 
     public static void main(String[] args) throws IOException, WriterException {
-        test06();
+        test08();
+    }
+
+    public static void test08() throws IOException, WriterException {
+        QrCodeGenWrapper.of(T)
+                .setH(1000)
+                .setW(1000)
+                .setLogo("sky.jpg")
+                .setLogoRate(30)
+                .setLogoStyle(QrCodeOptions.LogoStyle.CIRCLE)
+                .setLogoBgColor(Color.black)
+//                .setLogoBorderBgColor(0x33000000)
+                .setLogoOpacity(1)
+                .setDrawPreColor(Color.RED)
+                .setDrawStyle(QrCodeOptions.DrawStyle.TXT)
+                .asFile(P);
     }
 
     public static void test07() throws IOException, WriterException {
         QrCodeGenWrapper.of(T)
-                .setLogoStr("456789", new Font("宋体", Font.BOLD, 300), Color.RED, null)
-                .setLogoRate(3)
+                .setH(1000)
+                .setLogoStr("456789", "123123", new Font("宋体", Font.BOLD, 300), Color.RED, Color.WHITE)
+                .setLogoRate(50)
                 .asFile(P);
     }
 

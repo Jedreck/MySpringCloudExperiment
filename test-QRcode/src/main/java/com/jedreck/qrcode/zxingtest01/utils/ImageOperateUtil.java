@@ -36,7 +36,7 @@ public class ImageOperateUtil {
 
         // 设置边框
         if (borderEnable) {
-            ans = makeRoundBorder(ans, size, borderColor);
+            ans = makeRoundBorder(ans, size, borderColor, null);
         }
         return ans;
     }
@@ -49,8 +49,8 @@ public class ImageOperateUtil {
      * @param color        边框颜色
      * @return
      */
-    public static BufferedImage makeRoundBorder(BufferedImage image, int cornerRadius, Color color) {
-        int size = image.getWidth() / 15;
+    public static BufferedImage makeRoundBorder(BufferedImage image, int cornerRadius, Color color, Integer borderWidth) {
+        int size = borderWidth == null ? image.getWidth() / 15 : borderWidth;
         int w = image.getWidth() + size;
         int h = image.getHeight() + size;
         BufferedImage output = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -60,8 +60,9 @@ public class ImageOperateUtil {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(color == null ? Color.WHITE : color);
         g2.fill(new RoundRectangle2D.Float(0, 0, w, h, cornerRadius, cornerRadius));
+        g2.dispose();
 
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0f));
+        g2 = output.createGraphics();
         g2.drawImage(image, size >> 1, size >> 1, null);
         g2.dispose();
 

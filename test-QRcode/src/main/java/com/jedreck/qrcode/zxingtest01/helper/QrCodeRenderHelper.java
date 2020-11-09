@@ -42,17 +42,17 @@ public class QrCodeRenderHelper {
             logoImg = ImageOperateUtil.makeRoundedCorner(logoImg, radius);
         } else if (logoOptions.getLogoStyle() == QrCodeOptions.LogoStyle.CIRCLE) {
             // 绘制圆形logo
-            radius = Math.min(logoImg.getWidth(), logoImg.getHeight());
+            radius = (int) Math.min(logoImg.getWidth() * 1.1, logoImg.getHeight() * 1.1);
             logoImg = ImageOperateUtil.makeRoundImg(logoImg, false, null);
         }
 
         // 绘制边框
         if (logoOptions.isBorder()) {
-            if (logoOptions.getOuterBorderColor() != null) {
-                logoImg = ImageOperateUtil.makeRoundBorder(logoImg, radius, logoOptions.getOuterBorderColor());
-            }
+            logoImg = ImageOperateUtil.makeRoundBorder(logoImg, radius, logoOptions.getBorderColor(), null);
 
-            logoImg = ImageOperateUtil.makeRoundBorder(logoImg, radius, logoOptions.getBorderColor());
+            if (logoOptions.getOuterBorderColor() != null) {
+                logoImg = ImageOperateUtil.makeRoundBorder(logoImg, radius, logoOptions.getOuterBorderColor(), null);
+            }
         }
 
         // logo的宽高，避免长图的变形，这里采用等比例缩放的策略
