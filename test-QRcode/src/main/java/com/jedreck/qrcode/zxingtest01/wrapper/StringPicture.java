@@ -1,6 +1,7 @@
 package com.jedreck.qrcode.zxingtest01.wrapper;
 
 import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
@@ -15,7 +16,7 @@ public class StringPicture {
     /**
      * 文字转图片
      */
-    public static BufferedImage createImage(String text, Font font, Color color, Color bgColor) {
+    public static BufferedImage createImage(String text, String text2, Font font, Color color, Color bgColor) {
         font = font == null ? new Font("宋体", Font.BOLD, 300) : font;
         color = color == null ? Color.BLACK : color;
         bgColor = bgColor == null ? ColorUtil.OPACITY : bgColor;
@@ -23,7 +24,7 @@ public class StringPicture {
         // 获取font的样式应用在输出内容上整个的宽高
         int[] arr = getWidthAndHeight(text, font);
         int width = arr[0];
-        int height = arr[1];
+        int height = StringUtils.isBlank(text2) ? arr[1] : arr[1] * 2;
         // 创建图片 创建图片画布
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
         Graphics2D g = image.createGraphics();
@@ -47,7 +48,7 @@ public class StringPicture {
         // 画出一行字符串
         g.drawString(text, 0, font.getSize());
         // 画出第二行字符串，注意y轴坐标需要变动
-        g.drawString(text, 0, 2 * font.getSize());
+        g.drawString(text2, 0, 2 * font.getSize());
         //执行处理
         g.dispose();
 

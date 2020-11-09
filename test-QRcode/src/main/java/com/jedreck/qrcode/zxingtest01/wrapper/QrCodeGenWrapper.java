@@ -233,8 +233,8 @@ public class QrCodeGenWrapper {
          * @param color   颜色
          * @return
          */
-        public Builder setLogoStr(String logoStr, Font font, Color color, Color bgColor) {
-            BufferedImage image = StringPicture.createImage(logoStr, font, color, bgColor);
+        public Builder setLogoStr(String logoStr, String logoStr2, Font font, Color color, Color bgColor) {
+            BufferedImage image = StringPicture.createImage(logoStr, logoStr2, font, color, bgColor);
             logoOptions.logo(image);
             return this;
         }
