@@ -313,7 +313,7 @@ public class QrCodeGenWrapper {
         /**
          * logo 大小
          *
-         * @param rate (qrWidth << 1) / logoRate，数字越大logo越小，推荐10
+         * @param rate 二维码大小的百分比
          */
         public Builder setLogoRate(int rate) {
             logoOptions.rate(rate);
