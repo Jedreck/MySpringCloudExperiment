@@ -22,12 +22,14 @@ public class Test01 {
     public static final String P = "/tmp/aaa.png";
 
     public static void main(String[] args) throws IOException, WriterException {
-        test06();
+        test09();
     }
 
     private static void test09() throws IOException, WriterException {
         QrCodeGenWrapper.of(T)
-                .setDetectImg("sky.jpg")
+                .setDetectPatterning(QrCodeOptions.DetectPatterning.MONEY)
+                .setDetectOutColor(Color.black)
+                .setDetectInColor(Color.black)
                 .asFile(P);
     }
 

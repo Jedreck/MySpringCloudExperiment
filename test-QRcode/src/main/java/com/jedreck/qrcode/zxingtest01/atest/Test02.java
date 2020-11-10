@@ -19,6 +19,51 @@ public class Test02 {
     }
 
     /**
+     * 钱 图形
+     */
+    @Test
+    public void test05() throws IOException {
+        int W = 1000;
+        int s = W / 7;
+        int sw = s * 2;
+        int sww = s * 3;
+
+        BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.setComposite(AlphaComposite.Src);
+        g2.setColor(Color.PINK);
+        g2.fillRect(0, 0, W, W);
+
+        g2.setColor(Color.BLACK);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.fillOval(0, 0, W, W);
+
+        g2.setColor(Color.PINK);
+        g2.fillOval(s, s, sw + sww, sw + sww);
+
+        //限制范围
+        g2.setClip(sw, sw, sww, sww);
+        g2.setColor(Color.DARK_GRAY);
+        // 切割
+        g2.fillRect(sw, sw, sww, sww);
+        g2.setColor(Color.PINK);
+        int circleStartA = (int) (((1 - 3 * Math.sqrt(2)) / 2) * s);
+        int circleStartB = (int) (((7 - 3 * Math.sqrt(2)) / 2) * s);
+        int circleStartC = (int) (((13 - 3 * Math.sqrt(2)) / 2) * s);
+        int diameter = (int) ((3 * Math.sqrt(2)) * s);
+        // 左
+        g2.fillOval(circleStartA, circleStartB, diameter, diameter);
+        // 上
+        g2.fillOval(circleStartB, circleStartA, diameter, diameter);
+        // 下
+        g2.fillOval(circleStartB, circleStartC, diameter, diameter);
+        // 右
+        g2.fillOval(circleStartC, circleStartB, diameter, diameter);
+
+        ImageIO.write(img, "PNG", new File(P));
+    }
+
+    /**
      * 草料第2个图形
      */
     @Test

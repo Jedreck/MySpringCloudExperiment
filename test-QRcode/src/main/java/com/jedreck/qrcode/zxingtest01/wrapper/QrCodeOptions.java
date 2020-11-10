@@ -723,6 +723,131 @@ public class QrCodeOptions {
         };
 
         /**
+         * 圆角矩形 内套 圆
+         */
+        DetectPatterning ROUND_RECT_CIRCLE = new DetectPatterning() {
+            @Override
+            public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                int s = Math.max(w, h) / 7;
+                int sw = s * 2;
+                int sww = s * 3;
+                g2.setColor(outColor);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fill(new RoundRectangle2D.Float(x, y, w, w, sw, sw));
+
+                g2.setComposite(AlphaComposite.Src);
+                g2.setColor(bgColor);
+                g2.fill(new RoundRectangle2D.Float(x + s, y + s, sw + sww, sw + sww, sw, sw));
+
+                g2.setColor(inColor);
+                g2.setComposite(AlphaComposite.Src);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fillOval(x + sw, y + sw, sww, sww);
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+        };
+
+        /**
+         * 同心圆
+         */
+        DetectPatterning CIRCLE = new DetectPatterning() {
+            @Override
+            public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                int s = Math.max(w, h) / 7;
+                int sw = s * 2;
+                int sww = s * 3;
+                g2.setColor(outColor);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fillOval(x, y, w, w);
+
+                g2.setComposite(AlphaComposite.Src);
+                g2.setColor(bgColor);
+                g2.fillOval(x + s, y + s, sw + sww, sw + sww);
+
+                g2.setColor(inColor);
+                g2.setComposite(AlphaComposite.Src);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fillOval(x + sw, y + sw, sww, sww);
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+        };
+
+        /**
+         * 同心圆
+         */
+        DetectPatterning MONEY = new DetectPatterning() {
+            @Override
+            public void drawLT(Graphics2D g, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                int W = 1000;
+                int s = W / 7;
+                int sw = s * 2;
+                int sww = s * 3;
+
+                BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2 = img.createGraphics();
+                g2.setComposite(AlphaComposite.Src);
+                g2.setColor(bgColor);
+                g2.fillRect(0, 0, W, W);
+
+                g2.setColor(outColor);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fillOval(0, 0, W, W);
+
+                g2.setColor(bgColor);
+                g2.fillOval(s, s, sw + sww, sw + sww);
+
+                //限制范围
+                g2.setClip(sw, sw, sww, sww);
+                g2.setColor(inColor);
+                // 切割
+                g2.fillRect(sw, sw, sww, sww);
+                g2.setColor(bgColor);
+                int circleStartA = (int) (((1 - 3 * Math.sqrt(2)) / 2) * s);
+                int circleStartB = (int) (((7 - 3 * Math.sqrt(2)) / 2) * s);
+                int circleStartC = (int) (((13 - 3 * Math.sqrt(2)) / 2) * s);
+                int diameter = (int) ((3 * Math.sqrt(2)) * s);
+                // 左
+                g2.fillOval(circleStartA, circleStartB, diameter, diameter);
+                // 上
+                g2.fillOval(circleStartB, circleStartA, diameter, diameter);
+                // 下
+                g2.fillOval(circleStartB, circleStartC, diameter, diameter);
+                // 右
+                g2.fillOval(circleStartC, circleStartB, diameter, diameter);
+
+                g.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+        };
+
+        /**
          * 画出左上图形
          *
          * @param g2 原图
