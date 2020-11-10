@@ -271,10 +271,10 @@ public class QrCodeRenderHelper {
                     continue;
                 }
 
-                if (detectLocation.detectedArea() && qrCodeConfig.getDetectOptions().getSpecial()) {
+                if (detectLocation.detectedArea()) {
                     // 绘制三个位置探测图形
                     drawDetectImg(qrCodeConfig, g2, bitMatrix, matrixW, matrixH, leftPadding, topPadding, infoSize,
-                            detectCornerSize, x, y, detectOutColor, detectInnerColor, detectLocation);
+                            detectCornerSize, x, y, detectOutColor, detectInnerColor, bgColor, detectLocation);
                 } else {
                     g2.setColor(preColor);
                     // 绘制二维码的1点图
@@ -383,33 +383,40 @@ public class QrCodeRenderHelper {
      */
     private static void drawDetectImg(QrCodeOptions qrCodeConfig, Graphics2D g2, BitMatrixEx bitMatrix, int matrixW,
                                       int matrixH, int leftPadding, int topPadding, int infoSize, int detectCornerSize, int x, int y,
-                                      Color detectOutColor, Color detectInnerColor, DetectLocation detectLocation) {
-
+                                      Color detectOutColor, Color detectInnerColor, Color bgColor, DetectLocation detectLocation) {
+        int w = infoSize * detectCornerSize;
         BufferedImage detectedImg = qrCodeConfig.getDetectOptions().chooseDetectedImg(detectLocation);
+        QrCodeOptions.DetectPatterning detectPatterning = qrCodeConfig.getDetectOptions().getDetectPatterning();
         if (detectedImg != null) {
             // 使用探测图形的图片来渲染
             g2.drawImage(detectedImg
                             .getScaledInstance(infoSize * detectCornerSize, infoSize * detectCornerSize, Image.SCALE_SMOOTH),
                     leftPadding + x * infoSize, topPadding + y * infoSize, null);
-
-            // 图片直接渲染完毕之后，将其他探测图形的点设置为0，表示不需要再次渲染
-            for (int addX = 0; addX < detectCornerSize; addX++) {
-                for (int addY = 0; addY < detectCornerSize; addY++) {
-                    bitMatrix.getByteMatrix().set(x + addX, y + addY, 0);
-                }
-            }
-            return;
-        }
-
-        if (inOuterDetectCornerArea(x, y, matrixW, matrixH, detectCornerSize)) {
-            // 外层的框
-            g2.setColor(detectOutColor);
         } else {
-            // 内层的框
-            g2.setColor(detectInnerColor);
+            switch (detectLocation) {
+                case LD:
+                    detectPatterning.drawLD(g2, leftPadding + x * infoSize, topPadding + y * infoSize,
+                            w, w, detectInnerColor, detectOutColor, bgColor);
+                    break;
+                case LT:
+                    detectPatterning.drawLT(g2, leftPadding + x * infoSize, topPadding + y * infoSize,
+                            w, w, detectInnerColor, detectOutColor, bgColor);
+                    break;
+                case RT:
+                    detectPatterning.drawRT(g2, leftPadding + x * infoSize, topPadding + y * infoSize,
+                            w, w, detectInnerColor, detectOutColor, bgColor);
+                    break;
+                default:
+                    return;
+            }
+        }
+        // 图片直接渲染完毕之后，将其他探测图形的点设置为0，表示不需要再次渲染
+        for (int addX = 0; addX < detectCornerSize; addX++) {
+            for (int addY = 0; addY < detectCornerSize; addY++) {
+                bitMatrix.getByteMatrix().set(x + addX, y + addY, 0);
+            }
         }
 
-        g2.fillRect(leftPadding + x * infoSize, topPadding + y * infoSize, infoSize, infoSize);
     }
 
     private static void drawQrDotBgImg(QrCodeOptions qrCodeConfig, Graphics2D g2, int leftPadding, int topPadding,

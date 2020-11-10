@@ -32,20 +32,20 @@ public class Test02 {
         g2.setColor(Color.BLACK);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.fill(new RoundRectangle2D.Float(0, 0, W, W, 400, 400));
-        g2.dispose();
-
-        g2 = img.createGraphics();
+//        g2.dispose();
+//
+//        g2 = img.createGraphics();
         g2.setComposite(AlphaComposite.Src);
         g2.setColor(ColorUtil.OPACITY);
         g2.fill(new RoundRectangle2D.Float(s, s, sw, sw, 300, 300));
-        g2.dispose();
-
-        g2 = img.createGraphics();
+//        g2.dispose();
+//
+//        g2 = img.createGraphics();
         g2.setColor(Color.BLACK);
         g2.setComposite(AlphaComposite.Src);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.fill(new RoundRectangle2D.Float(sww, sww, sww, sww, 200, 200));
-        g2.dispose();
+//        g2.dispose();
         // 目标文件必须是PNG文件
         ImageIO.write(img, "PNG", new File(P));
 

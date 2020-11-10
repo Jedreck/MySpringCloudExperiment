@@ -60,6 +60,7 @@ public class Test01 {
                 .setPadding(0)
                 .setBgImg("sky.jpg")
                 .setBgStyle(QrCodeOptions.BgImgStyle.PENETRATE)
+                .setDetectPatterning(QrCodeOptions.DetectPatterning.ROUND_RECT)
                 .asBufferedImage();
 
         QrCodeOptions.BgImgOptions bgImgOptions = new QrCodeOptions.BgImgOptions();

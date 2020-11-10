@@ -461,6 +461,16 @@ public class QrCodeGenWrapper {
         }
 
         /**
+         * 探测图形方案
+         *
+         * @param detectPatterning {@link QrCodeOptions.DetectPatterning}
+         */
+        public Builder setDetectPatterning(QrCodeOptions.DetectPatterning detectPatterning) {
+            detectOptions.detectPatterning(detectPatterning);
+            return this;
+        }
+
+        /**
          * 左上角探测图形
          */
         public Builder setLTDetectImg(String detectImg) throws IOException {
@@ -814,6 +824,9 @@ public class QrCodeGenWrapper {
                 detectOp.setOutColor(detectOp.getOutColor());
             } else if (detectOp.getInColor() == null) {
                 detectOp.setInColor(detectOp.getInColor());
+            }
+            if (null == detectOp.getDetectPatterning()) {
+                detectOp.setDetectPatterning(QrCodeOptions.DetectPatterning.RECT);
             }
             qrCodeConfig.setDetectOptions(detectOp);
 

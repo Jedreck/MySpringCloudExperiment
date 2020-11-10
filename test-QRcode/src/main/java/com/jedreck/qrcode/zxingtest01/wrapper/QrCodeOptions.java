@@ -9,6 +9,7 @@ import org.apache.commons.lang3.BooleanUtils;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -649,209 +650,110 @@ public class QrCodeOptions {
     }
 
     /**
-     * 探测图形的配置信息
+     * 探测点图形
      */
-    public static class DetectOptions {
+    public interface DetectPatterning {
+        /**
+         * 矩形
+         */
+        DetectPatterning RECT = new DetectPatterning() {
 
-        private Color outColor;
+            @Override
+            public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                int s = Math.max(w, h) / 6;
+                int sw = s * 4;
+                int sww = s * 2;
+                g2.setColor(outColor);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fillRect(x, y, w, w);
 
-        private Color inColor;
+                g2.setComposite(AlphaComposite.Src);
+                g2.setColor(bgColor);
+                g2.fillRect(x + s, y + s, sw, sw);
+
+                g2.setColor(inColor);
+                g2.setComposite(AlphaComposite.Src);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fillRect(x + sww, y + sww, sww, sww);
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+        };
+        /**
+         * 圆角矩形
+         */
+        DetectPatterning ROUND_RECT = new DetectPatterning() {
+            @Override
+            public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                float s = (float) Math.max(w, h) / 6;
+                float sw = s * 4;
+                float sww = s * 2;
+                g2.setColor(outColor);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fill(new RoundRectangle2D.Float(x, y, w, w, sww, sww));
+
+                g2.setComposite(AlphaComposite.Src);
+                g2.setColor(bgColor);
+                g2.fill(new RoundRectangle2D.Float(x + s, y + s, sw, sw, s * 1.5f, s * 1.5f));
+
+                g2.setColor(inColor);
+                g2.setComposite(AlphaComposite.Src);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.fill(new RoundRectangle2D.Float(x + sww, y + sww, sww, sww, s, s));
+
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+        };
 
         /**
-         * 默认探测图形，优先级高于颜色的定制（即存在图片时，用图片绘制探测图形）
+         * 画出左上图形
+         *
+         * @param g2 原图
+         * @param x  起始X位置
+         * @param y  起始Y位置
+         * @param w  探测图形宽
+         * @param h  探测图形高
          */
-        private BufferedImage detectImg;
+        void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor);
 
         /**
-         * 左上角的探测图形
+         * 画出右上图形
+         *
+         * @param g2 原图
+         * @param x  起始X位置
+         * @param y  起始Y位置
+         * @param w  探测图形宽
+         * @param h  探测图形高
          */
-        private BufferedImage detectImgLT;
+        void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor);
 
         /**
-         * 右上角的探测图形
+         * 画出左下图形
+         *
+         * @param g2 原图
+         * @param x  起始X位置
+         * @param y  起始Y位置
+         * @param w  探测图形宽
+         * @param h  探测图形高
          */
-        private BufferedImage detectImgRT;
-
-        /**
-         * 左下角的探测图形
-         */
-        private BufferedImage detectImgLD;
-
-        /**
-         * true 表示探测图形单独处理
-         * false 表示探测图形的样式更随二维码的主样式
-         */
-        private Boolean special;
-
-        public Boolean getSpecial() {
-            return BooleanUtils.isTrue(special);
-        }
-
-        public DetectOptions() {
-        }
-
-        public DetectOptions(Color outColor, Color inColor, BufferedImage detectImg, BufferedImage detectImgLT,
-                             BufferedImage detectImgRT, BufferedImage detectImgLD, Boolean special) {
-            this.outColor = outColor;
-            this.inColor = inColor;
-            this.detectImg = detectImg;
-            this.detectImgLT = detectImgLT;
-            this.detectImgRT = detectImgRT;
-            this.detectImgLD = detectImgLD;
-            this.special = special;
-        }
-
-        public Color getOutColor() {
-            return outColor;
-        }
-
-        public void setOutColor(Color outColor) {
-            this.outColor = outColor;
-        }
-
-        public Color getInColor() {
-            return inColor;
-        }
-
-        public void setInColor(Color inColor) {
-            this.inColor = inColor;
-        }
-
-        public BufferedImage getDetectImg() {
-            return detectImg;
-        }
-
-        public void setDetectImg(BufferedImage detectImg) {
-            this.detectImg = detectImg;
-        }
-
-        public BufferedImage getDetectImgLT() {
-            return detectImgLT;
-        }
-
-        public void setDetectImgLT(BufferedImage detectImgLT) {
-            this.detectImgLT = detectImgLT;
-        }
-
-        public BufferedImage getDetectImgRT() {
-            return detectImgRT;
-        }
-
-        public void setDetectImgRT(BufferedImage detectImgRT) {
-            this.detectImgRT = detectImgRT;
-        }
-
-        public BufferedImage getDetectImgLD() {
-            return detectImgLD;
-        }
-
-        public void setDetectImgLD(BufferedImage detectImgLD) {
-            this.detectImgLD = detectImgLD;
-        }
-
-        public void setSpecial(Boolean special) {
-            this.special = special;
-        }
-
-        public BufferedImage chooseDetectedImg(QrCodeRenderHelper.DetectLocation detectLocation) {
-            switch (detectLocation) {
-                case LD:
-                    return detectImgLD == null ? detectImg : detectImgLD;
-                case LT:
-                    return detectImgLT == null ? detectImg : detectImgLT;
-                case RT:
-                    return detectImgRT == null ? detectImg : detectImgRT;
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            DetectOptions that = (DetectOptions) o;
-            return Objects.equals(outColor, that.outColor) && Objects.equals(inColor, that.inColor) &&
-                    Objects.equals(detectImg, that.detectImg) && Objects.equals(detectImgLT, that.detectImgLT) &&
-                    Objects.equals(detectImgRT, that.detectImgRT) && Objects.equals(detectImgLD, that.detectImgLD) &&
-                    Objects.equals(special, that.special);
-        }
-
-        @Override
-        public int hashCode() {
-
-            return Objects.hash(outColor, inColor, detectImg, detectImgLT, detectImgRT, detectImgLD, special);
-        }
-
-        @Override
-        public String toString() {
-            return "DetectOptions{" + "outColor=" + outColor + ", inColor=" + inColor + ", detectImg=" + detectImg +
-                    ", detectImgLT=" + detectImgLT + ", detectImgRT=" + detectImgRT + ", detectImgLD=" + detectImgLD +
-                    ", special=" + special + '}';
-        }
-
-        public static DetectOptionsBuilder builder() {
-            return new DetectOptionsBuilder();
-        }
-
-        public static class DetectOptionsBuilder {
-            private Color outColor;
-
-            private Color inColor;
-
-            private BufferedImage detectImg;
-
-            private BufferedImage detectImgLT;
-
-            private BufferedImage detectImgRT;
-
-            private BufferedImage detectImgLD;
-
-            private Boolean special;
-
-            public DetectOptionsBuilder outColor(Color outColor) {
-                this.outColor = outColor;
-                return this;
-            }
-
-            public DetectOptionsBuilder inColor(Color inColor) {
-                this.inColor = inColor;
-                return this;
-            }
-
-            public DetectOptionsBuilder detectImg(BufferedImage detectImg) {
-                this.detectImg = detectImg;
-                return this;
-            }
-
-            public DetectOptionsBuilder detectImgLT(BufferedImage detectImgLT) {
-                this.detectImgLT = detectImgLT;
-                return this;
-            }
-
-            public DetectOptionsBuilder detectImgRT(BufferedImage detectImgRT) {
-                this.detectImgRT = detectImgRT;
-                return this;
-            }
-
-            public DetectOptionsBuilder detectImgLD(BufferedImage detectImgLD) {
-                this.detectImgLD = detectImgLD;
-                return this;
-            }
-
-            public DetectOptionsBuilder special(Boolean special) {
-                this.special = special;
-                return this;
-            }
-
-            public DetectOptions build() {
-                return new DetectOptions(outColor, inColor, detectImg, detectImgLT, detectImgRT, detectImgLD, special);
-            }
-        }
+        void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor);
     }
 
 
@@ -1395,5 +1297,232 @@ public class QrCodeOptions {
          * 文字二维码，顺序模式
          */
         ORDER;
+    }
+
+    /**
+     * 探测图形的配置信息
+     */
+    public static class DetectOptions {
+
+        private Color outColor;
+
+        private Color inColor;
+
+        /**
+         * 默认探测图形，优先级高于颜色的定制和图形方案（即存在图片时，用图片绘制探测图形）
+         */
+        private BufferedImage detectImg;
+
+        /**
+         * 探测图形方案
+         */
+        private DetectPatterning detectPatterning;
+
+        /**
+         * 左上角的探测图形
+         */
+        private BufferedImage detectImgLT;
+
+        /**
+         * 右上角的探测图形
+         */
+        private BufferedImage detectImgRT;
+
+        /**
+         * 左下角的探测图形
+         */
+        private BufferedImage detectImgLD;
+
+        /**
+         * true 表示探测图形单独处理
+         * false 表示探测图形的样式更随二维码的主样式
+         */
+        private Boolean special;
+
+        public Boolean getSpecial() {
+            return BooleanUtils.isTrue(special);
+        }
+
+        public DetectOptions() {
+        }
+
+        public DetectOptions(Color outColor, Color inColor, BufferedImage detectImg, DetectPatterning detectPatterning,
+                             BufferedImage detectImgLT, BufferedImage detectImgRT, BufferedImage detectImgLD, Boolean special) {
+            this.outColor = outColor;
+            this.inColor = inColor;
+            this.detectImg = detectImg;
+            this.detectPatterning = detectPatterning;
+            this.detectImgLT = detectImgLT;
+            this.detectImgRT = detectImgRT;
+            this.detectImgLD = detectImgLD;
+            this.special = special;
+        }
+
+        public Color getOutColor() {
+            return outColor;
+        }
+
+        public void setOutColor(Color outColor) {
+            this.outColor = outColor;
+        }
+
+        public Color getInColor() {
+            return inColor;
+        }
+
+        public void setInColor(Color inColor) {
+            this.inColor = inColor;
+        }
+
+        public BufferedImage getDetectImg() {
+            return detectImg;
+        }
+
+        public void setDetectImg(BufferedImage detectImg) {
+            this.detectImg = detectImg;
+        }
+
+        public DetectPatterning getDetectPatterning() {
+            return detectPatterning;
+        }
+
+        public void setDetectPatterning(DetectPatterning detectPatterning) {
+            this.detectPatterning = detectPatterning;
+        }
+
+        public BufferedImage getDetectImgLT() {
+            return detectImgLT;
+        }
+
+        public void setDetectImgLT(BufferedImage detectImgLT) {
+            this.detectImgLT = detectImgLT;
+        }
+
+        public BufferedImage getDetectImgRT() {
+            return detectImgRT;
+        }
+
+        public void setDetectImgRT(BufferedImage detectImgRT) {
+            this.detectImgRT = detectImgRT;
+        }
+
+        public BufferedImage getDetectImgLD() {
+            return detectImgLD;
+        }
+
+        public void setDetectImgLD(BufferedImage detectImgLD) {
+            this.detectImgLD = detectImgLD;
+        }
+
+        public void setSpecial(Boolean special) {
+            this.special = special;
+        }
+
+        public BufferedImage chooseDetectedImg(QrCodeRenderHelper.DetectLocation detectLocation) {
+            switch (detectLocation) {
+                case LD:
+                    return detectImgLD == null ? detectImg : detectImgLD;
+                case LT:
+                    return detectImgLT == null ? detectImg : detectImgLT;
+                case RT:
+                    return detectImgRT == null ? detectImg : detectImgRT;
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            DetectOptions that = (DetectOptions) o;
+            return Objects.equals(outColor, that.outColor) && Objects.equals(inColor, that.inColor) &&
+                    Objects.equals(detectImg, that.detectImg) && Objects.equals(detectImgLT, that.detectImgLT) &&
+                    Objects.equals(detectImgRT, that.detectImgRT) && Objects.equals(detectImgLD, that.detectImgLD) &&
+                    Objects.equals(special, that.special) && Objects.equals(detectPatterning, that.detectPatterning);
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(outColor, inColor, detectImg, detectPatterning, detectImgLT, detectImgRT, detectImgLD, special);
+        }
+
+        @Override
+        public String toString() {
+            return "DetectOptions{" + "outColor=" + outColor + ", inColor=" + inColor + ", detectImg=" + detectImg +
+                    ", detectImgLT=" + detectImgLT + ", detectImgRT=" + detectImgRT + ", detectImgLD=" + detectImgLD +
+                    ", special=" + special + '}';
+        }
+
+        public static DetectOptionsBuilder builder() {
+            return new DetectOptionsBuilder();
+        }
+
+        public static class DetectOptionsBuilder {
+            private Color outColor;
+
+            private Color inColor;
+
+            private BufferedImage detectImg;
+
+            private DetectPatterning detectPatterning;
+
+            private BufferedImage detectImgLT;
+
+            private BufferedImage detectImgRT;
+
+            private BufferedImage detectImgLD;
+
+            private Boolean special;
+
+            public DetectOptionsBuilder outColor(Color outColor) {
+                this.outColor = outColor;
+                return this;
+            }
+
+            public DetectOptionsBuilder inColor(Color inColor) {
+                this.inColor = inColor;
+                return this;
+            }
+
+            public DetectOptionsBuilder detectImg(BufferedImage detectImg) {
+                this.detectImg = detectImg;
+                return this;
+            }
+
+            public DetectOptionsBuilder detectPatterning(DetectPatterning detectPatterning) {
+                this.detectPatterning = detectPatterning;
+                return this;
+            }
+
+            public DetectOptionsBuilder detectImgLT(BufferedImage detectImgLT) {
+                this.detectImgLT = detectImgLT;
+                return this;
+            }
+
+            public DetectOptionsBuilder detectImgRT(BufferedImage detectImgRT) {
+                this.detectImgRT = detectImgRT;
+                return this;
+            }
+
+            public DetectOptionsBuilder detectImgLD(BufferedImage detectImgLD) {
+                this.detectImgLD = detectImgLD;
+                return this;
+            }
+
+            public DetectOptionsBuilder special(Boolean special) {
+                this.special = special;
+                return this;
+            }
+
+            public DetectOptions build() {
+                return new DetectOptions(outColor, inColor, detectImg, detectPatterning, detectImgLT, detectImgRT, detectImgLD, special);
+            }
+        }
     }
 }
