@@ -11,7 +11,6 @@ import com.jedreck.qrcode.zxingtest01.utils.Base64Util;
 import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
 import com.jedreck.qrcode.zxingtest01.utils.FileReadUtil;
 import com.jedreck.qrcode.zxingtest01.utils.FileWriteUtil;
-import com.jedreck.qrcode.zxingtest01.utils.GraphicUtil;
 import com.jedreck.qrcode.zxingtest01.utils.ImageLoadUtil;
 import com.jedreck.qrcode.zxingtest01.utils.IoUtil;
 import com.jedreck.qrcode.zxingtest01.utils.gif.GifDecoder;

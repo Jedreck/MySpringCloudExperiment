@@ -199,7 +199,7 @@ public class QrCodeRenderHelper {
 
 
     /**
-     * 根据二维码矩阵，生成对应的二维码推片
+     * 根据二维码矩阵，生成对应的二维码图片
      *
      * @param qrCodeConfig
      * @param bitMatrix
@@ -298,7 +298,11 @@ public class QrCodeRenderHelper {
         /**
          * 右上角
          */
-        RT, NONE {
+        RT,
+        /**
+         * 非探测图形区域
+         */
+        NONE {
             @Override
             public boolean detectedArea() {
                 return false;

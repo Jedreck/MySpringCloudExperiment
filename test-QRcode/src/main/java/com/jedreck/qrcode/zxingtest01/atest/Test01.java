@@ -22,7 +22,13 @@ public class Test01 {
     public static final String P = "/tmp/aaa.png";
 
     public static void main(String[] args) throws IOException, WriterException {
-        test08();
+        test06();
+    }
+
+    private static void test09() throws IOException, WriterException {
+        QrCodeGenWrapper.of(T)
+                .setDetectImg("sky.jpg")
+                .asFile(P);
     }
 
     public static void test08() throws IOException, WriterException {
