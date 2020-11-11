@@ -28,8 +28,8 @@ public class Test01 {
     private static void test09() throws IOException, WriterException {
         QrCodeGenWrapper.of(T)
                 .setDetectPatterning(QrCodeOptions.DetectPatterning.MONEY)
-                .setDetectOutColor(Color.black)
-                .setDetectInColor(Color.black)
+                .setDetectOutColor(Color.BLUE)
+                .setDetectInColor(Color.red)
                 .asFile(P);
     }
 

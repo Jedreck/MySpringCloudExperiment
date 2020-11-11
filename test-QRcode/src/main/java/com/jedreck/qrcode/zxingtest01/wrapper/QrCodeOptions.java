@@ -797,9 +797,9 @@ public class QrCodeOptions {
             @Override
             public void drawLT(Graphics2D g, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
                 int W = 1000;
-                int s = W / 7;
-                int sw = s * 2;
-                int sww = s * 3;
+                double s = W / 7.0;
+                double sw = s * 2;
+                double sww = s * 3;
 
                 BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g2 = img.createGraphics();
@@ -812,18 +812,18 @@ public class QrCodeOptions {
                 g2.fillOval(0, 0, W, W);
 
                 g2.setColor(bgColor);
-                g2.fillOval(s, s, sw + sww, sw + sww);
+                g2.fillOval((int) s, (int) s, (int) (sw + sww), (int) (sw + sww));
 
                 //限制范围
-                g2.setClip(sw, sw, sww, sww);
+                g2.setClip((int) sw, (int) sw, (int) sww, (int) sww);
                 g2.setColor(inColor);
+                g2.fillRect((int) sw, (int) sw, (int) sww, (int) sww);
                 // 切割
-                g2.fillRect(sw, sw, sww, sww);
                 g2.setColor(bgColor);
-                int circleStartA = (int) (((1 - 3 * Math.sqrt(2)) / 2) * s);
-                int circleStartB = (int) (((7 - 3 * Math.sqrt(2)) / 2) * s);
-                int circleStartC = (int) (((13 - 3 * Math.sqrt(2)) / 2) * s);
-                int diameter = (int) ((3 * Math.sqrt(2)) * s);
+                int circleStartA = (int) ((-(2 + 3 * Math.sqrt(3)) / 2) * s);
+                int circleStartB = (int) (s / 2);
+                int circleStartC = (int) (((4 + 3 * Math.sqrt(3)) / 2) * s);
+                int diameter = (int) s * 6;
                 // 左
                 g2.fillOval(circleStartA, circleStartB, diameter, diameter);
                 // 上
