@@ -19,6 +19,154 @@ public class Test02 {
     }
 
     /**
+     * 矩形 左上 右下圆角
+     */
+    @Test
+    public void test08() throws IOException {
+        double rotate = 90;
+        Color inColor = Color.YELLOW;
+        Color outColor = Color.BLACK;
+        Color bgColor = Color.PINK;
+
+        int W = 1000;
+        double s = W / 7.0;
+        double s2 = s * 2;
+        double s3 = s * 3;
+        double s4 = s * 4;
+        double s5 = s * 5;
+
+        BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setComposite(AlphaComposite.Src);
+        g2.setColor(bgColor);
+        g2.fillRect(0, 0, W, W);
+        g2.rotate(Math.toRadians(rotate), W >> 1, W >> 1);
+
+        g2.setColor(outColor);
+        g2.fillRect(0, 0, W, W);
+        g2.setColor(bgColor);
+        g2.fillRect((int) s, (int) s, (int) s5, (int) s5);
+        g2.setColor(inColor);
+        g2.fillRect((int) s2, (int) s2, (int) s3, (int) s3);
+
+        //限制区域
+        int i = W >> 1;
+        int[][] area = {{0, i}, {i, i}};
+        for (int[] a : area) {
+            g2.setClip(a[0], a[0], a[1], a[1]);
+            g2.setColor(bgColor);
+            g2.fillRect(0, 0, W, W);
+
+            g2.setColor(outColor);
+            g2.fillRoundRect(0, 0, W, W, (int) s5, (int) s5);
+            g2.setColor(bgColor);
+            g2.fillRoundRect((int) s, (int) s, (int) s5, (int) s5, (int) s4, (int) s4);
+            g2.setColor(inColor);
+            g2.fillRoundRect((int) s2, (int) s2, (int) s3, (int) s3, (int) s2, (int) s2);
+        }
+
+        ImageIO.write(img, "PNG", new File(P));
+    }
+
+    /**
+     * 矩形 右上直角
+     */
+    @Test
+    public void test07() throws IOException {
+        double rotate = 90;
+        Color inColor = Color.YELLOW;
+        Color outColor = Color.BLACK;
+        Color bgColor = Color.PINK;
+
+        int W = 1000;
+        double s = W / 7.0;
+        double s2 = s * 2;
+        double s3 = s * 3;
+        double s4 = s * 4;
+        double s5 = s * 5;
+
+        BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setComposite(AlphaComposite.Src);
+        g2.setColor(bgColor);
+        g2.fillRect(0, 0, W, W);
+        g2.rotate(Math.toRadians(rotate), W >> 1, W >> 1);
+
+        g2.setColor(outColor);
+        g2.fillRect(0, 0, W, W);
+        g2.setColor(bgColor);
+        g2.fillRect((int) s, (int) s, (int) s5, (int) s5);
+        g2.setColor(inColor);
+        g2.fillRect((int) s2, (int) s2, (int) s3, (int) s3);
+
+        //限制区域
+        g2.setClip(0, 0, W >> 1, W >> 1);
+        g2.setColor(bgColor);
+        g2.fillRect(0, 0, W, W);
+
+        g2.setColor(outColor);
+        g2.fillRoundRect(0, 0, W, W, (int) s5, (int) s5);
+        g2.setColor(bgColor);
+        g2.fillRoundRect((int) s, (int) s, (int) s5, (int) s5, (int) s4, (int) s4);
+        g2.setColor(inColor);
+        g2.fillRoundRect((int) s2, (int) s2, (int) s3, (int) s3, (int) s2, (int) s2);
+
+
+        ImageIO.write(img, "PNG", new File(P));
+    }
+
+    /**
+     * 圆角矩形 右上直角
+     */
+    @Test
+    public void test06() throws IOException {
+        int W = 1000;
+        double s = W / 7.0;
+        double s2 = s * 2;
+        double s3 = s * 3;
+        double s4 = s * 4;
+        double s5 = s * 5;
+
+        BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setComposite(AlphaComposite.Src);
+        g2.setColor(Color.PINK);
+        g2.fillRect(0, 0, W, W);
+
+        //旋转
+        g2.rotate(Math.toRadians(90), W >> 1, W >> 1);
+
+        g2.setColor(Color.BLACK);
+        g2.fillRoundRect(0, 0, W, W, (int) s5, (int) s5);
+
+        g2.setColor(Color.PINK);
+        g2.fillRoundRect((int) s, (int) s, (int) s5, (int) s5, (int) s4, (int) s4);
+
+        g2.setColor(Color.YELLOW);
+        g2.fillRoundRect((int) s2, (int) s2, (int) s3, (int) s3, (int) s2, (int) s2);
+
+        //限制区域
+        g2.setClip(0, 0, W >> 1, W >> 1);
+
+        g2.setColor(Color.PINK);
+        g2.fillRect(0, 0, W, W);
+
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, W, W);
+
+        g2.setColor(Color.PINK);
+        g2.fillRect((int) s, (int) s, (int) s5, (int) s5);
+
+        g2.setColor(Color.YELLOW);
+        g2.fillRect((int) s2, (int) s2, (int) s3, (int) s3);
+
+        ImageIO.write(img, "PNG", new File(P));
+    }
+
+    /**
      * 钱 图形
      */
     @Test

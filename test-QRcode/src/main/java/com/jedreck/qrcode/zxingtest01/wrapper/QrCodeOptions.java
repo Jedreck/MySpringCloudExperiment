@@ -848,6 +848,214 @@ public class QrCodeOptions {
         };
 
         /**
+         * 圆角矩形 左上直角
+         */
+        DetectPatterning ROUND_RECT_ONE_RIGHT_ANGLE = new DetectPatterning() {
+            @Override
+            public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(90, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(0, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(180, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            private BufferedImage drawRaw(double rotate, Color inColor, Color outColor, Color bgColor) {
+                int W = 1000;
+                double s = W / 7.0;
+                double s2 = s * 2;
+                double s3 = s * 3;
+                double s4 = s * 4;
+                double s5 = s * 5;
+
+                BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2 = img.createGraphics();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setComposite(AlphaComposite.Src);
+                g2.setColor(bgColor);
+                g2.fillRect(0, 0, W, W);
+
+                g2.rotate(Math.toRadians(rotate), W >> 1, W >> 1);
+
+                g2.setColor(outColor);
+                g2.fillRoundRect(0, 0, W, W, (int) s5, (int) s5);
+                g2.setColor(bgColor);
+                g2.fillRoundRect((int) s, (int) s, (int) s5, (int) s5, (int) s4, (int) s4);
+                g2.setColor(inColor);
+                g2.fillRoundRect((int) s2, (int) s2, (int) s3, (int) s3, (int) s2, (int) s2);
+
+                //剪切
+                g2.setClip(0, 0, W >> 1, W >> 1);
+
+                g2.setColor(bgColor);
+                g2.fillRect(0, 0, W, W);
+
+                g2.setColor(outColor);
+                g2.fillRect(0, 0, W, W);
+                g2.setColor(bgColor);
+                g2.fillRect((int) s, (int) s, (int) s5, (int) s5);
+                g2.setColor(inColor);
+                g2.fillRect((int) s2, (int) s2, (int) s3, (int) s3);
+
+                return img;
+            }
+        };
+
+        /**
+         * 矩形 一圆角
+         */
+        DetectPatterning RECT_ONE_ROUND_ANGLE = new DetectPatterning() {
+            @Override
+            public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(0, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(90, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(-90, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            private BufferedImage drawRaw(double rotate, Color inColor, Color outColor, Color bgColor) {
+                int W = 1000;
+                double s = W / 7.0;
+                double s2 = s * 2;
+                double s3 = s * 3;
+                double s4 = s * 4;
+                double s5 = s * 5;
+
+                BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2 = img.createGraphics();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setComposite(AlphaComposite.Src);
+                g2.setColor(bgColor);
+                g2.fillRect(0, 0, W, W);
+                g2.rotate(Math.toRadians(rotate), W >> 1, W >> 1);
+
+                g2.setColor(outColor);
+                g2.fillRect(0, 0, W, W);
+                g2.setColor(bgColor);
+                g2.fillRect((int) s, (int) s, (int) s5, (int) s5);
+                g2.setColor(inColor);
+                g2.fillRect((int) s2, (int) s2, (int) s3, (int) s3);
+
+                //限制区域
+                g2.setClip(0, 0, W >> 1, W >> 1);
+                g2.setColor(bgColor);
+                g2.fillRect(0, 0, W, W);
+
+                g2.setColor(outColor);
+                g2.fillRoundRect(0, 0, W, W, (int) s5, (int) s5);
+                g2.setColor(bgColor);
+                g2.fillRoundRect((int) s, (int) s, (int) s5, (int) s5, (int) s4, (int) s4);
+                g2.setColor(inColor);
+                g2.fillRoundRect((int) s2, (int) s2, (int) s3, (int) s3, (int) s2, (int) s2);
+
+                return img;
+            }
+        };
+
+        /**
+         * 矩形 两个圆角 圆角左上右下
+         */
+        DetectPatterning RECT_TWO_ROUND_ANGLE_LT = new DetectPatterning() {
+            @Override
+            public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(0, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(90, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                BufferedImage img = drawRaw(-90, inColor, outColor, bgColor);
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
+            }
+
+            private BufferedImage drawRaw(double rotate, Color inColor, Color outColor, Color bgColor) {
+                int W = 1000;
+                double s = W / 7.0;
+                double s2 = s * 2;
+                double s3 = s * 3;
+                double s4 = s * 4;
+                double s5 = s * 5;
+
+                BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2 = img.createGraphics();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setComposite(AlphaComposite.Src);
+                g2.setColor(bgColor);
+                g2.fillRect(0, 0, W, W);
+                g2.rotate(Math.toRadians(rotate), W >> 1, W >> 1);
+
+                g2.setColor(outColor);
+                g2.fillRect(0, 0, W, W);
+                g2.setColor(bgColor);
+                g2.fillRect((int) s, (int) s, (int) s5, (int) s5);
+                g2.setColor(inColor);
+                g2.fillRect((int) s2, (int) s2, (int) s3, (int) s3);
+
+                //限制区域
+                int i = W >> 1;
+                int[][] area = {{0, i}, {i, i}};
+                for (int[] a : area) {
+                    g2.setClip(a[0], a[0], a[1], a[1]);
+                    g2.setColor(bgColor);
+                    g2.fillRect(0, 0, W, W);
+
+                    g2.setColor(outColor);
+                    g2.fillRoundRect(0, 0, W, W, (int) s5, (int) s5);
+                    g2.setColor(bgColor);
+                    g2.fillRoundRect((int) s, (int) s, (int) s5, (int) s5, (int) s4, (int) s4);
+                    g2.setColor(inColor);
+                    g2.fillRoundRect((int) s2, (int) s2, (int) s3, (int) s3, (int) s2, (int) s2);
+                }
+                return img;
+            }
+        };
+
+        /**
+         * 矩形 有两个圆角 左下右上
+         */
+        DetectPatterning RECT_TWO_ROUND_ANGLE_LD = new DetectPatterning() {
+            @Override
+            public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                RECT_TWO_ROUND_ANGLE_LT.drawRT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+
+            @Override
+            public void drawRT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                RECT_TWO_ROUND_ANGLE_LT.drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+
+            @Override
+            public void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
+                RECT_TWO_ROUND_ANGLE_LT.drawLT(g2, x, y, w, h, inColor, outColor, bgColor);
+            }
+        };
+
+        /**
          * 画出左上图形
          *
          * @param g2 原图

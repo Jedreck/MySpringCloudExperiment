@@ -27,7 +27,7 @@ public class Test01 {
 
     private static void test09() throws IOException, WriterException {
         QrCodeGenWrapper.of(T)
-                .setDetectPatterning(QrCodeOptions.DetectPatterning.MONEY)
+                .setDetectPatterning(QrCodeOptions.DetectPatterning.RECT_TWO_ROUND_ANGLE_LD)
                 .setDetectOutColor(Color.BLUE)
                 .setDetectInColor(Color.red)
                 .asFile(P);
