@@ -1857,5 +1857,4 @@ public class QrCodeOptions {
             }
         }
     }
-
 }
