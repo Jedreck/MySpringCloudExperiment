@@ -650,6 +650,351 @@ public class QrCodeOptions {
     }
 
     /**
+     * 绘制二维码的配置信息
+     */
+    public static class DrawOptions {
+        /**
+         * 着色颜色
+         */
+        private Color preColor;
+
+        /**
+         * 背景颜色
+         */
+        private Color bgColor;
+
+        /**
+         * 背景图
+         */
+        private BufferedImage bgImg;
+
+        /**
+         * 绘制样式
+         */
+        private DrawStyle drawStyle;
+
+        /**
+         * 生成文字二维码时的候字符池
+         */
+        private String text;
+
+        /**
+         * 生成文字二维码时的字体
+         */
+        private String fontName;
+
+        /**
+         * 文字二维码渲染模式
+         */
+        private TxtMode txtMode;
+
+        /**
+         * 字体样式
+         * <p>
+         * {@link Font#PLAIN} 0
+         * {@link Font#BOLD}  1
+         * {@link Font#ITALIC} 2
+         */
+        private int fontStyle;
+
+        /**
+         * true 时表示支持对相邻的着色点进行合并处理 （即用一个大图来绘制相邻的两个着色点）
+         * <p>
+         * 说明： 三角形样式关闭该选项，因为留白过多，对识别有影响
+         */
+        private boolean enableScale;
+
+        /**
+         * 图片透明处填充，true则表示透明处用bgColor填充； false则透明处依旧透明
+         */
+        private boolean diaphaneityFill;
+
+        /**
+         * 渲染图
+         */
+        private Map<DotSize, BufferedImage> imgMapper;
+
+        public BufferedImage getImage(int row, int col) {
+            return getImage(DotSize.create(row, col));
+        }
+
+        public BufferedImage getImage(DotSize dotSize) {
+            return imgMapper.get(dotSize);
+        }
+
+        /**
+         * 获取二维码绘制的文字
+         *
+         * @return
+         */
+        public String getDrawQrTxt() {
+            return QuickQrFont.qrTxt(text, txtMode != null && txtMode == TxtMode.RANDOM);
+        }
+
+        public Color getPreColor() {
+            return preColor;
+        }
+
+        public void setPreColor(Color preColor) {
+            this.preColor = preColor;
+        }
+
+        public Color getBgColor() {
+            return bgColor;
+        }
+
+        public void setBgColor(Color bgColor) {
+            this.bgColor = bgColor;
+        }
+
+        public BufferedImage getBgImg() {
+            return bgImg;
+        }
+
+        public void setBgImg(BufferedImage bgImg) {
+            this.bgImg = bgImg;
+        }
+
+        public DrawStyle getDrawStyle() {
+            return drawStyle;
+        }
+
+        public void setDrawStyle(DrawStyle drawStyle) {
+            this.drawStyle = drawStyle;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public String getFontName() {
+            return fontName;
+        }
+
+        public void setFontName(String fontName) {
+            this.fontName = fontName;
+        }
+
+        public TxtMode getTxtMode() {
+            return txtMode;
+        }
+
+        public void setTxtMode(TxtMode txtMode) {
+            this.txtMode = txtMode;
+        }
+
+        public int getFontStyle() {
+            return fontStyle;
+        }
+
+        public void setFontStyle(int fontStyle) {
+            this.fontStyle = fontStyle;
+        }
+
+        public boolean isEnableScale() {
+            return enableScale;
+        }
+
+        public void setEnableScale(boolean enableScale) {
+            this.enableScale = enableScale;
+        }
+
+        public boolean isDiaphaneityFill() {
+            return diaphaneityFill;
+        }
+
+        public void setDiaphaneityFill(boolean diaphaneityFill) {
+            this.diaphaneityFill = diaphaneityFill;
+        }
+
+        public Map<DotSize, BufferedImage> getImgMapper() {
+            return imgMapper;
+        }
+
+        public void setImgMapper(Map<DotSize, BufferedImage> imgMapper) {
+            this.imgMapper = imgMapper;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            DrawOptions that = (DrawOptions) o;
+            return fontStyle == that.fontStyle && enableScale == that.enableScale &&
+                    diaphaneityFill == that.diaphaneityFill && Objects.equals(preColor, that.preColor) &&
+                    Objects.equals(bgColor, that.bgColor) && Objects.equals(bgImg, that.bgImg) &&
+                    drawStyle == that.drawStyle && Objects.equals(text, that.text) &&
+                    Objects.equals(fontName, that.fontName) && txtMode == that.txtMode &&
+                    Objects.equals(imgMapper, that.imgMapper);
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(preColor, bgColor, bgImg, drawStyle, text, fontName, txtMode, fontStyle, enableScale,
+                    diaphaneityFill, imgMapper);
+        }
+
+        @Override
+        public String toString() {
+            return "DrawOptions{" + "preColor=" + preColor + ", bgColor=" + bgColor + ", bgImg=" + bgImg +
+                    ", drawStyle=" + drawStyle + ", text='" + text + '\'' + ", fontName='" + fontName + '\'' +
+                    ", txtMode=" + txtMode + ", fontStyle=" + fontStyle + ", enableScale=" + enableScale +
+                    ", diaphaneityFill=" + diaphaneityFill + ", imgMapper=" + imgMapper + '}';
+        }
+
+        public static DrawOptionsBuilder builder() {
+            return new DrawOptionsBuilder();
+        }
+
+        public static class DrawOptionsBuilder {
+            /**
+             * 二维码矩阵中 1对应的着色颜色
+             */
+            private Color preColor;
+
+            /**
+             * 二维码矩阵中 0对应的背景颜色
+             */
+            private Color bgColor;
+
+            /**
+             * 透明度填充，如绘制二维码的图片中存在透明区域，若这个参数为true，则会用bgColor填充透明的区域；若为false，则透明区域依旧是透明的
+             */
+            private boolean diaphaneityFill;
+
+            /**
+             * 文字二维码中，用于渲染的文字库，支持按字符顺序or随机两种展现方式（说明：英文不友好）
+             */
+            private String text;
+
+            /**
+             * 文字二维码，渲染模式
+             */
+            private TxtMode txtMode;
+
+            /**
+             * 文字二维码，字体名
+             */
+            private String fontName;
+
+            /**
+             * 字体样式
+             * {@link Font#PLAIN} 0
+             * {@link Font#BOLD}  1
+             * {@link Font#ITALIC} 2
+             */
+            private Integer fontStyle;
+
+            /**
+             * 二维码矩阵中，0点对应绘制的背景图片， 1点对应绘制的图片在 imgMapper 中
+             */
+            private BufferedImage bgImg;
+
+            /**
+             * 二维码绘制样式
+             */
+            private DrawStyle drawStyle;
+
+
+            /**
+             * true 时表示支持对相邻的着色点进行合并处理 （即用一个大图来绘制相邻的两个着色点）
+             * <p>
+             * 说明： 三角形样式关闭该选项，因为留白过多，对识别有影响
+             */
+            private boolean enableScale;
+
+            /**
+             * 渲染图
+             */
+            private Map<DotSize, BufferedImage> imgMapper;
+
+            public DrawOptionsBuilder() {
+                imgMapper = new HashMap<>();
+            }
+
+            public DrawOptionsBuilder preColor(Color preColor) {
+                this.preColor = preColor;
+                return this;
+            }
+
+            public DrawOptionsBuilder bgColor(Color bgColor) {
+                this.bgColor = bgColor;
+                return this;
+            }
+
+            public DrawOptionsBuilder diaphaneityFill(boolean fill) {
+                this.diaphaneityFill = fill;
+                return this;
+            }
+
+            public DrawOptionsBuilder bgImg(BufferedImage image) {
+                this.bgImg = image;
+                return this;
+            }
+
+            public DrawOptionsBuilder drawStyle(DrawStyle drawStyle) {
+                this.drawStyle = drawStyle;
+                return this;
+            }
+
+            public DrawOptionsBuilder text(String text) {
+                this.text = text;
+                return this;
+            }
+
+            public DrawOptionsBuilder txtMode(TxtMode txtMode) {
+                this.txtMode = txtMode;
+                return this;
+            }
+
+            public DrawOptionsBuilder fontName(String fontName) {
+                this.fontName = fontName;
+                return this;
+            }
+
+            public DrawOptionsBuilder fontStyle(int fontStyle) {
+                this.fontStyle = fontStyle;
+                return this;
+            }
+
+            public DrawOptionsBuilder enableScale(boolean enableScale) {
+                this.enableScale = enableScale;
+                return this;
+            }
+
+            public DrawOptionsBuilder drawImg(int row, int column, BufferedImage image) {
+                imgMapper.put(new DotSize(row, column), image);
+                return this;
+            }
+
+            public DrawOptions build() {
+                DrawOptions drawOptions = new DrawOptions();
+                drawOptions.setBgColor(this.bgColor);
+                drawOptions.setBgImg(this.bgImg);
+                drawOptions.setPreColor(this.preColor);
+                drawOptions.setDrawStyle(this.drawStyle);
+                drawOptions.setEnableScale(this.enableScale);
+                drawOptions.setImgMapper(this.imgMapper);
+                drawOptions.setDiaphaneityFill(this.diaphaneityFill);
+                drawOptions.setText(text == null ? QuickQrFont.DEFAULT_QR_TXT : text);
+                drawOptions.setTxtMode(txtMode == null ? TxtMode.ORDER : txtMode);
+                drawOptions.setFontName(fontName == null ? QuickQrFont.DEFAULT_FONT_NAME : fontName);
+                drawOptions.setFontStyle(fontStyle == null ? QuickQrFont.DEFAULT_FONT_STYLE : fontStyle);
+                return drawOptions;
+            }
+        }
+    }
+
+    /**
      * 探测点图形
      */
     public interface DetectPatterning {
@@ -1089,352 +1434,6 @@ public class QrCodeOptions {
         void drawLD(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor);
     }
 
-
-    /**
-     * 绘制二维码的配置信息
-     */
-    public static class DrawOptions {
-        /**
-         * 着色颜色
-         */
-        private Color preColor;
-
-        /**
-         * 背景颜色
-         */
-        private Color bgColor;
-
-        /**
-         * 背景图
-         */
-        private BufferedImage bgImg;
-
-        /**
-         * 绘制样式
-         */
-        private DrawStyle drawStyle;
-
-        /**
-         * 生成文字二维码时的候字符池
-         */
-        private String text;
-
-        /**
-         * 生成文字二维码时的字体
-         */
-        private String fontName;
-
-        /**
-         * 文字二维码渲染模式
-         */
-        private TxtMode txtMode;
-
-        /**
-         * 字体样式
-         * <p>
-         * {@link Font#PLAIN} 0
-         * {@link Font#BOLD}  1
-         * {@link Font#ITALIC} 2
-         */
-        private int fontStyle;
-
-        /**
-         * true 时表示支持对相邻的着色点进行合并处理 （即用一个大图来绘制相邻的两个着色点）
-         * <p>
-         * 说明： 三角形样式关闭该选项，因为留白过多，对识别有影响
-         */
-        private boolean enableScale;
-
-        /**
-         * 图片透明处填充，true则表示透明处用bgColor填充； false则透明处依旧透明
-         */
-        private boolean diaphaneityFill;
-
-        /**
-         * 渲染图
-         */
-        private Map<DotSize, BufferedImage> imgMapper;
-
-        public BufferedImage getImage(int row, int col) {
-            return getImage(DotSize.create(row, col));
-        }
-
-        public BufferedImage getImage(DotSize dotSize) {
-            return imgMapper.get(dotSize);
-        }
-
-        /**
-         * 获取二维码绘制的文字
-         *
-         * @return
-         */
-        public String getDrawQrTxt() {
-            return QuickQrFont.qrTxt(text, txtMode != null && txtMode == TxtMode.RANDOM);
-        }
-
-        public Color getPreColor() {
-            return preColor;
-        }
-
-        public void setPreColor(Color preColor) {
-            this.preColor = preColor;
-        }
-
-        public Color getBgColor() {
-            return bgColor;
-        }
-
-        public void setBgColor(Color bgColor) {
-            this.bgColor = bgColor;
-        }
-
-        public BufferedImage getBgImg() {
-            return bgImg;
-        }
-
-        public void setBgImg(BufferedImage bgImg) {
-            this.bgImg = bgImg;
-        }
-
-        public DrawStyle getDrawStyle() {
-            return drawStyle;
-        }
-
-        public void setDrawStyle(DrawStyle drawStyle) {
-            this.drawStyle = drawStyle;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(String text) {
-            this.text = text;
-        }
-
-        public String getFontName() {
-            return fontName;
-        }
-
-        public void setFontName(String fontName) {
-            this.fontName = fontName;
-        }
-
-        public TxtMode getTxtMode() {
-            return txtMode;
-        }
-
-        public void setTxtMode(TxtMode txtMode) {
-            this.txtMode = txtMode;
-        }
-
-        public int getFontStyle() {
-            return fontStyle;
-        }
-
-        public void setFontStyle(int fontStyle) {
-            this.fontStyle = fontStyle;
-        }
-
-        public boolean isEnableScale() {
-            return enableScale;
-        }
-
-        public void setEnableScale(boolean enableScale) {
-            this.enableScale = enableScale;
-        }
-
-        public boolean isDiaphaneityFill() {
-            return diaphaneityFill;
-        }
-
-        public void setDiaphaneityFill(boolean diaphaneityFill) {
-            this.diaphaneityFill = diaphaneityFill;
-        }
-
-        public Map<DotSize, BufferedImage> getImgMapper() {
-            return imgMapper;
-        }
-
-        public void setImgMapper(Map<DotSize, BufferedImage> imgMapper) {
-            this.imgMapper = imgMapper;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            DrawOptions that = (DrawOptions) o;
-            return fontStyle == that.fontStyle && enableScale == that.enableScale &&
-                    diaphaneityFill == that.diaphaneityFill && Objects.equals(preColor, that.preColor) &&
-                    Objects.equals(bgColor, that.bgColor) && Objects.equals(bgImg, that.bgImg) &&
-                    drawStyle == that.drawStyle && Objects.equals(text, that.text) &&
-                    Objects.equals(fontName, that.fontName) && txtMode == that.txtMode &&
-                    Objects.equals(imgMapper, that.imgMapper);
-        }
-
-        @Override
-        public int hashCode() {
-
-            return Objects.hash(preColor, bgColor, bgImg, drawStyle, text, fontName, txtMode, fontStyle, enableScale,
-                    diaphaneityFill, imgMapper);
-        }
-
-        @Override
-        public String toString() {
-            return "DrawOptions{" + "preColor=" + preColor + ", bgColor=" + bgColor + ", bgImg=" + bgImg +
-                    ", drawStyle=" + drawStyle + ", text='" + text + '\'' + ", fontName='" + fontName + '\'' +
-                    ", txtMode=" + txtMode + ", fontStyle=" + fontStyle + ", enableScale=" + enableScale +
-                    ", diaphaneityFill=" + diaphaneityFill + ", imgMapper=" + imgMapper + '}';
-        }
-
-        public static DrawOptionsBuilder builder() {
-            return new DrawOptionsBuilder();
-        }
-
-        public static class DrawOptionsBuilder {
-            /**
-             * 二维码矩阵中 1对应的着色颜色
-             */
-            private Color preColor;
-
-            /**
-             * 二维码矩阵中 0对应的背景颜色
-             */
-            private Color bgColor;
-
-            /**
-             * 透明度填充，如绘制二维码的图片中存在透明区域，若这个参数为true，则会用bgColor填充透明的区域；若为false，则透明区域依旧是透明的
-             */
-            private boolean diaphaneityFill;
-
-            /**
-             * 文字二维码中，用于渲染的文字库，支持按字符顺序or随机两种展现方式（说明：英文不友好）
-             */
-            private String text;
-
-            /**
-             * 文字二维码，渲染模式
-             */
-            private TxtMode txtMode;
-
-            /**
-             * 文字二维码，字体名
-             */
-            private String fontName;
-
-            /**
-             * 字体样式
-             * {@link Font#PLAIN} 0
-             * {@link Font#BOLD}  1
-             * {@link Font#ITALIC} 2
-             */
-            private Integer fontStyle;
-
-            /**
-             * 二维码矩阵中，0点对应绘制的背景图片， 1点对应绘制的图片在 imgMapper 中
-             */
-            private BufferedImage bgImg;
-
-            /**
-             * 二维码绘制样式
-             */
-            private DrawStyle drawStyle;
-
-
-            /**
-             * true 时表示支持对相邻的着色点进行合并处理 （即用一个大图来绘制相邻的两个着色点）
-             * <p>
-             * 说明： 三角形样式关闭该选项，因为留白过多，对识别有影响
-             */
-            private boolean enableScale;
-
-            /**
-             * 渲染图
-             */
-            private Map<DotSize, BufferedImage> imgMapper;
-
-            public DrawOptionsBuilder() {
-                imgMapper = new HashMap<>();
-            }
-
-            public DrawOptionsBuilder preColor(Color preColor) {
-                this.preColor = preColor;
-                return this;
-            }
-
-            public DrawOptionsBuilder bgColor(Color bgColor) {
-                this.bgColor = bgColor;
-                return this;
-            }
-
-            public DrawOptionsBuilder diaphaneityFill(boolean fill) {
-                this.diaphaneityFill = fill;
-                return this;
-            }
-
-            public DrawOptionsBuilder bgImg(BufferedImage image) {
-                this.bgImg = image;
-                return this;
-            }
-
-            public DrawOptionsBuilder drawStyle(DrawStyle drawStyle) {
-                this.drawStyle = drawStyle;
-                return this;
-            }
-
-            public DrawOptionsBuilder text(String text) {
-                this.text = text;
-                return this;
-            }
-
-            public DrawOptionsBuilder txtMode(TxtMode txtMode) {
-                this.txtMode = txtMode;
-                return this;
-            }
-
-            public DrawOptionsBuilder fontName(String fontName) {
-                this.fontName = fontName;
-                return this;
-            }
-
-            public DrawOptionsBuilder fontStyle(int fontStyle) {
-                this.fontStyle = fontStyle;
-                return this;
-            }
-
-            public DrawOptionsBuilder enableScale(boolean enableScale) {
-                this.enableScale = enableScale;
-                return this;
-            }
-
-            public DrawOptionsBuilder drawImg(int row, int column, BufferedImage image) {
-                imgMapper.put(new DotSize(row, column), image);
-                return this;
-            }
-
-            public DrawOptions build() {
-                DrawOptions drawOptions = new DrawOptions();
-                drawOptions.setBgColor(this.bgColor);
-                drawOptions.setBgImg(this.bgImg);
-                drawOptions.setPreColor(this.preColor);
-                drawOptions.setDrawStyle(this.drawStyle);
-                drawOptions.setEnableScale(this.enableScale);
-                drawOptions.setImgMapper(this.imgMapper);
-                drawOptions.setDiaphaneityFill(this.diaphaneityFill);
-                drawOptions.setText(text == null ? QuickQrFont.DEFAULT_QR_TXT : text);
-                drawOptions.setTxtMode(txtMode == null ? TxtMode.ORDER : txtMode);
-                drawOptions.setFontName(fontName == null ? QuickQrFont.DEFAULT_FONT_NAME : fontName);
-                drawOptions.setFontStyle(fontStyle == null ? QuickQrFont.DEFAULT_FONT_STYLE : fontStyle);
-                return drawOptions;
-            }
-        }
-    }
-
     /**
      * logo的样式
      */
@@ -1672,10 +1671,6 @@ public class QrCodeOptions {
          */
         private Boolean special;
 
-        public Boolean getSpecial() {
-            return BooleanUtils.isTrue(special);
-        }
-
         public DetectOptions() {
         }
 
@@ -1688,6 +1683,18 @@ public class QrCodeOptions {
             this.detectImgLT = detectImgLT;
             this.detectImgRT = detectImgRT;
             this.detectImgLD = detectImgLD;
+            this.special = special;
+        }
+
+        public static DetectOptionsBuilder builder() {
+            return new DetectOptionsBuilder();
+        }
+
+        public Boolean getSpecial() {
+            return BooleanUtils.isTrue(special);
+        }
+
+        public void setSpecial(Boolean special) {
             this.special = special;
         }
 
@@ -1747,10 +1754,6 @@ public class QrCodeOptions {
             this.detectImgLD = detectImgLD;
         }
 
-        public void setSpecial(Boolean special) {
-            this.special = special;
-        }
-
         public BufferedImage chooseDetectedImg(QrCodeRenderHelper.DetectLocation detectLocation) {
             switch (detectLocation) {
                 case LD:
@@ -1790,10 +1793,6 @@ public class QrCodeOptions {
             return "DetectOptions{" + "outColor=" + outColor + ", inColor=" + inColor + ", detectImg=" + detectImg +
                     ", detectImgLT=" + detectImgLT + ", detectImgRT=" + detectImgRT + ", detectImgLD=" + detectImgLD +
                     ", special=" + special + '}';
-        }
-
-        public static DetectOptionsBuilder builder() {
-            return new DetectOptionsBuilder();
         }
 
         public static class DetectOptionsBuilder {
@@ -1858,4 +1857,5 @@ public class QrCodeOptions {
             }
         }
     }
+
 }

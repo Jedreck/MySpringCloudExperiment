@@ -98,15 +98,14 @@ public class QrCodeRenderHelper {
      *
      * @param qrImg        二维码图
      * @param bgImgOptions 背景图信息
-     * @return
      */
     public static BufferedImage drawBackground(BufferedImage qrImg, QrCodeOptions.BgImgOptions bgImgOptions) {
         final int qrWidth = qrImg.getWidth();
         final int qrHeight = qrImg.getHeight();
 
         // 背景的图宽高不应该小于原图
-        int bgW = bgImgOptions.getBgW() < qrWidth ? qrWidth : bgImgOptions.getBgW();
-        int bgH = bgImgOptions.getBgH() < qrHeight ? qrHeight : bgImgOptions.getBgH();
+        int bgW = Math.max(bgImgOptions.getBgW(), qrWidth);
+        int bgH = Math.max(bgImgOptions.getBgH(), qrHeight);
 
         // 背景图缩放
         BufferedImage bgImg = bgImgOptions.getBgImg();
@@ -152,8 +151,8 @@ public class QrCodeRenderHelper {
         final int qrHeight = qrImg.getHeight();
 
         // 背景的图宽高不应该小于原图
-        int bgW = bgImgOptions.getBgW() < qrWidth ? qrWidth : bgImgOptions.getBgW();
-        int bgH = bgImgOptions.getBgH() < qrHeight ? qrHeight : bgImgOptions.getBgH();
+        int bgW = Math.max(bgImgOptions.getBgW(), qrWidth);
+        int bgH = Math.max(bgImgOptions.getBgH(), qrHeight);
 
         // 覆盖方式
         boolean fillMode = bgImgOptions.getBgImgStyle() == QrCodeOptions.BgImgStyle.FILL;
@@ -354,13 +353,9 @@ public class QrCodeRenderHelper {
      * @return
      */
     private static boolean inOuterDetectCornerArea(int x, int y, int matrixW, int matrixH, int detectCornerSize) {
-        if (x == 0 || x == detectCornerSize - 1 || x == matrixW - 1 || x == matrixW - detectCornerSize || y == 0 ||
-                y == detectCornerSize - 1 || y == matrixH - 1 || y == matrixH - detectCornerSize) {
-            // 外层的框
-            return true;
-        }
-
-        return false;
+        // 外层的框
+        return x == 0 || x == detectCornerSize - 1 || x == matrixW - 1 || x == matrixW - detectCornerSize || y == 0 ||
+                y == detectCornerSize - 1 || y == matrixH - 1 || y == matrixH - detectCornerSize;
     }
 
 
