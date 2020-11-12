@@ -9,6 +9,7 @@ import com.jedreck.qrcode.zxingtest01.utils.FileReadUtil;
 import com.jedreck.qrcode.zxingtest01.utils.FileWriteUtil;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeGenWrapper;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
+import com.jedreck.qrcode.zxingtest01.wrapper.StringPicture;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -22,7 +23,13 @@ public class Test01 {
     public static final String P = "/tmp/aaa.png";
 
     public static void main(String[] args) throws IOException, WriterException {
-        test09();
+        test10();
+    }
+
+    private static void test10() {
+        String[] ts = {"123", "123456", "456168165asdfgkjashdfklhaui"};
+        BufferedImage image = StringPicture.createImage(ts, null, Color.pink, null);
+        System.out.println(image.getWidth());
     }
 
     private static void test09() throws IOException, WriterException {
@@ -49,9 +56,10 @@ public class Test01 {
     }
 
     public static void test07() throws IOException, WriterException {
+        String[] s = {"456789", "123123"};
         QrCodeGenWrapper.of(T)
                 .setH(1000)
-                .setLogoStr("456789", "123123", new Font("宋体", Font.BOLD, 300), Color.RED, Color.WHITE)
+                .setLogoStr(s, new Font("宋体", Font.BOLD, 300), Color.RED, Color.WHITE)
                 .setLogoRate(50)
                 .asFile(P);
     }
