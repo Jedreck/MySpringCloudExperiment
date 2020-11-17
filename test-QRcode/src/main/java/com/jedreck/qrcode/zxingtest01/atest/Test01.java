@@ -16,6 +16,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class Test01 {
 
@@ -27,8 +29,10 @@ public class Test01 {
     }
 
     private static void test10() {
-        String[] ts = {"123", "123456", "456168165asdfgkjashdfklhaui"};
-        BufferedImage image = StringPicture.createImage(ts, null, Color.pink, null);
+        List<String> s = Arrays.asList("123", "123456", "456168165asdfgkjashdfklhaui");
+
+        String[] st = new String[s.size()];
+        BufferedImage image = StringPicture.createImage(s.toArray(st), null, Color.pink, null);
         System.out.println(image.getWidth());
     }
 
