@@ -32,6 +32,8 @@
         <module>test-rocketmq</module>
         <module>test-javacv</module>
         <module>test-jave2</module>
+        <module>test-unified-configuration-nacos</module>
+        <module>test-unified-configuration-nacos/test-simple-001</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
