@@ -7,6 +7,8 @@ import com.jedreck.testspringcloudgateway.route.AuthRoute;
 import com.jedreck.testspringcloudgateway.utils.FilterResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
@@ -19,12 +21,19 @@ import java.util.Date;
 
 @Slf4j
 @Component
+@RefreshScope
 public class Auth01Filter implements GatewayFilter, Ordered {
     @Autowired
     AuthRoute authRoute;
 
+    @Value("${config.filter01}")
+    boolean on;
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        if (!on) {
+            return chain.filter(exchange);
+        }
         AuthBean authBean = authRoute.auth.get();
 
         Date nowDate = new Date();

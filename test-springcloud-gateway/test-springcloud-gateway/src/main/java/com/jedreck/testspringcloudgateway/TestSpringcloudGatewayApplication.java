@@ -10,8 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TestSpringcloudGatewayApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TestSpringcloudGatewayApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TestSpringcloudGatewayApplication.class, args);
+    }
 
 }

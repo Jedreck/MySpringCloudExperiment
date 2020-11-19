@@ -20,7 +20,7 @@ public class AllRoute {
     Auth02Filter auth02Filter;
 
     @Bean
-    public RouteLocator TestConsumRouteFunction(RouteLocatorBuilder builder) {
+    public RouteLocator AllRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route(p -> p.method(HttpMethod.GET)
                         .and()

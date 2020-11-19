@@ -1,0 +1,11 @@
+spring:
+  #  profiles:
+  #    active: common
+  cloud:
+    nacos:
+      config:
+        server-addr: 222.2.2.2:8848
+        # 文件后缀名
+        file-extension: yaml
+        # 这里需要填入的是 命名空间ID
+        namespace: gateway-01

@@ -25,8 +25,8 @@ class TestSpringcloudGatewayApplicationTests {
         authBean.setKey("123456");
         authBean.setAuth01(100);
         authBean.setStartDate(DateUtil.parseDate("2020-11-19"));
-        authBean.setEndDate(DateUtil.parseDate("2020-11-18"));
-        authBean.setStartTime(DateUtil.parse("18:30:00", DatePattern.NORM_TIME_PATTERN));
+        authBean.setEndDate(DateUtil.parseDate("2020-11-20"));
+        authBean.setStartTime(DateUtil.parse("15:50:00", DatePattern.NORM_TIME_PATTERN));
         authBean.setEndTime(DateUtil.parse("19:30:00", DatePattern.NORM_TIME_PATTERN));
         redisUtil.set(authBean.getKey(), authBean);
     }
