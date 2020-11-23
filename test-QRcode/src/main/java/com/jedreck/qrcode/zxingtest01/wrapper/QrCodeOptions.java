@@ -1005,21 +1005,25 @@ public class QrCodeOptions {
 
             @Override
             public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
-                int s = Math.max(w, h) / 6;
-                int sw = s * 4;
-                int sww = s * 2;
-                g2.setColor(outColor);
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.fillRect(x, y, w, w);
+                int W = 600;
+                int s = 100;
+                int sw = 200;
+                int sww = 400;
 
-                g2.setComposite(AlphaComposite.Src);
-                g2.setColor(bgColor);
-                g2.fillRect(x + s, y + s, sw, sw);
+                BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g = img.createGraphics();
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g.setComposite(AlphaComposite.Src);
+                g.setColor(outColor);
+                g.fillRect(0, 0, W, W);
 
-                g2.setColor(inColor);
-                g2.setComposite(AlphaComposite.Src);
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.fillRect(x + sww, y + sww, sww, sww);
+                g.setColor(bgColor);
+                g.fillRect(s, s, sww, sww);
+
+                g.setColor(inColor);
+                g.fillRect(sw, sw, sw, sw);
+
+                g2.drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), x, y, null);
             }
 
             @Override

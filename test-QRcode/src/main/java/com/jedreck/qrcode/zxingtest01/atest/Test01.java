@@ -21,11 +21,11 @@ import java.util.List;
 
 public class Test01 {
 
-    public static final String T = "真是";
+    public static final String T = "真是auedhfjkhgajlsdbnfjolanjsdboflanejkwrbvlauj weflihauijwefboiabnhdilfbujainweuilfn";
     public static final String P = "/tmp/aaa.png";
 
     public static void main(String[] args) throws IOException, WriterException {
-        test10();
+        test01();
     }
 
     private static void test10() {
@@ -120,7 +120,7 @@ public class Test01 {
     }
 
     public static void test01() throws IOException, WriterException {
-        QrCodeGenWrapper.of(T).asFile(P);
+        QrCodeGenWrapper.of(T).setDetectPatterning(QrCodeOptions.DetectPatterning.RECT).asFile(P);
     }
 
     public static void test02() throws IOException, WriterException {
