@@ -21,6 +21,45 @@ spring:
         max-active: 8
         # 连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
+  # 网关配置
+  cloud:
+    gateway:
+      # 允许跨域 针对SpringCloudGateway2.2.x以上版本 可以直接使用自带的跨域配置即可
+      filter:
+        remove-hop-by-hop:
+          headers:
+            # 以下是去掉网关默认去掉的请求响应头
+            - trailer
+            - te
+            - keep-alive
+            - transfer-encoding
+            - upgrade
+            - proxy-authenticate
+            - connection
+            - proxy-authorization
+            - x-application-context
+            # 以下是去掉服务层面定义的跨域
+            - access-control-allow-credentials
+            - access-control-allow-headers
+            - access-control-allow-methods
+            - access-control-allow-origin
+            - access-control-max-age
+            - vary
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowCredentials: true
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+            maxAge: 3628800
+      # 自定义route
+      routes:
+        - id: auth01
+          uri: http://localhost:58001
+          predicates:
+            - { @AuthRoute }
+
 
 
 # 配置filter启动
