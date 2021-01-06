@@ -1,7 +1,10 @@
 package com.jedreck.qrcode.zxingtest01.atest;
 
+import com.google.zxing.WriterException;
 import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
 import com.jedreck.qrcode.zxingtest01.utils.ImageLoadUtil;
+import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeGenWrapper;
+import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
@@ -16,6 +19,16 @@ public class Test02 {
 
     public static void main(String[] args) throws Exception {
         test01(ImageLoadUtil.getImageByPath("sky.jpg"), 5, 5, Color.GRAY, .5f);
+    }
+
+    @Test
+    public void simpleTest() throws IOException, WriterException {
+        QrCodeGenWrapper
+//                .of("https://qr.encdata.cn/h5/sFBkjKYHA")
+                .of("https://qr.encdata.cn/mini?m=scan&e=EcXw5fFxm")
+                .setDetectPatterning(QrCodeOptions.DetectPatterning.RECT)
+                .setPadding(2)
+                .asFile(P);
     }
 
     /**
