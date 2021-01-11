@@ -3,6 +3,7 @@ package com.jedreck.testjave;
 import org.apache.commons.lang3.StringUtils;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FrameGrabber;
+import org.junit.Test;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.EncoderException;
 import ws.schild.jave.MultimediaObject;
@@ -14,14 +15,13 @@ import ws.schild.jave.info.VideoInfo;
 import ws.schild.jave.info.VideoSize;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 public class TestVideo {
-    public static void main(String[] args) throws EncoderException, FrameGrabber.Exception {
-        test001();
-    }
-
-    public static void test002() throws EncoderException {
+    @Test
+    public void test002() throws EncoderException {
         // 视频
         Encoder encoder = new Encoder();
         String[] audioDecoders = encoder.getAudioDecoders();
@@ -49,17 +49,19 @@ public class TestVideo {
         Arrays.stream(supportedDecodingFormats).forEach(System.out::println);
     }
 
-    public static void test001() throws EncoderException, FrameGrabber.Exception {
+    @Test
+    public void test001() throws EncoderException, FrameGrabber.Exception, FileNotFoundException {
         //源avi格式视频
 //        File source = new File("D:\\Desktop\\966.MOV");
-        File source = new File("D:\\Desktop\\988.mp4");
+        File source = new File("D:\\Desktop\\video\\9882.mp4");
 //        File source = new File("D:\\Desktop\\VID_20201105_174135.mp4");
         //转换后的mp4格式视频
-        File target = new File("D:\\Desktop\\9882.mp4");
+        File target = new File("D:\\Desktop\\video\\9883.mp4");
 //        File target = new File("D:\\Desktop\\9662.MOV");
 //        File target2 = new File("D:\\Desktop\\aaa.jpg");
         //获取手机是否翻转,反转多少度
-        FFmpegFrameGrabber ff = FFmpegFrameGrabber.createDefault(source);
+//        FFmpegFrameGrabber ff = FFmpegFrameGrabber.createDefault(source);
+        FFmpegFrameGrabber ff = new FFmpegFrameGrabber(new FileInputStream(source));
         ff.start();
         String rotate = ff.getVideoMetadata("rotate");//视频旋转角度，可能是null
         ff.close();
@@ -127,9 +129,12 @@ public class TestVideo {
         encodingAttributes.setAudioAttributes(audio);
         Encoder encoder = new Encoder();
         encoder.encode(multimediaObject, target, encodingAttributes);
+
+        System.out.println("完成");
     }
 
-    public static void test01() throws EncoderException {
+    @Test
+    public void test01() throws EncoderException {
         //源avi格式视频
         File source = new File("D:\\Study\\RabbitMQ\\Rabbit入门到精通\\00-今日大纲.avi");
         //转换后的mp4格式视频
@@ -152,7 +157,8 @@ public class TestVideo {
         encoder.encode(multimediaObject, target, attrs);//转换开始。。。
     }
 
-    public static void test02() throws EncoderException {
+    @Test
+    public void test02() throws EncoderException {
         //源avi格式视频
         File source = new File("D:\\Study\\【千锋Java】ElasticSearch6入门教程（62集）\\千锋Java教程：62.在Java应用中实现集群管理.mp4");
         //转换后的mp4格式视频
@@ -193,7 +199,8 @@ public class TestVideo {
         System.out.println("耗时：" + (System.currentTimeMillis() - time) / 1000);
     }
 
-    public static void test03() {
+    @Test
+    public void test03() {
         long times = System.currentTimeMillis();
         File source = new File("D:\\Desktop\\千锋Java教程：62.在Java应用中实现集群管理.mp4");
         File target = new File("D:\\Desktop\\aaa.png");

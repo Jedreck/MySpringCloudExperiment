@@ -12,6 +12,10 @@
     <artifactId>test-jave2</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
         <!--视音频处理-->
         <dependency>
             <groupId>ws.schild</groupId>
