@@ -1,0 +1,7 @@
+---
+server:
+  port: 58002
+
+logging:
+  # 方法二：指定log配置文件
+  config: classpath:logback-spring.xml

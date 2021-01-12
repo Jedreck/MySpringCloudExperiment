@@ -1,0 +1,19 @@
+server:
+  port: 58001
+
+spring:
+  profiles:
+    active: dev
+
+# 方法一：根据对应的包设置级别
+logging:
+  # 格式化
+  pattern:
+    console: "%d - %msg %n"
+    file: "%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %-50logger{100} - %msg%n"
+  # 设置级别
+  level:
+    com.jedreck.**: debug
+  # 输出路径
+  file:
+    path: /testLog
