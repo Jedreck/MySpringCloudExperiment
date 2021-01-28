@@ -3,6 +3,7 @@ package com.jedreck.qrcode.zxingtest01.atest;
 import com.google.zxing.WriterException;
 import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
 import com.jedreck.qrcode.zxingtest01.utils.ImageLoadUtil;
+import com.jedreck.qrcode.zxingtest01.utils.ImageUtil;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeGenWrapper;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import org.junit.Test;
@@ -19,6 +20,21 @@ public class Test02 {
 
     public static void main(String[] args) throws Exception {
         test01(ImageLoadUtil.getImageByPath("sky.jpg"), 5, 5, Color.GRAY, .5f);
+    }
+
+    /**
+     * 图片缩放
+     */
+    @Test
+    public void zoomPic() throws IOException {
+        BufferedImage image = ImageLoadUtil.getImageByPath("nanning.jpg");
+        BufferedImage image2 = ImageLoadUtil.getImageByPath("sky.jpg");
+        BufferedImage resize = ImageUtil.resizeMin(image, 120);
+        BufferedImage resize2 = ImageUtil.resizeMax(image, 120);
+        BufferedImage resize3 = ImageUtil.resizeMin(image2, 120);
+        BufferedImage resize4 = ImageUtil.resizeMax(image2, 120);
+
+        System.out.println("success");
     }
 
     @Test
