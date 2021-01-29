@@ -1,6 +1,7 @@
 package com.jedreck.qrcode.zxingtest01.atest;
 
 import com.google.zxing.WriterException;
+import com.jedreck.qrcode.zxingtest01.constants.MediaType;
 import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
 import com.jedreck.qrcode.zxingtest01.utils.ImageLoadUtil;
 import com.jedreck.qrcode.zxingtest01.utils.ImageUtil;
@@ -9,9 +10,12 @@ import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -23,16 +27,81 @@ public class Test02 {
     }
 
     /**
+     * 存储图片
+     */
+    @Test
+    public void savePic() throws IOException {
+        BufferedImage image = ImageLoadUtil.getImageByPath("D:\\Desktop\\999.png");
+        File file = new File("/tmp/7777.jpg");
+
+        // 存储图片方式一 严重失真
+//        FileWriteUtil.mkDir(file);
+//        ImageIO.write(image, MediaType.ImageJpg.getExt(), file);
+
+        // 存储图片方式二 微小失真
+//        Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpeg");
+//        if (iter.hasNext()) {
+//            ImageWriter writer = iter.next();
+//
+//            ImageWriteParam param = writer.getDefaultWriteParam();
+//            // 设置可否压缩
+//            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+//            // 最高质量
+////            param.setCompressionQuality(1.0f);
+//            // 最接近真实
+//            param.setCompressionQuality(0.955f);
+//
+//            file = new File("/tmp/8881.jpg");
+//            FileImageOutputStream out = new FileImageOutputStream(file);
+//            writer.setOutput(out);
+//
+//            writer.write(null, new IIOImage(image, null, null), param);
+//
+//            out.close();
+//            writer.dispose();
+//        }
+
+        // 工具类
+        file = new File("/tmp/8881.jpg");
+        FileImageOutputStream out2 = new FileImageOutputStream(file);
+        ImageUtil.getStream(image, MediaType.ImageJpg.getExt(), null, out2);
+        out2.close();
+//        file = new File("/tmp/8882.png");
+//        FileImageOutputStream out3 = new FileImageOutputStream(file);
+//        ImageUtil.getStream(image, MediaType.ImagePng.getExt(), 1f, out3);
+//        out3.close();
+
+        ImageIO.write(image, MediaType.ImageJpg.getExt(), new File("/tmp/8883.jpg"));
+        ImageIO.write(image, MediaType.ImagePng.getExt(), new File("/tmp/8884.png"));
+
+        System.out.println("success");
+    }
+
+
+    /**
      * 图片缩放
      */
     @Test
     public void zoomPic() throws IOException {
-        BufferedImage image = ImageLoadUtil.getImageByPath("nanning.jpg");
+        BufferedImage bufferedImage = ImageLoadUtil.getImageByPath("D:\\Desktop\\999.png");
         BufferedImage image2 = ImageLoadUtil.getImageByPath("sky.jpg");
-        BufferedImage resize = ImageUtil.resizeMin(image, 120);
-        BufferedImage resize2 = ImageUtil.resizeMax(image, 120);
-        BufferedImage resize3 = ImageUtil.resizeMin(image2, 120);
-        BufferedImage resize4 = ImageUtil.resizeMax(image2, 120);
+//        BufferedImage resize = ImageUtil.resizeMin(image, 120);
+//        BufferedImage resize2 = ImageUtil.resizeMax(image, 120);
+//        BufferedImage resize3 = ImageUtil.resizeMin(image2, 120);
+//        BufferedImage resize4 = ImageUtil.resizeMax(image2, 120);
+//        BufferedImage bufferedImage = ImageUtil.resizeByte(image, 2000, 500, "jpg");
+
+        // 存储图片
+        ImageUtil.savePic(bufferedImage, "jpg", "/tmp/bbb.jpg");
+        ImageIO.write(bufferedImage, MediaType.ImagePng.getExt(), new File("/tmp/bbb2.png"));
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, MediaType.ImagePng.getExt(), out);
+        byte[] bytes = out.toByteArray();
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        BufferedImage read = ImageIO.read(in);
+        ImageIO.write(read, MediaType.ImageJpg.getExt(), new File("/tmp/bbb3.jpg"));
+
 
         System.out.println("success");
     }
