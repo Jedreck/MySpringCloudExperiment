@@ -64,7 +64,7 @@ public class Test02 {
         // 工具类
         file = new File("/tmp/8881.jpg");
         FileImageOutputStream out2 = new FileImageOutputStream(file);
-        ImageUtil.getStream(image, MediaType.ImageJpg.getExt(), null, out2);
+        ImageUtil.getStreamJPG(image, null, out2);
         out2.close();
 //        file = new File("/tmp/8882.png");
 //        FileImageOutputStream out3 = new FileImageOutputStream(file);
@@ -92,7 +92,7 @@ public class Test02 {
 //        BufferedImage bufferedImage = ImageUtil.resizeByte(image, 2000, 500, "jpg");
 
         // 存储图片
-        ImageUtil.savePic(bufferedImage, "jpg", "/tmp/bbb.jpg");
+        ImageUtil.savePicJPG(bufferedImage, "/tmp/bbb.jpg");
         ImageIO.write(bufferedImage, MediaType.ImagePng.getExt(), new File("/tmp/bbb2.png"));
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
