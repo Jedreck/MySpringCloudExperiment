@@ -1,0 +1,24 @@
+# 端口
+server:
+  port: 8848
+spring:
+  servlet:
+    multipart:
+      # 单个multipart文件最大大小
+      max-file-size: 100MB
+      # 一次请求的总计大小（要大于max-file-size）
+      max-request-size: 200MB
+# FastDFS
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  thumb-image: #缩略图生成参数
+    width: 150
+    height: 150
+  web-server-url: http://222.2.2.2:8888/
+  tracker-list:
+    - 222.2.2.2:22122
+
+public:
+  #  thumb-image-suffix: _300x300
+  thumb-image-suffix: _thumb
