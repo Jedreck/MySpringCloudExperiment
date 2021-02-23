@@ -26,7 +26,7 @@ public class QrCodeRenderHelper {
      * @param logoOptions
      * @return
      */
-    public static BufferedImage drawLogo(BufferedImage qrImg, QrCodeOptions.LogoOptions logoOptions) {
+    public static BufferedImage drawLogo(BufferedImage qrImg, QrCodeOptions.LogoOptions logoOptions, BitMatrixEx bitMatrix) {
         final int qrWidth = qrImg.getWidth();
         final int qrHeight = qrImg.getHeight();
 
@@ -74,8 +74,15 @@ public class QrCodeRenderHelper {
             logoWidth = logoImg.getWidth();
             logoHeight = logoImg.getHeight();
         }
-        int logoOffsetX = (qrWidth - logoWidth) >> 1;
-        int logoOffsetY = (qrHeight - logoHeight) >> 1;
+        int logoOffsetX;
+        int logoOffsetY;
+        if (QrCodeOptions.LogoPosition.RIGHT_DOWN == logoOptions.getLogoPosition()) {
+            logoOffsetX = qrWidth - logoWidth - bitMatrix.getLeftPadding();
+            logoOffsetY = qrHeight - logoHeight - bitMatrix.getTopPadding();
+        } else {
+            logoOffsetX = (qrWidth - logoWidth) >> 1;
+            logoOffsetY = (qrHeight - logoHeight) >> 1;
+        }
 
 
         // 插入LOGO

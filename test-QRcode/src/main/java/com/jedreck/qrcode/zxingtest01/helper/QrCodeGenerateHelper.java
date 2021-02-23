@@ -20,7 +20,8 @@ import java.util.List;
  * 二维码生成辅助类，主要两个方法，一个是生成二维码矩阵，一个是渲染矩阵为图片
  */
 public class QrCodeGenerateHelper {
-    private QrCodeGenerateHelper(){}
+    private QrCodeGenerateHelper() {
+    }
 
     private static final int QUIET_ZONE_SIZE = 4;
 
@@ -167,7 +168,7 @@ public class QrCodeGenerateHelper {
             if (qrCodeConfig.getBgImgOptions().getBgImgStyle() == QrCodeOptions.BgImgStyle.FILL &&
                     qrCodeConfig.getLogoOptions() != null) {
                 // 此种模式，先绘制logo
-                QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
+                QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions(), bitMatrix);
                 logoAlreadyDraw = true;
             }
 
@@ -176,7 +177,7 @@ public class QrCodeGenerateHelper {
 
         // 插入logo
         if (qrCodeConfig.getLogoOptions() != null && !logoAlreadyDraw) {
-            QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
+            QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions(), bitMatrix);
         }
 
         return qrCode;
@@ -209,7 +210,7 @@ public class QrCodeGenerateHelper {
         if (qrCodeConfig.getBgImgOptions().getBgImgStyle() == QrCodeOptions.BgImgStyle.FILL &&
                 qrCodeConfig.getLogoOptions() != null) {
             // 此种模式，先绘制logo
-            QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions());
+            QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions(), bitMatrix);
             logoAlreadyDraw = true;
         }
 
@@ -223,7 +224,7 @@ public class QrCodeGenerateHelper {
         if (qrCodeConfig.getLogoOptions() != null && !logoAlreadyDraw) {
             List<ImmutablePair<BufferedImage, Integer>> result = new ArrayList<>(bgList.size());
             for (ImmutablePair<BufferedImage, Integer> pair : bgList) {
-                result.add(ImmutablePair.of(QrCodeRenderHelper.drawLogo(pair.getLeft(), qrCodeConfig.getLogoOptions()),
+                result.add(ImmutablePair.of(QrCodeRenderHelper.drawLogo(pair.getLeft(), qrCodeConfig.getLogoOptions(), bitMatrix),
                         pair.getRight()));
             }
             return result;

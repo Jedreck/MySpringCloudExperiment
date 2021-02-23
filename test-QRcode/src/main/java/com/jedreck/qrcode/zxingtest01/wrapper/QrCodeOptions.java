@@ -167,222 +167,20 @@ public class QrCodeOptions {
     }
 
     /**
-     * logo 的配置信息
+     * logo位置
      */
-    public static class LogoOptions {
-
+    public enum LogoPosition {
         /**
-         * logo 图片
+         * 居中
          */
-        private BufferedImage logo;
-
+        MIDDLE,
         /**
-         * logo 样式
+         * 右下
          */
-        private LogoStyle logoStyle;
+        RIGHT_DOWN;
 
-        /**
-         * logo 占二维码的比例
-         */
-        private int rate;
-
-        /**
-         * true 表示有边框，
-         * false 表示无边框
-         */
-        private boolean border;
-
-        /**
-         * 边框颜色
-         */
-        private Color borderColor;
-
-        /**
-         * 外围边框颜色
-         */
-        private Color outerBorderColor;
-
-        /**
-         * 用于设置logo的透明度
-         */
-        private Float opacity;
-
-        public LogoOptions() {
-        }
-
-        public LogoOptions(BufferedImage logo, LogoStyle logoStyle, int rate, boolean border, Color borderColor,
-                           Color outerBorderColor, Float opacity) {
-            this.logo = logo;
-            this.logoStyle = logoStyle;
-            this.rate = rate;
-            this.border = border;
-            this.borderColor = borderColor;
-            this.outerBorderColor = outerBorderColor;
-            this.opacity = opacity;
-        }
-
-        public BufferedImage getLogo() {
-            return logo;
-        }
-
-        public void setLogo(BufferedImage logo) {
-            this.logo = logo;
-        }
-
-        public LogoStyle getLogoStyle() {
-            return logoStyle;
-        }
-
-        public void setLogoStyle(LogoStyle logoStyle) {
-            this.logoStyle = logoStyle;
-        }
-
-        public int getRate() {
-            return rate;
-        }
-
-        public void setRate(int rate) {
-            this.rate = rate;
-        }
-
-        public boolean isBorder() {
-            return border;
-        }
-
-        public void setBorder(boolean border) {
-            this.border = border;
-        }
-
-        public Color getBorderColor() {
-            return borderColor;
-        }
-
-        public void setBorderColor(Color borderColor) {
-            this.borderColor = borderColor;
-        }
-
-        public Color getOuterBorderColor() {
-            return outerBorderColor;
-        }
-
-        public void setOuterBorderColor(Color outerBorderColor) {
-            this.outerBorderColor = outerBorderColor;
-        }
-
-        public Float getOpacity() {
-            return opacity;
-        }
-
-        public void setOpacity(Float opacity) {
-            this.opacity = opacity;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            LogoOptions that = (LogoOptions) o;
-            return rate == that.rate && border == that.border && Objects.equals(logo, that.logo) &&
-                    logoStyle == that.logoStyle && Objects.equals(borderColor, that.borderColor) &&
-                    Objects.equals(outerBorderColor, that.outerBorderColor) && Objects.equals(opacity, that.opacity);
-        }
-
-        @Override
-        public int hashCode() {
-
-            return Objects.hash(logo, logoStyle, rate, border, borderColor, outerBorderColor, opacity);
-        }
-
-        @Override
-        public String toString() {
-            return "LogoOptions{" + "logo=" + logo + ", logoStyle=" + logoStyle + ", rate=" + rate + ", border=" +
-                    border + ", borderColor=" + borderColor + ", outerBorderColor=" + outerBorderColor + ", opacity=" +
-                    opacity + '}';
-        }
-
-        public static LogoOptionsBuilder builder() {
-            return new LogoOptionsBuilder();
-        }
-
-        public static class LogoOptionsBuilder {
-            /**
-             * logo 图片
-             */
-            private BufferedImage logo;
-
-            /**
-             * logo 样式
-             */
-            private LogoStyle logoStyle;
-
-            /**
-             * logo 占二维码的比例
-             */
-            private int rate;
-
-            /**
-             * true 表示有边框，
-             * false 表示无边框
-             */
-            private boolean border;
-
-            /**
-             * 边框颜色
-             */
-            private Color borderColor;
-
-            /**
-             * 外围边框颜色
-             */
-            private Color outerBorderColor;
-
-            /**
-             * 用于设置logo的透明度
-             */
-            private Float opacity;
-
-            public LogoOptionsBuilder logo(BufferedImage logo) {
-                this.logo = logo;
-                return this;
-            }
-
-            public LogoOptionsBuilder logoStyle(LogoStyle logoStyle) {
-                this.logoStyle = logoStyle;
-                return this;
-            }
-
-            public LogoOptionsBuilder rate(int rate) {
-                this.rate = rate;
-                return this;
-            }
-
-            public LogoOptionsBuilder border(boolean border) {
-                this.border = border;
-                return this;
-            }
-
-            public LogoOptionsBuilder borderColor(Color borderColor) {
-                this.borderColor = borderColor;
-                return this;
-            }
-
-            public LogoOptionsBuilder outerBorderColor(Color outerBorderColor) {
-                this.outerBorderColor = outerBorderColor;
-                return this;
-            }
-
-            public LogoOptionsBuilder opacity(Float opacity) {
-                this.opacity = opacity;
-                return this;
-            }
-
-            public LogoOptions build() {
-                return new LogoOptions(logo, logoStyle, rate, border, borderColor, outerBorderColor, opacity);
-            }
+        public static LogoPosition getPosition(String name) {
+            return LogoPosition.valueOf(name.toUpperCase());
         }
     }
 
@@ -1446,6 +1244,251 @@ public class QrCodeOptions {
 
         public static LogoStyle getStyle(String name) {
             return LogoStyle.valueOf(name.toUpperCase());
+        }
+    }
+
+    /**
+     * logo 的配置信息
+     */
+    public static class LogoOptions {
+
+        /**
+         * logo 图片
+         */
+        private BufferedImage logo;
+
+        /**
+         * logo 样式
+         */
+        private LogoStyle logoStyle;
+
+        /**
+         * logo 占二维码的比例
+         */
+        private int rate;
+
+        /**
+         * true 表示有边框，
+         * false 表示无边框
+         */
+        private boolean border;
+
+        /**
+         * 边框颜色
+         */
+        private Color borderColor;
+
+        /**
+         * 外围边框颜色
+         */
+        private Color outerBorderColor;
+
+        /**
+         * 用于设置logo的透明度
+         */
+        private Float opacity;
+
+        /**
+         * logo位置，中间或右下
+         */
+        private LogoPosition logoPosition;
+
+        public LogoOptions() {
+        }
+
+        public LogoOptions(BufferedImage logo, LogoStyle logoStyle, int rate, boolean border, Color borderColor,
+                           Color outerBorderColor, Float opacity, LogoPosition logoPosition) {
+            this.logo = logo;
+            this.logoStyle = logoStyle;
+            this.rate = rate;
+            this.border = border;
+            this.borderColor = borderColor;
+            this.outerBorderColor = outerBorderColor;
+            this.opacity = opacity;
+            this.logoPosition = logoPosition;
+        }
+
+        public BufferedImage getLogo() {
+            return logo;
+        }
+
+        public void setLogo(BufferedImage logo) {
+            this.logo = logo;
+        }
+
+        public LogoStyle getLogoStyle() {
+            return logoStyle;
+        }
+
+        public void setLogoStyle(LogoStyle logoStyle) {
+            this.logoStyle = logoStyle;
+        }
+
+        public int getRate() {
+            return rate;
+        }
+
+        public void setRate(int rate) {
+            this.rate = rate;
+        }
+
+        public boolean isBorder() {
+            return border;
+        }
+
+        public void setBorder(boolean border) {
+            this.border = border;
+        }
+
+        public Color getBorderColor() {
+            return borderColor;
+        }
+
+        public void setBorderColor(Color borderColor) {
+            this.borderColor = borderColor;
+        }
+
+        public Color getOuterBorderColor() {
+            return outerBorderColor;
+        }
+
+        public void setOuterBorderColor(Color outerBorderColor) {
+            this.outerBorderColor = outerBorderColor;
+        }
+
+        public Float getOpacity() {
+            return opacity;
+        }
+
+        public void setOpacity(Float opacity) {
+            this.opacity = opacity;
+        }
+
+        public LogoPosition getLogoPosition() {
+            return logoPosition == null ? LogoPosition.MIDDLE : logoPosition;
+        }
+
+        public void setLogoPosition(LogoPosition logoPosition) {
+            this.logoPosition = logoPosition;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            LogoOptions that = (LogoOptions) o;
+            return rate == that.rate && border == that.border && Objects.equals(logo, that.logo) &&
+                    logoStyle == that.logoStyle && Objects.equals(borderColor, that.borderColor) &&
+                    Objects.equals(outerBorderColor, that.outerBorderColor) && Objects.equals(opacity, that.opacity)
+                    && logoPosition == that.logoPosition;
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(logo, logoStyle, rate, border, borderColor, outerBorderColor, opacity, logoPosition);
+        }
+
+        @Override
+        public String toString() {
+            return "LogoOptions{" + "logo=" + logo + ", logoStyle=" + logoStyle + ", rate=" + rate + ", border=" +
+                    border + ", borderColor=" + borderColor + ", outerBorderColor=" + outerBorderColor + ", opacity=" +
+                    opacity + ", logoPosition= " + logoPosition + "}";
+        }
+
+        public static LogoOptionsBuilder builder() {
+            return new LogoOptionsBuilder();
+        }
+
+        public static class LogoOptionsBuilder {
+            /**
+             * logo 图片
+             */
+            private BufferedImage logo;
+
+            /**
+             * logo 样式
+             */
+            private LogoStyle logoStyle;
+
+            /**
+             * logo 占二维码的比例
+             */
+            private int rate;
+
+            /**
+             * true 表示有边框，
+             * false 表示无边框
+             */
+            private boolean border;
+
+            /**
+             * 边框颜色
+             */
+            private Color borderColor;
+
+            /**
+             * 外围边框颜色
+             */
+            private Color outerBorderColor;
+
+            /**
+             * 用于设置logo的透明度
+             */
+            private Float opacity;
+
+            /**
+             * logo位置，中间或右下
+             */
+            private LogoPosition logoPosition;
+
+            public LogoOptionsBuilder logo(BufferedImage logo) {
+                this.logo = logo;
+                return this;
+            }
+
+            public LogoOptionsBuilder logoStyle(LogoStyle logoStyle) {
+                this.logoStyle = logoStyle;
+                return this;
+            }
+
+            public LogoOptionsBuilder rate(int rate) {
+                this.rate = rate;
+                return this;
+            }
+
+            public LogoOptionsBuilder border(boolean border) {
+                this.border = border;
+                return this;
+            }
+
+            public LogoOptionsBuilder borderColor(Color borderColor) {
+                this.borderColor = borderColor;
+                return this;
+            }
+
+            public LogoOptionsBuilder outerBorderColor(Color outerBorderColor) {
+                this.outerBorderColor = outerBorderColor;
+                return this;
+            }
+
+            public LogoOptionsBuilder opacity(Float opacity) {
+                this.opacity = opacity;
+                return this;
+            }
+
+            public LogoOptionsBuilder logoPosition(LogoPosition logoPosition) {
+                this.logoPosition = logoPosition;
+                return this;
+            }
+
+            public LogoOptions build() {
+                return new LogoOptions(logo, logoStyle, rate, border, borderColor, outerBorderColor, opacity, logoPosition);
+            }
         }
     }
 

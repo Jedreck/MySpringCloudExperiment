@@ -158,7 +158,8 @@ public class QrCodeGenWrapper {
 
         public Integer getPadding() {
             if (padding == null) {
-                return 1;
+                // 默认为 2
+                return 2;
             }
 
             if (padding < 0) {
@@ -326,6 +327,11 @@ public class QrCodeGenWrapper {
          */
         public Builder setLogoOpacity(float opacity) {
             logoOptions.opacity(opacity);
+            return this;
+        }
+
+        public Builder setLogoPosition(QrCodeOptions.LogoPosition logoPosition) {
+            logoOptions.logoPosition(logoPosition);
             return this;
         }
 

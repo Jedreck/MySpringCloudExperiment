@@ -10,6 +10,7 @@ import com.jedreck.qrcode.zxingtest01.utils.FileWriteUtil;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeGenWrapper;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import com.jedreck.qrcode.zxingtest01.wrapper.StringPicture;
+import org.junit.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,11 +22,25 @@ import java.util.List;
 
 public class Test01 {
 
-    public static final String T = "真是auedhfjkhgajlsdbnfjolanjsdboflanejkwrbvlauj weflihauijwefboiabnhdilfbujainweuilfn";
+    public static final String T = "真jahiusdnfiaoiermvoaueroijamklsdvuqweiopamvioASUdrfomiaskodvicuawopefmas";
     public static final String P = "/tmp/aaa.png";
 
     public static void main(String[] args) throws IOException, WriterException {
         test01();
+    }
+
+    @Test
+    public void test11() throws IOException, WriterException {
+        QrCodeGenWrapper.of(T)
+                .setH(1000)
+                .setW(1000)
+                .setLogo("sky.jpg")
+                .setLogoRate(40)
+                .setLogoStyle(QrCodeOptions.LogoStyle.NORMAL)
+                .setLogoBorder(true)
+                .setLogoBgColor(Color.BLUE)
+                .setLogoPosition(QrCodeOptions.LogoPosition.RIGHT_DOWN)
+                .asFile(P);
     }
 
     private static void test10() {
