@@ -12,6 +12,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -50,6 +51,11 @@ public class QrCodeOptions {
      * 三个探测图形的样式选项
      */
     private DetectOptions detectOptions;
+
+    /**
+     * 文字信息选项
+     */
+    private NoteOptions noteOptions;
 
     private Map<EncodeHintType, Object> hints;
 
@@ -121,6 +127,14 @@ public class QrCodeOptions {
         this.detectOptions = detectOptions;
     }
 
+    public NoteOptions getNoteOptions() {
+        return noteOptions;
+    }
+
+    public void setNoteOptions(NoteOptions noteOptions) {
+        this.noteOptions = noteOptions;
+    }
+
     public Map<EncodeHintType, Object> getHints() {
         return hints;
     }
@@ -151,19 +165,19 @@ public class QrCodeOptions {
                 Objects.equals(bgImgOptions, options.bgImgOptions) &&
                 Objects.equals(logoOptions, options.logoOptions) &&
                 Objects.equals(detectOptions, options.detectOptions) && Objects.equals(hints, options.hints) &&
-                Objects.equals(picType, options.picType);
+                Objects.equals(picType, options.picType) && Objects.equals(noteOptions, options.noteOptions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(msg, w, h, drawOptions, bgImgOptions, logoOptions, detectOptions, hints, picType);
+        return Objects.hash(msg, w, h, drawOptions, bgImgOptions, logoOptions, detectOptions, hints, picType, noteOptions);
     }
 
     @Override
     public String toString() {
         return "QrCodeOptions{" + "msg='" + msg + '\'' + ", w=" + w + ", h=" + h + ", drawOptions=" + drawOptions +
                 ", bgImgOptions=" + bgImgOptions + ", logoOptions=" + logoOptions + ", detectOptions=" + detectOptions +
-                ", hints=" + hints + ", picType='" + picType + '\'' + '}';
+                ", hints=" + hints + ", picType='" + picType + '\'' + ", noteOptions='" + noteOptions + '\'' + '}';
     }
 
     /**
@@ -1020,6 +1034,131 @@ public class QrCodeOptions {
     }
 
     /**
+     * 文字信息
+     */
+    public static class NoteOptions {
+        /**
+         * 文字
+         */
+        private List<String> notes;
+
+        /**
+         * 位置
+         */
+        private NotePosition notePosition;
+
+        /**
+         * 字体
+         */
+        private Font font;
+
+        /**
+         * 字体颜色
+         */
+        private Color fontColor;
+
+        /**
+         * 描边颜色
+         */
+        private Color outlineColor;
+
+        public NoteOptions() {
+        }
+
+        public NoteOptions(List<String> notes, NotePosition notePosition, Font font, Color fontColor, Color outlineColor) {
+            this.notes = notes;
+            this.notePosition = notePosition;
+            this.font = font;
+            this.fontColor = fontColor;
+            this.outlineColor = outlineColor;
+        }
+
+        public List<String> getNotes() {
+            return notes;
+        }
+
+        public void setNotes(List<String> notes) {
+            this.notes = notes;
+        }
+
+        public NotePosition getNotePosition() {
+            return notePosition;
+        }
+
+        public void setNotePosition(NotePosition notePosition) {
+            this.notePosition = notePosition;
+        }
+
+        public Font getFont() {
+            return font;
+        }
+
+        public void setFont(Font font) {
+            this.font = font;
+        }
+
+        public Color getFontColor() {
+            return fontColor;
+        }
+
+        public void setFontColor(Color fontColor) {
+            this.fontColor = fontColor;
+        }
+
+        public Color getOutlineColor() {
+            return outlineColor;
+        }
+
+        public void setOutlineColor(Color outlineColor) {
+            this.outlineColor = outlineColor;
+        }
+
+        public static final class NoteOptionsBuilder {
+            private List<String> notes;
+            private QrCodeOptions.NotePosition notePosition;
+            private Font font;
+            private Color fontColor;
+            private Color outlineColor;
+
+            private NoteOptionsBuilder() {
+            }
+
+            public static NoteOptionsBuilder builder() {
+                return new NoteOptionsBuilder();
+            }
+
+            public NoteOptionsBuilder notes(List<String> notes) {
+                this.notes = notes;
+                return this;
+            }
+
+            public NoteOptionsBuilder notePosition(QrCodeOptions.NotePosition notePosition) {
+                this.notePosition = notePosition;
+                return this;
+            }
+
+            public NoteOptionsBuilder font(Font font) {
+                this.font = font;
+                return this;
+            }
+
+            public NoteOptionsBuilder fontColor(Color fontColor) {
+                this.fontColor = fontColor;
+                return this;
+            }
+
+            public NoteOptionsBuilder outlineColor(Color outlineColor) {
+                this.outlineColor = outlineColor;
+                return this;
+            }
+
+            public NoteOptions build() {
+                return new NoteOptions(notes, notePosition, font, fontColor, outlineColor);
+            }
+        }
+    }
+
+    /**
      * 探测点图形
      */
     public interface DetectPatterning {
@@ -1489,6 +1628,21 @@ public class QrCodeOptions {
 
         public static LogoPosition getPosition(String name) {
             return LogoPosition.valueOf(name.toUpperCase());
+        }
+    }
+
+    public enum NotePosition {
+        /**
+         * 居中
+         */
+        MIDDLE,
+        /**
+         * 底部
+         */
+        DOWN;
+
+        public static NotePosition getNotePosition(String name) {
+            return NotePosition.valueOf(name.toUpperCase());
         }
     }
 

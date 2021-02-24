@@ -1,5 +1,6 @@
 package com.jedreck.qrcode.zxingtest01.helper;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.google.zxing.qrcode.encoder.ByteMatrix;
 import com.jedreck.qrcode.zxingtest01.constants.QuickQrFont;
 import com.jedreck.qrcode.zxingtest01.entity.DotSize;
@@ -7,6 +8,7 @@ import com.jedreck.qrcode.zxingtest01.utils.GraphicUtil;
 import com.jedreck.qrcode.zxingtest01.utils.ImageOperateUtil;
 import com.jedreck.qrcode.zxingtest01.wrapper.BitMatrixEx;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
+import com.jedreck.qrcode.zxingtest01.wrapper.StringPicture;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.awt.*;
@@ -290,6 +292,45 @@ public class QrCodeRenderHelper {
         }
         g2.dispose();
         return qrImg;
+    }
+
+    public static BufferedImage drawNote(BufferedImage qrCode, QrCodeOptions qrCodeOptions, BitMatrixEx bitMatrix) {
+        // 校验参数
+        if (qrCodeOptions.getNoteOptions() == null || ObjectUtil.isEmpty(qrCodeOptions.getNoteOptions().getNotes())) {
+            return qrCode;
+        }
+        QrCodeOptions.NoteOptions noteOptions = qrCodeOptions.getNoteOptions();
+        QrCodeOptions.NotePosition position =
+                noteOptions.getNotePosition() == null ? QrCodeOptions.NotePosition.DOWN : noteOptions.getNotePosition();
+        // 生成文字图片
+        BufferedImage noteImg = StringPicture.createImageOutline(
+                noteOptions.getNotes().toArray(new String[0]), noteOptions.getFont(),
+                noteOptions.getFontColor(), noteOptions.getOutlineColor(), null);
+        if (noteImg == null) {
+            return qrCode;
+        }
+
+        // 拼接图片
+
+        BufferedImage image;
+        if (position == QrCodeOptions.NotePosition.DOWN) {
+            int imgH = qrCode.getHeight() + noteImg.getHeight() + 20;
+            image = new BufferedImage(qrCode.getWidth(), imgH, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = GraphicUtil.getG2d(image);
+            g.setComposite(AlphaComposite.SrcOver);
+            g.setColor(qrCodeOptions.getDrawOptions().getBgColor());
+            g.fillRect(0, 0, qrCode.getWidth(), imgH);
+            g.drawImage(qrCode, 0, 0, null);
+            g.drawImage(noteImg, (qrCode.getWidth() - noteImg.getWidth()) / 2, qrCode.getHeight(), null);
+        } else {
+            image = new BufferedImage(qrCode.getWidth(), qrCode.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = GraphicUtil.getG2d(image);
+            g.setComposite(AlphaComposite.SrcOver);
+            g.drawImage(qrCode, 0, 0, null);
+            g.drawImage(noteImg, (qrCode.getWidth() - noteImg.getWidth()) / 2,
+                    (qrCode.getHeight() - noteImg.getHeight()) / 2, null);
+        }
+        return image;
     }
 
     public enum DetectLocation {

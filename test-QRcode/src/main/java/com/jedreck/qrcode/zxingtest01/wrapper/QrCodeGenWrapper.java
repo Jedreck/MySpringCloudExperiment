@@ -88,6 +88,8 @@ public class QrCodeGenWrapper {
 
         private QrCodeOptions.DetectOptions.DetectOptionsBuilder detectOptions;
 
+        private QrCodeOptions.NoteOptions.NoteOptionsBuilder noteOptions;
+
         public Builder() {
             // 背景图默认采用覆盖方式
             bgImgOptions =
@@ -104,6 +106,9 @@ public class QrCodeGenWrapper {
 
             // 探测图形
             detectOptions = QrCodeOptions.DetectOptions.builder();
+
+            // 文字信息
+            noteOptions = QrCodeOptions.NoteOptions.NoteOptionsBuilder.builder();
         }
 
         public String getMsg() {
@@ -226,7 +231,7 @@ public class QrCodeGenWrapper {
         }
 
         /**
-         * 设置文字logo
+         * 设置文字logo,与logo图片不兼容
          *
          * @param logoStr logo文字
          * @param font    字体
@@ -789,6 +794,62 @@ public class QrCodeGenWrapper {
 
         /////////////// 二维码绘制 配置结束 ///////////////
 
+        // ------------------------------------------
+
+        /////////////// 5 -- 文字信息 相关配置 ///////////////
+
+        /**
+         * 设置文字信息显示的文字
+         *
+         * @param notes 文字
+         */
+        public Builder setNotes(List<String> notes) {
+            noteOptions.notes(notes);
+            return this;
+        }
+
+        /**
+         * 设置文字信息位置
+         *
+         * @param notePosition {@link QrCodeOptions.NotePosition}
+         */
+        public Builder setNotePosition(QrCodeOptions.NotePosition notePosition) {
+            noteOptions.notePosition(notePosition);
+            return this;
+        }
+
+        /**
+         * 设置文字信息字体
+         *
+         * @param font 字体
+         */
+        public Builder setNoteFont(Font font) {
+            noteOptions.font(font);
+            return this;
+        }
+
+        /**
+         * 设置文字信息字体颜色
+         *
+         * @param fontColor 字体颜色
+         */
+        public Builder setNoteFontColor(Color fontColor) {
+            noteOptions.fontColor(fontColor);
+            return this;
+        }
+
+        /**
+         * 设置文字信息字体颜色
+         *
+         * @param outlineColor 字体颜色
+         */
+        public Builder setNoteOutlineColor(Color outlineColor) {
+            noteOptions.outlineColor(outlineColor);
+            return this;
+        }
+        /////////////// 文字信息 配置结束 ///////////////
+        /////////////// 二维码绘制 配置结束 ///////////////
+
         private void validate() {
             if (msg == null || msg.length() == 0) {
                 throw new IllegalArgumentException("生成二维码的内容不能为空!");
@@ -844,6 +905,10 @@ public class QrCodeGenWrapper {
                 qrCodeConfig.getDetectOptions().setInColor(ColorUtil.OPACITY);
                 qrCodeConfig.getDetectOptions().setOutColor(ColorUtil.OPACITY);
             }
+
+            // 设置文字信息
+            QrCodeOptions.NoteOptions noteOption = noteOptions.build();
+            qrCodeConfig.setNoteOptions(noteOption);
 
             // 设置输出图片格式
             qrCodeConfig.setPicType(picType);

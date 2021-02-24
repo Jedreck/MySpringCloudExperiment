@@ -180,6 +180,11 @@ public class QrCodeGenerateHelper {
             QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions(), bitMatrix);
         }
 
+        // 绘制文字信息
+        if (qrCodeConfig.getNoteOptions() != null) {
+            qrCode = QrCodeRenderHelper.drawNote(qrCode, qrCodeConfig, bitMatrix);
+        }
+
         return qrCode;
     }
 

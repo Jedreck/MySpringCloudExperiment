@@ -34,21 +34,25 @@ public class Test01 {
         QrCodeGenWrapper.of(T)
                 .setH(1000)
                 .setW(1000)
+                .setLogoRate(50)
                 .setLogo("sky.jpg")
-                .setLogoRate(40)
-                .setLogoStyle(QrCodeOptions.LogoStyle.NORMAL)
-                .setLogoBorder(true)
-                .setLogoBgColor(Color.BLUE)
-                .setLogoPosition(QrCodeOptions.LogoPosition.RIGHT_DOWN)
+                .setNotes(Arrays.asList("AAA","aiosh后发哦你说地扶8q973"))
+                .setNoteFont(new Font("幼圆",Font.BOLD,60))
+                .setNoteFontColor(Color.pink)
+                .setNoteOutlineColor(Color.WHITE)
+                .setNotePosition(QrCodeOptions.NotePosition.MIDDLE)
                 .asFile(P);
     }
 
-    private static void test10() {
+    @Test
+    public void test10() throws IOException {
         List<String> s = Arrays.asList("123", "123456", "456168165asdfgkjashdfklhaui");
 
         String[] st = new String[s.size()];
-        BufferedImage image = StringPicture.createImage(s.toArray(st), null, Color.pink, null);
-        System.out.println(image.getWidth());
+//        BufferedImage image = StringPicture.createImage(s.toArray(st), null, Color.pink, null);
+        BufferedImage image1 = StringPicture.createImageOutline(s.toArray(st), new Font("幼圆",Font.PLAIN,100), Color.pink, Color.black, null);
+//        System.out.println(image.getWidth());
+        ImageIO.write(image1, "png", new File(P));
     }
 
     private static void test09() throws IOException, WriterException {
