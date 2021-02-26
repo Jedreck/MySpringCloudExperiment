@@ -435,6 +435,17 @@ public class QrCodeOptions {
         private BufferedImage bgImg;
 
         /**
+         * 外框图
+         * <p>
+         * 这个参数是解决 既有 外框作为背景图{@link QrCodeOptions.BgImgStyle}FILL 又有 码点透明覆盖作为背景图{@link QrCodeOptions.BgImgStyle}PENETRATE 的场景用
+         * <p>
+         * 先绘制 透明码点作为背景 再调用此参数 覆盖 bgImg和BgImgStyle 再绘制一遍东西
+         */
+        private BufferedImage bgOutImg;
+        private Integer bgOutImgW;
+        private Integer bgOutImgH;
+
+        /**
          * 动态背景图
          */
         private GifDecoder gifDecoder;
@@ -475,9 +486,14 @@ public class QrCodeOptions {
         public BgImgOptions() {
         }
 
-        public BgImgOptions(BufferedImage bgImg, GifDecoder gifDecoder, int bgW, int bgH, BgImgStyle bgImgStyle,
-                            float opacity, int startX, int startY) {
+        public BgImgOptions(BufferedImage bgImg, BufferedImage bgOutImg,
+                            Integer bgOutImgW, Integer bgOutImgH, GifDecoder gifDecoder,
+                            int bgW, int bgH, BgImgStyle bgImgStyle, float opacity,
+                            int startX, int startY) {
             this.bgImg = bgImg;
+            this.bgOutImg = bgOutImg;
+            this.bgOutImgW = bgOutImgW;
+            this.bgOutImgH = bgOutImgH;
             this.gifDecoder = gifDecoder;
             this.bgW = bgW;
             this.bgH = bgH;
@@ -511,6 +527,30 @@ public class QrCodeOptions {
 
         public BufferedImage getBgImg() {
             return bgImg;
+        }
+
+        public BufferedImage getBgOutImg() {
+            return bgOutImg;
+        }
+
+        public void setBgOutImg(BufferedImage bgOutImg) {
+            this.bgOutImg = bgOutImg;
+        }
+
+        public Integer getBgOutImgW() {
+            return bgOutImgW;
+        }
+
+        public void setBgOutImgW(Integer bgOutImgW) {
+            this.bgOutImgW = bgOutImgW;
+        }
+
+        public Integer getBgOutImgH() {
+            return bgOutImgH;
+        }
+
+        public void setBgOutImgH(Integer bgOutImgH) {
+            this.bgOutImgH = bgOutImgH;
         }
 
         public void setBgImg(BufferedImage bgImg) {
@@ -576,7 +616,9 @@ public class QrCodeOptions {
             BgImgOptions that = (BgImgOptions) o;
             return bgW == that.bgW && bgH == that.bgH && Float.compare(that.opacity, opacity) == 0 &&
                     startX == that.startX && startY == that.startY && Objects.equals(bgImg, that.bgImg) &&
-                    Objects.equals(gifDecoder, that.gifDecoder) && bgImgStyle == that.bgImgStyle;
+                    Objects.equals(gifDecoder, that.gifDecoder) && bgImgStyle == that.bgImgStyle
+                    && Objects.equals(bgOutImg, that.bgOutImg) && Objects.equals(bgOutImgH, that.bgOutImgH)
+                    && Objects.equals(bgOutImgW, that.bgOutImgW);
         }
 
         @Override
@@ -642,6 +684,10 @@ public class QrCodeOptions {
              */
             private int startY;
 
+            private BufferedImage bgOutImg;
+            private Integer bgOutImgW;
+            private Integer bgOutImgH;
+
             public BgImgOptionsBuilder bgImg(BufferedImage bgImg) {
                 this.bgImg = bgImg;
                 return this;
@@ -682,8 +728,24 @@ public class QrCodeOptions {
                 return this;
             }
 
+            public BgImgOptionsBuilder bgOutImg(BufferedImage bgOutImg) {
+                this.bgOutImg = bgOutImg;
+                return this;
+            }
+
+            public BgImgOptionsBuilder bgOutImgW(Integer bgOutImgW) {
+                this.bgOutImgW = bgOutImgW;
+                return this;
+            }
+
+            public BgImgOptionsBuilder bgOutImgH(Integer bgOutImgH) {
+                this.bgOutImgH = bgOutImgH;
+                return this;
+            }
+
             public BgImgOptions build() {
-                return new BgImgOptions(bgImg, gifDecoder, bgW, bgH, bgImgStyle, opacity, startX, startY);
+                return new BgImgOptions(bgImg, bgOutImg, bgOutImgW, bgOutImgH, gifDecoder,
+                        bgW, bgH, bgImgStyle, opacity, startX, startY);
             }
         }
     }

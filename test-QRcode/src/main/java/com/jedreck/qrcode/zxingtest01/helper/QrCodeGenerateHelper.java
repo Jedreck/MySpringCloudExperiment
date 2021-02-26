@@ -1,13 +1,13 @@
 package com.jedreck.qrcode.zxingtest01.helper;
 
-import com.jedreck.qrcode.zxingtest01.wrapper.BitMatrixEx;
-import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.encoder.ByteMatrix;
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
+import com.jedreck.qrcode.zxingtest01.wrapper.BitMatrixEx;
+import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.awt.*;
@@ -178,6 +178,20 @@ public class QrCodeGenerateHelper {
         // 插入logo
         if (qrCodeConfig.getLogoOptions() != null && !logoAlreadyDraw) {
             QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions(), bitMatrix);
+        }
+
+        // 如果同时设置了bgImg和bgOutImg，现在已经弄好了bgImg，接下来开始弄bgOutImg
+        QrCodeOptions.BgImgOptions bgImgOptions = qrCodeConfig.getBgImgOptions();
+        if (bgImgOptions != null
+                && bgImgOptions.getBgImg() != null
+                && bgImgOptions.getBgImgStyle() == QrCodeOptions.BgImgStyle.PENETRATE
+                && bgImgOptions.getBgOutImg() != null
+        ) {
+            bgImgOptions.setBgImg(bgImgOptions.getBgOutImg());
+            bgImgOptions.setBgW(bgImgOptions.getBgOutImgW());
+            bgImgOptions.setBgH(bgImgOptions.getBgOutImgH());
+            bgImgOptions.setBgImgStyle(QrCodeOptions.BgImgStyle.FILL);
+            qrCode = QrCodeRenderHelper.drawBackground(qrCode, bgImgOptions);
         }
 
         // 绘制文字信息

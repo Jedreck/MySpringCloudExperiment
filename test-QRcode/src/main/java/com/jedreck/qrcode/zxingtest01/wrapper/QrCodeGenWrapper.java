@@ -390,6 +390,51 @@ public class QrCodeGenWrapper {
         }
 
         /**
+         * 设置外框背景图片
+         */
+        public Builder setBgOutImg(String path) throws IOException {
+            try {
+                return setBgOutImg(FileReadUtil.getStreamByFileName(path));
+            } catch (IOException e) {
+                log.error("load backgroundImg error! e:{}", e);
+                throw new IOException("load backgroundImg error!", e);
+            }
+        }
+
+        public Builder setBgOutImg(InputStream inputStream) throws IOException {
+            try {
+                ByteArrayInputStream target = IoUtil.toByteArrayInputStream(inputStream);
+                MediaType media = MediaType.typeOfMagicNum(FileReadUtil.getMagicNum(target));
+                if (media == MediaType.ImageGif) {
+                    GifDecoder gifDecoder = new GifDecoder();
+                    gifDecoder.read(target);
+                    bgImgOptions.gifDecoder(gifDecoder);
+                    return this;
+                } else {
+                    return setBgOutImg(ImageIO.read(target));
+                }
+            } catch (IOException e) {
+                log.error("load backgroundImg error! e:{}", e);
+                throw new IOException("load backgroundImg error!", e);
+            }
+        }
+
+        public Builder setBgOutImg(BufferedImage bgOutImg) {
+            bgImgOptions.bgOutImg(bgOutImg);
+            return this;
+        }
+
+        public Builder setBgOutImgW(Integer bgOutImgW) {
+            bgImgOptions.bgOutImgW(bgOutImgW);
+            return this;
+        }
+
+        public Builder setBgOutImgH(Integer bgOutImgH) {
+            bgImgOptions.bgOutImgH(bgOutImgH);
+            return this;
+        }
+
+        /**
          * 背景图样式
          *
          * @param bgImgStyle {@link QrCodeOptions.BgImgStyle}
@@ -902,8 +947,10 @@ public class QrCodeGenWrapper {
                 // 透传，用背景图颜色进行绘制时
                 drawOp.setPreColor(ColorUtil.OPACITY);
                 qrCodeConfig.getBgImgOptions().setOpacity(1);
-                qrCodeConfig.getDetectOptions().setInColor(ColorUtil.OPACITY);
-                qrCodeConfig.getDetectOptions().setOutColor(ColorUtil.OPACITY);
+                if (!Boolean.TRUE.equals(qrCodeConfig.getDetectOptions().getSpecial())) {
+                    qrCodeConfig.getDetectOptions().setInColor(ColorUtil.OPACITY);
+                    qrCodeConfig.getDetectOptions().setOutColor(ColorUtil.OPACITY);
+                }
             }
 
             // 设置文字信息

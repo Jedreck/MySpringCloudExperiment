@@ -30,15 +30,85 @@ public class Test01 {
     }
 
     @Test
+    public void test14() throws IOException, WriterException {
+        QrCodeGenWrapper.Builder builder = QrCodeGenWrapper.of(T)
+                .setH(1000)
+                .setW(1000);
+
+        builder.setBgImg("sky.jpg")
+                .setBgOutImg("sky.jpg")
+                .setBgOutImgW(1920)
+                .setBgOutImgH(1086)
+                .setBgStartX(2)
+                .setBgStartY(2)
+                .setBgStyle(QrCodeOptions.BgImgStyle.PENETRATE);
+
+        builder.setDetectOutColor(Color.blue)
+                .setDetectSpecial();
+
+        builder.setNotes(Arrays.asList("AAA", "aiosh后发哦你说地扶8q973"))
+                .setNoteFont(new Font("幼圆", Font.BOLD, 60))
+                .setNoteFontColor(new Color(Integer.parseInt("0xFFFFFFFF", 16), true))
+                .setNoteOutlineColor(Color.WHITE)
+                .setNotePosition(QrCodeOptions.NotePosition.DOWN);
+
+        builder.setPicType("png");
+        builder.asFile(P);
+    }
+
+    @Test
+    public void test13() throws IOException, WriterException {
+        QrCodeGenWrapper.Builder builder = QrCodeGenWrapper.of(T)
+                .setH(1000)
+                .setW(1000);
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.RECT).asFile("/tmp/200.png");
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.ROUND_RECT).asFile("/tmp/201.png");
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.ROUND_RECT_CIRCLE).asFile("/tmp/202.png");
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.CIRCLE).asFile("/tmp/203.png");
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.MONEY).asFile("/tmp/204.png");
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.ROUND_RECT_ONE_RIGHT_ANGLE).asFile("/tmp/205.png");
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.RECT_ONE_ROUND_ANGLE).asFile("/tmp/206.png");
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.RECT_TWO_ROUND_ANGLE_LT).asFile("/tmp/207.png");
+        builder.setDetectPatterning(QrCodeOptions.DetectPatterning.RECT_TWO_ROUND_ANGLE_LD).asFile("/tmp/208.png");
+    }
+
+    @Test
+    public void test12() throws IOException, WriterException {
+        QrCodeGenWrapper.Builder builder = QrCodeGenWrapper.of(T)
+                .setH(1000)
+                .setW(1000);
+        builder.setDrawStyle(QrCodeOptions.DrawStyle.RECT)
+                .asFile("/tmp/100.png");
+        builder.setDrawStyle(QrCodeOptions.DrawStyle.CIRCLE)
+                .setDrawEnableScale(false)
+                .asFile("/tmp/101.png");
+        builder.setDrawStyle(QrCodeOptions.DrawStyle.CIRCLE)
+                .setDrawEnableScale(true)
+                .asFile("/tmp/102.png");
+        builder.setDrawStyle(QrCodeOptions.DrawStyle.DIAMOND)
+                .setDrawEnableScale(false)
+                .asFile("/tmp/103.png");
+        builder.setDrawStyle(QrCodeOptions.DrawStyle.TRIANGLE)
+                .setDrawEnableScale(false)
+                .asFile("/tmp/104.png");
+        builder.setDrawStyle(QrCodeOptions.DrawStyle.SEXANGLE)
+                .setDrawEnableScale(false)
+                .asFile("/tmp/105.png");
+        builder.setDrawStyle(QrCodeOptions.DrawStyle.OCTAGON)
+                .setDrawEnableScale(false)
+                .asFile("/tmp/106.png");
+    }
+
+    @Test
     public void test11() throws IOException, WriterException {
         QrCodeGenWrapper.of(T)
                 .setH(1000)
                 .setW(1000)
                 .setLogoRate(50)
                 .setLogo("sky.jpg")
-                .setNotes(Arrays.asList("AAA","aiosh后发哦你说地扶8q973"))
-                .setNoteFont(new Font("幼圆",Font.BOLD,60))
-                .setNoteFontColor(Color.pink)
+                .setNotes(Arrays.asList("AAA", "aiosh后发哦你说地扶8q973"))
+                .setNoteFont(new Font("幼圆", Font.BOLD, 60))
+                .setNoteFontColor(new Color(Integer.parseInt("0000FFE6", 16), true))
                 .setNoteOutlineColor(Color.WHITE)
                 .setNotePosition(QrCodeOptions.NotePosition.MIDDLE)
                 .asFile(P);
@@ -50,7 +120,7 @@ public class Test01 {
 
         String[] st = new String[s.size()];
 //        BufferedImage image = StringPicture.createImage(s.toArray(st), null, Color.pink, null);
-        BufferedImage image1 = StringPicture.createImageOutline(s.toArray(st), new Font("幼圆",Font.PLAIN,100), Color.pink, Color.black, null);
+        BufferedImage image1 = StringPicture.createImageOutline(s.toArray(st), new Font("幼圆", Font.PLAIN, 100), Color.pink, Color.black, null);
 //        System.out.println(image.getWidth());
         ImageIO.write(image1, "png", new File(P));
     }
