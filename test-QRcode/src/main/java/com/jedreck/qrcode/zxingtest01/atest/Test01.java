@@ -48,7 +48,7 @@ public class Test01 {
 
         builder.setNotes(Arrays.asList("AAA", "aiosh后发哦你说地扶8q973"))
                 .setNoteFont(new Font("幼圆", Font.BOLD, 60))
-                .setNoteFontColor(new Color(Integer.parseInt("0xFFFFFFFF", 16), true))
+                .setNoteFontColor(new Color(Integer.parseUnsignedInt("FF000000",16),true))
                 .setNoteOutlineColor(Color.WHITE)
                 .setNotePosition(QrCodeOptions.NotePosition.DOWN);
 
@@ -59,8 +59,8 @@ public class Test01 {
     @Test
     public void test13() throws IOException, WriterException {
         QrCodeGenWrapper.Builder builder = QrCodeGenWrapper.of(T)
-                .setH(1000)
-                .setW(1000);
+                .setH(500)
+                .setW(500);
         builder.setDetectPatterning(QrCodeOptions.DetectPatterning.RECT).asFile("/tmp/200.png");
         builder.setDetectPatterning(QrCodeOptions.DetectPatterning.ROUND_RECT).asFile("/tmp/201.png");
         builder.setDetectPatterning(QrCodeOptions.DetectPatterning.ROUND_RECT_CIRCLE).asFile("/tmp/202.png");
@@ -75,8 +75,8 @@ public class Test01 {
     @Test
     public void test12() throws IOException, WriterException {
         QrCodeGenWrapper.Builder builder = QrCodeGenWrapper.of(T)
-                .setH(1000)
-                .setW(1000);
+                .setH(500)
+                .setW(500);
         builder.setDrawStyle(QrCodeOptions.DrawStyle.RECT)
                 .asFile("/tmp/100.png");
         builder.setDrawStyle(QrCodeOptions.DrawStyle.CIRCLE)

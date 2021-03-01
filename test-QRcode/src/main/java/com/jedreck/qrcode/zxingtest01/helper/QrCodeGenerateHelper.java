@@ -180,6 +180,7 @@ public class QrCodeGenerateHelper {
             QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions(), bitMatrix);
         }
 
+        boolean noteDone = false;
         // 如果同时设置了bgImg和bgOutImg，现在已经弄好了bgImg，接下来开始弄bgOutImg
         QrCodeOptions.BgImgOptions bgImgOptions = qrCodeConfig.getBgImgOptions();
         if (bgImgOptions != null
@@ -187,6 +188,12 @@ public class QrCodeGenerateHelper {
                 && bgImgOptions.getBgImgStyle() == QrCodeOptions.BgImgStyle.PENETRATE
                 && bgImgOptions.getBgOutImg() != null
         ) {
+            // 绘制文字信息-1
+            if (qrCodeConfig.getNoteOptions() != null
+                    && qrCodeConfig.getNoteOptions().getNotePosition() == QrCodeOptions.NotePosition.MIDDLE) {
+                qrCode = QrCodeRenderHelper.drawNote(qrCode, qrCodeConfig, bitMatrix);
+                noteDone = true;
+            }
             bgImgOptions.setBgImg(bgImgOptions.getBgOutImg());
             bgImgOptions.setBgW(bgImgOptions.getBgOutImgW());
             bgImgOptions.setBgH(bgImgOptions.getBgOutImgH());
@@ -194,8 +201,8 @@ public class QrCodeGenerateHelper {
             qrCode = QrCodeRenderHelper.drawBackground(qrCode, bgImgOptions);
         }
 
-        // 绘制文字信息
-        if (qrCodeConfig.getNoteOptions() != null) {
+        // 绘制文字信息-2
+        if (qrCodeConfig.getNoteOptions() != null && !noteDone) {
             qrCode = QrCodeRenderHelper.drawNote(qrCode, qrCodeConfig, bitMatrix);
         }
 
