@@ -163,6 +163,7 @@ public class QrCodeGenerateHelper {
         //  在覆盖模式下，先设置二维码的透明度，然后绘制在背景图的正中央，最后绘制logo，这样保证logo不会透明，显示清晰
         //  在填充模式下，先绘制logo，然后绘制在背景的指定位置上；若先绘制背景，再绘制logo，则logo大小偏移量的计算会有问题
         boolean logoAlreadyDraw = false;
+        boolean noteDone = false;
         // 绘制背景图
         if (qrCodeConfig.getBgImgOptions() != null) {
             if (qrCodeConfig.getBgImgOptions().getBgImgStyle() == QrCodeOptions.BgImgStyle.FILL &&
@@ -170,6 +171,12 @@ public class QrCodeGenerateHelper {
                 // 此种模式，先绘制logo
                 QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions(), bitMatrix);
                 logoAlreadyDraw = true;
+            }
+            // 绘制文字信息-1
+            if (qrCodeConfig.getNoteOptions() != null
+                    && qrCodeConfig.getNoteOptions().getNotePosition() == QrCodeOptions.NotePosition.MIDDLE) {
+                qrCode = QrCodeRenderHelper.drawNote(qrCode, qrCodeConfig, bitMatrix);
+                noteDone = true;
             }
 
             qrCode = QrCodeRenderHelper.drawBackground(qrCode, qrCodeConfig.getBgImgOptions());
@@ -180,7 +187,7 @@ public class QrCodeGenerateHelper {
             QrCodeRenderHelper.drawLogo(qrCode, qrCodeConfig.getLogoOptions(), bitMatrix);
         }
 
-        boolean noteDone = false;
+
         // 如果同时设置了bgImg和bgOutImg，现在已经弄好了bgImg，接下来开始弄bgOutImg
         QrCodeOptions.BgImgOptions bgImgOptions = qrCodeConfig.getBgImgOptions();
         if (bgImgOptions != null
@@ -188,9 +195,9 @@ public class QrCodeGenerateHelper {
                 && bgImgOptions.getBgImgStyle() == QrCodeOptions.BgImgStyle.PENETRATE
                 && bgImgOptions.getBgOutImg() != null
         ) {
-            // 绘制文字信息-1
+            // 绘制文字信息-2
             if (qrCodeConfig.getNoteOptions() != null
-                    && qrCodeConfig.getNoteOptions().getNotePosition() == QrCodeOptions.NotePosition.MIDDLE) {
+                    && qrCodeConfig.getNoteOptions().getNotePosition() == QrCodeOptions.NotePosition.MIDDLE && !noteDone) {
                 qrCode = QrCodeRenderHelper.drawNote(qrCode, qrCodeConfig, bitMatrix);
                 noteDone = true;
             }
@@ -201,7 +208,7 @@ public class QrCodeGenerateHelper {
             qrCode = QrCodeRenderHelper.drawBackground(qrCode, bgImgOptions);
         }
 
-        // 绘制文字信息-2
+        // 绘制文字信息-3
         if (qrCodeConfig.getNoteOptions() != null && !noteDone) {
             qrCode = QrCodeRenderHelper.drawNote(qrCode, qrCodeConfig, bitMatrix);
         }

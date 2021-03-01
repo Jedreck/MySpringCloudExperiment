@@ -36,12 +36,12 @@ public class Test01 {
                 .setW(1000);
 
         builder.setBgImg("sky.jpg")
-                .setBgOutImg("sky.jpg")
+//                .setBgOutImg("sky.jpg")
                 .setBgOutImgW(1920)
                 .setBgOutImgH(1086)
                 .setBgStartX(2)
                 .setBgStartY(2)
-                .setBgStyle(QrCodeOptions.BgImgStyle.PENETRATE);
+                .setBgStyle(QrCodeOptions.BgImgStyle.FILL);
 
         builder.setDetectOutColor(Color.blue)
                 .setDetectSpecial();
@@ -50,7 +50,7 @@ public class Test01 {
                 .setNoteFont(new Font("幼圆", Font.BOLD, 60))
                 .setNoteFontColor(new Color(Integer.parseUnsignedInt("FF000000",16),true))
                 .setNoteOutlineColor(Color.WHITE)
-                .setNotePosition(QrCodeOptions.NotePosition.DOWN);
+                .setNotePosition(QrCodeOptions.NotePosition.MIDDLE);
 
         builder.setPicType("png");
         builder.asFile(P);
