@@ -179,7 +179,7 @@ public class QrCodeGenerateHelper {
                 noteDone = true;
             }
 
-            qrCode = QrCodeRenderHelper.drawBackground(qrCode, qrCodeConfig.getBgImgOptions());
+            qrCode = QrCodeRenderHelper.drawBackground(qrCode, qrCodeConfig);
         }
 
         // 插入logo
@@ -205,7 +205,7 @@ public class QrCodeGenerateHelper {
             bgImgOptions.setBgW(bgImgOptions.getBgOutImgW());
             bgImgOptions.setBgH(bgImgOptions.getBgOutImgH());
             bgImgOptions.setBgImgStyle(QrCodeOptions.BgImgStyle.FILL);
-            qrCode = QrCodeRenderHelper.drawBackground(qrCode, bgImgOptions);
+            qrCode = QrCodeRenderHelper.drawBackground(qrCode, qrCodeConfig);
         }
 
         // 绘制文字信息-3

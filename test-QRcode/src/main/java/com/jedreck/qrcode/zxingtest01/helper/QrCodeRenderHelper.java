@@ -106,9 +106,10 @@ public class QrCodeRenderHelper {
      * 绘制背景图
      *
      * @param qrImg        二维码图
-     * @param bgImgOptions 背景图信息
+     * @param qrCodeOptions 图信息
      */
-    public static BufferedImage drawBackground(BufferedImage qrImg, QrCodeOptions.BgImgOptions bgImgOptions) {
+    public static BufferedImage drawBackground(BufferedImage qrImg, QrCodeOptions qrCodeOptions) {
+        QrCodeOptions.BgImgOptions bgImgOptions = qrCodeOptions.getBgImgOptions();
         final int qrWidth = qrImg.getWidth();
         final int qrHeight = qrImg.getHeight();
 
@@ -126,9 +127,9 @@ public class QrCodeRenderHelper {
 
         Graphics2D bgImgGraphic = GraphicUtil.getG2d(bgImg);
         if (bgImgOptions.getBgImgStyle() == QrCodeOptions.BgImgStyle.FILL) {
-            // 先给背景空白区填充白色作为底色
+            // 先给背景空白区填充背景色作为底色
             bgImgGraphic.setComposite(AlphaComposite.DstOver);
-            bgImgGraphic.setColor(Color.WHITE);
+            bgImgGraphic.setColor(qrCodeOptions.getDrawOptions().getBgColor() == null ? Color.WHITE : qrCodeOptions.getDrawOptions().getBgColor());
             bgImgGraphic.fillRect(0, 0, bgImg.getWidth(), bgImg.getHeight());
             // 选择一块区域进行填充
             bgImgGraphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0f));

@@ -47,6 +47,8 @@ public class Test01 {
         builder.setDetectOutColor(Color.blue)
                 .setDetectSpecial();
 
+        builder.setDrawBgColor(Color.gray);
+
 
 //        builder.setNotes(Arrays.asList("AAA", "aiosh后发哦你说地扶8q973"))
 //                .setNoteFont(new Font("幼圆", Font.BOLD, 60))
@@ -173,7 +175,9 @@ public class Test01 {
         bgImgOptions.setBgImgStyle(QrCodeOptions.BgImgStyle.FILL);
         bgImgOptions.setStartX(500);
         bgImgOptions.setStartY(100);
-        BufferedImage bufferedImage1 = QrCodeRenderHelper.drawBackground(qrImg, bgImgOptions);
+        QrCodeOptions qrCodeConfig = new QrCodeOptions();
+        qrCodeConfig.setBgImgOptions(bgImgOptions);
+        BufferedImage bufferedImage1 = QrCodeRenderHelper.drawBackground(qrImg, qrCodeConfig);
 
         File file = new File(P);
         FileWriteUtil.mkDir(file.getParentFile());
