@@ -126,6 +126,10 @@ public class QrCodeRenderHelper {
 
         Graphics2D bgImgGraphic = GraphicUtil.getG2d(bgImg);
         if (bgImgOptions.getBgImgStyle() == QrCodeOptions.BgImgStyle.FILL) {
+            // 先给背景空白区填充白色作为底色
+            bgImgGraphic.setComposite(AlphaComposite.DstOver);
+            bgImgGraphic.setColor(Color.WHITE);
+            bgImgGraphic.fillRect(0, 0, bgImg.getWidth(), bgImg.getHeight());
             // 选择一块区域进行填充
             bgImgGraphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0f));
             bgImgGraphic.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

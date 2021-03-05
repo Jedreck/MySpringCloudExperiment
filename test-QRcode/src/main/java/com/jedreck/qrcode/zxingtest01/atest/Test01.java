@@ -35,22 +35,24 @@ public class Test01 {
                 .setH(1000)
                 .setW(1000);
 
-        builder.setBgImg("sky.jpg")
+        builder.setBgImg("https://qr.encdata.cn/mini/beauty_qrcode/416.png")
 //                .setBgOutImg("sky.jpg")
-                .setBgOutImgW(1920)
-                .setBgOutImgH(1086)
-                .setBgStartX(2)
-                .setBgStartY(2)
+                .setDrawBgColor(Color.WHITE)
+                .setBgOutImgW(500)
+                .setBgOutImgH(500)
+                .setBgStartX(250)
+                .setBgStartY(250)
                 .setBgStyle(QrCodeOptions.BgImgStyle.FILL);
 
         builder.setDetectOutColor(Color.blue)
                 .setDetectSpecial();
 
-        builder.setNotes(Arrays.asList("AAA", "aiosh后发哦你说地扶8q973"))
-                .setNoteFont(new Font("幼圆", Font.BOLD, 60))
-                .setNoteFontColor(new Color(Integer.parseUnsignedInt("FF000000",16),true))
-                .setNoteOutlineColor(Color.WHITE)
-                .setNotePosition(QrCodeOptions.NotePosition.MIDDLE);
+
+//        builder.setNotes(Arrays.asList("AAA", "aiosh后发哦你说地扶8q973"))
+//                .setNoteFont(new Font("幼圆", Font.BOLD, 60))
+//                .setNoteFontColor(new Color(Integer.parseUnsignedInt("FF000000",16),true))
+//                .setNoteOutlineColor(Color.WHITE)
+//                .setNotePosition(QrCodeOptions.NotePosition.MIDDLE);
 
         builder.setPicType("png");
         builder.asFile(P);
