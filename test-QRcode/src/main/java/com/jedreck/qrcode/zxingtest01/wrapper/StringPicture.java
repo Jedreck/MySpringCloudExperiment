@@ -27,9 +27,9 @@ public class StringPicture {
         bgColor = bgColor == null ? ColorUtil.OPACITY : bgColor;
 
         // 获取font的样式应用在输出内容上整个的宽高
-        int[] arr = getMaxWidthAndHeight(texts, font);
-        int width = arr[0];
-        int height = arr[1];
+        int[][] arr = getMaxWidthAndHeight(texts, font);
+        int width = arr[0][0];
+        int height = arr[0][1];
         // 创建图片 创建图片画布
         int imgH = height * texts.length;
         BufferedImage image = new BufferedImage(width, imgH, BufferedImage.TYPE_INT_ARGB);
@@ -70,9 +70,9 @@ public class StringPicture {
         outlineWidth = outlineWidth == null ? ((font.getSize() / 10) + 1) : outlineWidth;
 
         // 获取font的样式应用在输出内容上整个的宽高
-        int[] arr = getMaxWidthAndHeight(texts, font);
-        int width = arr[0];
-        int height = arr[1];
+        int[][] arr = getMaxWidthAndHeight(texts, font);
+        int width = arr[0][0];
+        int height = arr[0][1];
         // 创建图片 创建图片画布
         int imgH = height * texts.length;
         BufferedImage image = new BufferedImage(width, imgH, BufferedImage.TYPE_INT_ARGB);
@@ -84,7 +84,10 @@ public class StringPicture {
         for (int i = 0; i < texts.length; ) {
             // 画出i行字符串
             TextLayout tl = new TextLayout(texts[i], font, frc);
-            Shape shape = tl.getOutline(AffineTransform.getTranslateInstance(3, ++i * font.getSize()));
+            // 文字居中
+            int x = 3 + ((width - arr[1][i]) >> 1);
+            int y = (++i * font.getSize()) + 5;
+            Shape shape = tl.getOutline(AffineTransform.getTranslateInstance(x, y));
 
             if (outlineColor != null) {
                 // 描边色
@@ -106,16 +109,20 @@ public class StringPicture {
     /**
      * 根据str,font的样式计算最大宽高
      */
-    private static int[] getMaxWidthAndHeight(String[] texts, Font font) {
+    private static int[][] getMaxWidthAndHeight(String[] texts, Font font) {
+        int[][] ints = new int[2][texts.length];
+        int[] widths = new int[texts.length];
         // 获取单行最大高度宽度
         int maxHeight = 0;
         int maxWidth = 0;
-        for (String t : texts) {
+        for (int i = 0; i < texts.length; i++) {
+            String t = texts[i];
             Rectangle2D r = font.getStringBounds(t, new FontRenderContext(
                     AffineTransform.getScaleInstance(1, 1), false, false));
             int rHeight = (int) Math.floor(r.getHeight());
             // 获取整个str用了font样式的宽度这里用四舍五入后+3保证宽度绝对能容纳这个字符串作为图片的宽度
             int rWidth = (int) Math.round(r.getWidth()) + 3;
+            widths[i] = rWidth;
             if (rHeight > maxHeight) {
                 maxHeight = rHeight;
             }
@@ -124,7 +131,9 @@ public class StringPicture {
             }
         }
         // 把单个字符的高度+4保证高度绝对能容纳字符串作为图片的高度
-        return new int[]{maxWidth + 5, maxHeight + 3};
+        ints[0] = new int[]{maxWidth + 5, maxHeight + 3};
+        ints[1] = widths;
+        return ints;
     }
 
 }

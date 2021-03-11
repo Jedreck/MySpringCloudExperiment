@@ -1228,7 +1228,7 @@ public class QrCodeOptions {
          * 矩形
          */
         DetectPatterning RECT = new DetectPatterning() {
-
+            // todo 以后加上静态形状就不用每次都绘制了
             @Override
             public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
                 int W = 600;
