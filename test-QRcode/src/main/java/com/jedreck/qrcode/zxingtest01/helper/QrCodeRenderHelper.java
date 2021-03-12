@@ -319,7 +319,7 @@ public class QrCodeRenderHelper {
 
         BufferedImage image;
         if (position == QrCodeOptions.NotePosition.DOWN) {
-            int imgH = qrCode.getHeight() + noteImg.getHeight() + 20;
+            int imgH = qrCode.getHeight() + noteImg.getHeight();
             image = new BufferedImage(qrCode.getWidth(), imgH, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = GraphicUtil.getG2d(image);
             g.setComposite(AlphaComposite.SrcOver);

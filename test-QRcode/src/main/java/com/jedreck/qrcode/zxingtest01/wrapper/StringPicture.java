@@ -72,9 +72,8 @@ public class StringPicture {
         // 获取font的样式应用在输出内容上整个的宽高
         int[][] arr = getMaxWidthAndHeight(texts, font);
         int width = arr[0][0];
-        int height = arr[0][1];
         // 创建图片 创建图片画布
-        int imgH = height * texts.length;
+        int imgH = (font.getSize() + font.getSize() / 10) * texts.length;
         BufferedImage image = new BufferedImage(width, imgH, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = GraphicUtil.getG2d(image);
 
@@ -86,7 +85,7 @@ public class StringPicture {
             TextLayout tl = new TextLayout(texts[i], font, frc);
             // 文字居中
             int x = 3 + ((width - arr[1][i]) >> 1);
-            int y = (++i * font.getSize()) + 5;
+            int y = (++i * font.getSize());
             Shape shape = tl.getOutline(AffineTransform.getTranslateInstance(x, y));
 
             if (outlineColor != null) {
@@ -99,6 +98,8 @@ public class StringPicture {
             //字体色
             g.setColor(color);
             g.fill(shape);
+
+            g.drawLine(x, y, x + 50, y);
         }
         //执行处理
         g.dispose();
@@ -131,7 +132,7 @@ public class StringPicture {
             }
         }
         // 把单个字符的高度+4保证高度绝对能容纳字符串作为图片的高度
-        ints[0] = new int[]{maxWidth + 5, maxHeight + 3};
+        ints[0] = new int[]{maxWidth + 10, maxHeight + 5};
         ints[1] = widths;
         return ints;
     }
