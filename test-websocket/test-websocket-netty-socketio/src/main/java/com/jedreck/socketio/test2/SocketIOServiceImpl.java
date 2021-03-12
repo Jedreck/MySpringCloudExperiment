@@ -43,7 +43,7 @@ public class SocketIOServiceImpl implements SocketIOService {
 
     @Override
     public void start() {
-        // 监听客户端连接
+        // 监听客户端连接，加的是监听器，不是数据操作
         socketIOServer.addConnectListener(client -> {
             String loginUserNum = getParamsByClient(client);
             if (loginUserNum != null) {
