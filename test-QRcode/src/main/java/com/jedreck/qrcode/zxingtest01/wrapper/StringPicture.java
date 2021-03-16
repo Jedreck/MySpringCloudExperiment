@@ -73,7 +73,7 @@ public class StringPicture {
         int[][] arr = getMaxWidthAndHeight(texts, font);
         int width = arr[0][0];
         // 创建图片 创建图片画布
-        int imgH = (font.getSize() + font.getSize() / 10) * texts.length;
+        int imgH = (font.getSize() + font.getSize() / 10) * texts.length + font.getSize() / 10;
         BufferedImage image = new BufferedImage(width, imgH, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = GraphicUtil.getG2d(image);
 

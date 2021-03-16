@@ -1875,6 +1875,18 @@ public class QrCodeOptions {
             }
         };
 
+        DrawStyle Liquid1 = new DrawStyle() {
+            @Override
+            public void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt) {
+
+            }
+
+            @Override
+            public boolean expand(DotSize dotSize) {
+                return false;
+            }
+        };
+
         void draw(Graphics2D g2d, int x, int y, int w, int h, BufferedImage img, String txt);
 
         /**

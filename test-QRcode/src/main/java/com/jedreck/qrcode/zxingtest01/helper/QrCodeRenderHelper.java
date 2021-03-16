@@ -63,7 +63,7 @@ public class QrCodeRenderHelper {
         int calculateQrLogoHeight = qrHeight * logoRate / 100;
         int logoWidth;
         int logoHeight;
-        if (calculateQrLogoWidth < logoImg.getWidth()) {
+        if (logoImg.getWidth() > logoImg.getHeight() && calculateQrLogoWidth < logoImg.getWidth()) {
             // logo实际宽大于计算的宽度，则需要等比例缩放
             logoWidth = calculateQrLogoWidth;
             logoHeight = logoWidth * logoImg.getHeight() / logoImg.getWidth();
@@ -105,7 +105,7 @@ public class QrCodeRenderHelper {
     /**
      * 绘制背景图
      *
-     * @param qrImg        二维码图
+     * @param qrImg         二维码图
      * @param qrCodeOptions 图信息
      */
     public static BufferedImage drawBackground(BufferedImage qrImg, QrCodeOptions qrCodeOptions) {
@@ -319,14 +319,14 @@ public class QrCodeRenderHelper {
 
         BufferedImage image;
         if (position == QrCodeOptions.NotePosition.DOWN) {
-            int imgH = qrCode.getHeight() + noteImg.getHeight();
-            image = new BufferedImage(qrCode.getWidth(), imgH, BufferedImage.TYPE_INT_ARGB);
+            int imgHW = qrCode.getHeight() + noteImg.getHeight();
+            image = new BufferedImage(imgHW, imgHW, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = GraphicUtil.getG2d(image);
             g.setComposite(AlphaComposite.SrcOver);
             g.setColor(qrCodeOptions.getDrawOptions().getBgColor());
-            g.fillRect(0, 0, qrCode.getWidth(), imgH);
-            g.drawImage(qrCode, 0, 0, null);
-            g.drawImage(noteImg, (qrCode.getWidth() - noteImg.getWidth()) / 2, qrCode.getHeight(), null);
+            g.fillRect(0, 0, imgHW, imgHW);
+            g.drawImage(qrCode, (imgHW - qrCode.getWidth()) / 2, 0, null);
+            g.drawImage(noteImg, (imgHW - noteImg.getWidth()) / 2, qrCode.getHeight(), null);
         } else {
             image = new BufferedImage(qrCode.getWidth(), qrCode.getHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = GraphicUtil.getG2d(image);
