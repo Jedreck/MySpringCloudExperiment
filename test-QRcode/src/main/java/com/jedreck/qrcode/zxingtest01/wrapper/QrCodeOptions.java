@@ -1231,10 +1231,10 @@ public class QrCodeOptions {
             // todo 以后加上静态形状就不用每次都绘制了
             @Override
             public void drawLT(Graphics2D g2, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
-                int W = 600;
-                int s = 100;
-                int sw = 200;
-                int sww = 400;
+                int W = 60;
+                int s = 10;
+                int sw = 20;
+                int sww = 40;
 
                 BufferedImage img = new BufferedImage(W, W, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g = img.createGraphics();
@@ -1366,12 +1366,12 @@ public class QrCodeOptions {
         };
 
         /**
-         * 同心圆
+         * 金钱
          */
         DetectPatterning MONEY = new DetectPatterning() {
             @Override
             public void drawLT(Graphics2D g, int x, int y, int w, int h, Color inColor, Color outColor, Color bgColor) {
-                int W = 1000;
+                int W = 700;
                 double s = W / 7.0;
                 double sw = s * 2;
                 double sww = s * 3;
@@ -1445,7 +1445,7 @@ public class QrCodeOptions {
             }
 
             private BufferedImage drawRaw(double rotate, Color inColor, Color outColor, Color bgColor) {
-                int W = 1000;
+                int W = 350;
                 double s = W / 7.0;
                 double s2 = s * 2;
                 double s3 = s * 3;
@@ -1508,7 +1508,7 @@ public class QrCodeOptions {
             }
 
             private BufferedImage drawRaw(double rotate, Color inColor, Color outColor, Color bgColor) {
-                int W = 1000;
+                int W = 350;
                 double s = W / 7.0;
                 double s2 = s * 2;
                 double s3 = s * 3;
@@ -1569,7 +1569,7 @@ public class QrCodeOptions {
             }
 
             private BufferedImage drawRaw(double rotate, Color inColor, Color outColor, Color bgColor) {
-                int W = 1000;
+                int W = 350;
                 double s = W / 7.0;
                 double s2 = s * 2;
                 double s3 = s * 3;
