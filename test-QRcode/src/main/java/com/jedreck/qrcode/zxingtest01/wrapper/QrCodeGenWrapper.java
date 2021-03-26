@@ -1,6 +1,8 @@
 package com.jedreck.qrcode.zxingtest01.wrapper;
 
 import cn.hutool.core.img.ImgUtil;
+import cn.hutool.crypto.digest.DigestUtil;
+import cn.hutool.json.JSONUtil;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
@@ -8,6 +10,7 @@ import com.jedreck.qrcode.zxingtest01.constants.MediaType;
 import com.jedreck.qrcode.zxingtest01.constants.QuickQrFont;
 import com.jedreck.qrcode.zxingtest01.helper.QrCodeGenerateHelper;
 import com.jedreck.qrcode.zxingtest01.utils.Base64Util;
+import com.jedreck.qrcode.zxingtest01.utils.CacheImageUtil;
 import com.jedreck.qrcode.zxingtest01.utils.ColorUtil;
 import com.jedreck.qrcode.zxingtest01.utils.FileReadUtil;
 import com.jedreck.qrcode.zxingtest01.utils.FileWriteUtil;
@@ -210,7 +213,13 @@ public class QrCodeGenWrapper {
          * @param logo 本地路径 or 网络地址
          */
         public Builder setLogo(String logo) throws IOException {
+            String key = DigestUtil.md5Hex(logo);
+            BufferedImage image = CacheImageUtil.get(key);
             try {
+                if (image == null) {
+                    image = ImageLoadUtil.getImageByPath(logo);
+                    CacheImageUtil.put(key, image);
+                }
                 return setLogo(ImageLoadUtil.getImageByPath(logo));
             } catch (IOException e) {
                 log.error("load logo error! e:{}", e);
@@ -239,7 +248,12 @@ public class QrCodeGenWrapper {
          * @return
          */
         public Builder setLogoStr(String[] logoStr, Font font, Color color, Color bgColor) {
-            BufferedImage image = StringPicture.createImage(logoStr, font, color, bgColor);
+            String key = DigestUtil.md5Hex(JSONUtil.toJsonStr(logoStr));
+            BufferedImage image = CacheImageUtil.get(key);
+            if (image == null) {
+                image = StringPicture.createImage(logoStr, font, color, bgColor);
+                CacheImageUtil.put(key, image);
+            }
             logoOptions.logo(image);
             return this;
         }
@@ -352,8 +366,13 @@ public class QrCodeGenWrapper {
          * @param path @param logo 本地路径 or 网络地址
          */
         public Builder setBgImg(String path) throws IOException {
+            String key = DigestUtil.md5Hex(path);
+            BufferedImage image = CacheImageUtil.get(key);
+            if (image != null) {
+                return setBgImg(image);
+            }
             try {
-                return setBgImg(FileReadUtil.getStreamByFileName(path));
+                return setBgImg(FileReadUtil.getStreamByFileName(path), key);
             } catch (IOException e) {
                 log.error("load backgroundImg error! e:{}", e);
                 throw new IOException("load backgroundImg error!", e);
@@ -363,7 +382,7 @@ public class QrCodeGenWrapper {
         /**
          * 设置背景图片路径
          */
-        public Builder setBgImg(InputStream inputStream) throws IOException {
+        public Builder setBgImg(InputStream inputStream, String key) throws IOException {
             try {
                 ByteArrayInputStream target = IoUtil.toByteArrayInputStream(inputStream);
                 MediaType media = MediaType.typeOfMagicNum(FileReadUtil.getMagicNum(target));
@@ -373,7 +392,11 @@ public class QrCodeGenWrapper {
                     bgImgOptions.gifDecoder(gifDecoder);
                     return this;
                 } else {
-                    return setBgImg(ImageIO.read(target));
+                    BufferedImage image = ImageIO.read(target);
+                    if (null != key) {
+                        CacheImageUtil.put(key, image);
+                    }
+                    return setBgImg(image);
                 }
             } catch (IOException e) {
                 log.error("load backgroundImg error! e:{}", e);
@@ -393,15 +416,20 @@ public class QrCodeGenWrapper {
          * 设置外框背景图片
          */
         public Builder setBgOutImg(String path) throws IOException {
+            String key = DigestUtil.md5Hex(path);
+            BufferedImage image = CacheImageUtil.get(key);
+            if (image != null) {
+                return setBgOutImg(image);
+            }
             try {
-                return setBgOutImg(FileReadUtil.getStreamByFileName(path));
+                return setBgOutImg(FileReadUtil.getStreamByFileName(path), key);
             } catch (IOException e) {
                 log.error("load backgroundImg error! e:{}", e);
                 throw new IOException("load backgroundImg error!", e);
             }
         }
 
-        public Builder setBgOutImg(InputStream inputStream) throws IOException {
+        public Builder setBgOutImg(InputStream inputStream, String key) throws IOException {
             try {
                 ByteArrayInputStream target = IoUtil.toByteArrayInputStream(inputStream);
                 MediaType media = MediaType.typeOfMagicNum(FileReadUtil.getMagicNum(target));
@@ -411,7 +439,11 @@ public class QrCodeGenWrapper {
                     bgImgOptions.gifDecoder(gifDecoder);
                     return this;
                 } else {
-                    return setBgOutImg(ImageIO.read(target));
+                    BufferedImage image = ImageIO.read(target);
+                    if (null != key) {
+                        CacheImageUtil.put(key, image);
+                    }
+                    return setBgOutImg(image);
                 }
             } catch (IOException e) {
                 log.error("load backgroundImg error! e:{}", e);
@@ -493,8 +525,14 @@ public class QrCodeGenWrapper {
 
         /////////////// 3 -- 探测图形 相关配置 ///////////////
         public Builder setDetectImg(String detectImg) throws IOException {
+            String key = DigestUtil.md5Hex(detectImg);
+            BufferedImage image = CacheImageUtil.get(key);
             try {
-                return setDetectImg(ImageLoadUtil.getImageByPath(detectImg));
+                if (image == null) {
+                    image = ImageLoadUtil.getImageByPath(detectImg);
+                    CacheImageUtil.put(key, image);
+                }
+                return setDetectImg(image);
             } catch (IOException e) {
                 log.error("load detectImage error! e:{}", e);
                 throw new IOException("load detectImage error!", e);
@@ -530,8 +568,14 @@ public class QrCodeGenWrapper {
          * 左上角探测图形
          */
         public Builder setLTDetectImg(String detectImg) throws IOException {
+            String key = DigestUtil.md5Hex(detectImg);
+            BufferedImage image = CacheImageUtil.get(key);
             try {
-                return setLTDetectImg(ImageLoadUtil.getImageByPath(detectImg));
+                if (image == null) {
+                    image = ImageLoadUtil.getImageByPath(detectImg);
+                    CacheImageUtil.put(key, image);
+                }
+                return setLTDetectImg(image);
             } catch (IOException e) {
                 log.error("load detectImage error! e:{}", e);
                 throw new IOException("load detectImage error!", e);
@@ -563,7 +607,13 @@ public class QrCodeGenWrapper {
          * 右上角探测图形
          */
         public Builder setRTDetectImg(String detectImg) throws IOException {
+            String key = DigestUtil.md5Hex(detectImg);
+            BufferedImage image = CacheImageUtil.get(key);
             try {
+                if (image == null) {
+                    image = ImageLoadUtil.getImageByPath(detectImg);
+                    CacheImageUtil.put(key, image);
+                }
                 return setRTDetectImg(ImageLoadUtil.getImageByPath(detectImg));
             } catch (IOException e) {
                 log.error("load detectImage error! e:{}", e);
@@ -596,7 +646,13 @@ public class QrCodeGenWrapper {
          * 左下角探测图形
          */
         public Builder setLDDetectImg(String detectImg) throws IOException {
+            String key = DigestUtil.md5Hex(detectImg);
+            BufferedImage image = CacheImageUtil.get(key);
             try {
+                if (image == null) {
+                    image = ImageLoadUtil.getImageByPath(detectImg);
+                    CacheImageUtil.put(key, image);
+                }
                 return setLDDetectImg(ImageLoadUtil.getImageByPath(detectImg));
             } catch (IOException e) {
                 log.error("load detectImage error! e:{}", e);
@@ -720,7 +776,13 @@ public class QrCodeGenWrapper {
         }
 
         public Builder setDrawBgImg(String img) throws IOException {
+            String key = DigestUtil.md5Hex(img);
+            BufferedImage image = CacheImageUtil.get(key);
             try {
+                if (image == null) {
+                    image = ImageLoadUtil.getImageByPath(img);
+                    CacheImageUtil.put(key, image);
+                }
                 return setDrawBgImg(ImageLoadUtil.getImageByPath(img));
             } catch (IOException e) {
                 log.error("load drawBgImg error! e:{}", e);
@@ -755,7 +817,13 @@ public class QrCodeGenWrapper {
         }
 
         public Builder setDrawImg(String img) throws IOException {
+            String key = DigestUtil.md5Hex(img);
+            BufferedImage image = CacheImageUtil.get(key);
             try {
+                if (image == null) {
+                    image = ImageLoadUtil.getImageByPath(img);
+                    CacheImageUtil.put(key, image);
+                }
                 return setDrawImg(ImageLoadUtil.getImageByPath(img));
             } catch (IOException e) {
                 log.error("load draw img error! e: {}", e);
