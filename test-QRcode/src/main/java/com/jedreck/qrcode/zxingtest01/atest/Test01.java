@@ -7,9 +7,11 @@ import com.jedreck.qrcode.zxingtest01.entity.DotSize;
 import com.jedreck.qrcode.zxingtest01.helper.QrCodeRenderHelper;
 import com.jedreck.qrcode.zxingtest01.utils.FileReadUtil;
 import com.jedreck.qrcode.zxingtest01.utils.FileWriteUtil;
+import com.jedreck.qrcode.zxingtest01.utils.ImageLoadUtil;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeGenWrapper;
 import com.jedreck.qrcode.zxingtest01.wrapper.QrCodeOptions;
 import com.jedreck.qrcode.zxingtest01.wrapper.StringPicture;
+import net.coobird.thumbnailator.Thumbnails;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
@@ -30,6 +32,66 @@ public class Test01 {
     }
 
     @Test
+    public void test16() throws IOException {
+        BufferedImage img = ImageLoadUtil.getImageByPath("D:/Desktop/generate.png");
+        for (int i = 2; i <= 6; i++) {
+            Thumbnails.of(img)
+                    .size(i * 100, i * 100)
+                    .outputQuality(0.9)
+                    .outputFormat(MediaType.ImagePng.getExt())
+                    .toFile(new File("D:/Desktop/th" + i * 100));
+        }
+    }
+
+    @Test
+    public void test15() throws IOException, WriterException {
+        for (int a = 0; a < 5; a++) {
+            long start = System.currentTimeMillis();
+            QrCodeGenWrapper.Builder builder =
+                    QrCodeGenWrapper.of(a + "https://").setH(635).setW(635);
+            System.out.println("##########################");
+            System.out.println("耗时0-->" + (System.currentTimeMillis() - start));
+            builder
+                    .setBgImg("https://404.png")
+//                    .setBgOutImg("https://404.png")
+                    .setDrawBgColor(Color.WHITE)
+                    .setBgOutImgW(1000)
+                    .setBgOutImgH(1000)
+                    .setBgStartX(183)
+                    .setBgStartY(146)
+                    .setBgStyle(QrCodeOptions.BgImgStyle.FILL);
+            System.out.println("耗时1-->" + (System.currentTimeMillis() - start));
+            builder
+                    .setDetectOutColor(Color.blue)
+                    .setDetectPatterning(QrCodeOptions.DetectPatterning.ROUND_RECT_ONE_RIGHT_ANGLE)
+                    .setDetectSpecial();
+
+            builder.setDrawStyle(QrCodeOptions.DrawStyle.CIRCLE);
+
+            builder.setDrawBgColor(Color.gray);
+            System.out.println("耗时2-->" + (System.currentTimeMillis() - start));
+            builder
+                    .setLogo("https://QY090.png")
+                    .setLogoRate(30)
+                    .setLogoPosition(QrCodeOptions.LogoPosition.MIDDLE)
+                    .setLogoStyle(QrCodeOptions.LogoStyle.NORMAL);
+            System.out.println("耗时3-->" + (System.currentTimeMillis() - start));
+            builder
+                    .setNotes(Arrays.asList("新智认知", "pqygjzzz"))
+                    .setNoteFont(new Font("思源黑体", Font.PLAIN, 120))
+                    .setNoteFontColor(new Color(Integer.parseUnsignedInt("FF000000", 16), true))
+                    //                .setNoteOutlineColor(Color.WHITE)
+                    .setNotePosition(QrCodeOptions.NotePosition.DOWN);
+
+            builder.setPicType("png");
+            System.out.println("耗时4-->" + (System.currentTimeMillis() - start));
+            builder.asFile(P);
+            System.out.println("耗时5-->" + (System.currentTimeMillis() - start));
+            System.out.println("##########################");
+        }
+    }
+
+    @Test
     public void test14() throws IOException, WriterException {
         QrCodeGenWrapper.Builder builder = QrCodeGenWrapper.of(T)
                 .setH(1000)
@@ -45,10 +107,18 @@ public class Test01 {
                 .setBgStyle(QrCodeOptions.BgImgStyle.FILL);
 
         builder.setDetectOutColor(Color.blue)
+                .setDetectPatterning(QrCodeOptions.DetectPatterning.ROUND_RECT_ONE_RIGHT_ANGLE)
                 .setDetectSpecial();
+
+        builder.setDrawStyle(QrCodeOptions.DrawStyle.CIRCLE);
 
         builder.setDrawBgColor(Color.gray);
 
+        builder
+                .setLogo("https://QY090.png")
+                .setLogoRate(30)
+                .setLogoPosition(QrCodeOptions.LogoPosition.MIDDLE)
+                .setLogoStyle(QrCodeOptions.LogoStyle.NORMAL);
 
 //        builder.setNotes(Arrays.asList("AAA", "aiosh后发哦你说地扶8q973"))
 //                .setNoteFont(new Font("幼圆", Font.BOLD, 60))
@@ -57,7 +127,11 @@ public class Test01 {
 //                .setNotePosition(QrCodeOptions.NotePosition.MIDDLE);
 
         builder.setPicType("png");
+
+        long s = System.currentTimeMillis();
         builder.asFile(P);
+        long e = System.currentTimeMillis();
+        System.out.println(e - s);
     }
 
     @Test

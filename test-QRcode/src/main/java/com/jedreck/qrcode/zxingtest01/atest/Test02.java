@@ -109,8 +109,8 @@ public class Test02 {
     @Test
     public void simpleTest() throws IOException, WriterException {
         QrCodeGenWrapper
-//                .of("https://qr.encdata.cn/h5/sFBkjKYHA")
-                .of("https://qr.encdata.cn/mini?m=scan&e=EcXw5fFxm")
+//                .of("123")
+                .of("123")
                 .setDetectPatterning(QrCodeOptions.DetectPatterning.RECT)
                 .setPadding(2)
                 .asFile(P);

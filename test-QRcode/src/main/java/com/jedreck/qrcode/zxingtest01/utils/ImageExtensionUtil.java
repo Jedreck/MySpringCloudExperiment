@@ -16,6 +16,13 @@ public class ImageExtensionUtil {
      */
     private static final byte[] MARK_BUF_JPEG_FOOT = {(byte) 0xff, (byte) 0xd9};
 
+    public static boolean isPNG(byte[] img) {
+        return compare(img, MARK_BUF_PNG);
+    }
+
+    public static boolean isJpeg(byte[] img) {
+        return compare(img, MARK_BUF_JPEG_HEAD) || compare(img, MARK_BUF_JPEG_FOOT);
+    }
 
     public static MediaType getExtension(byte[] imageBytes) {
         if (compare(imageBytes, MARK_BUF_PNG)) {
@@ -35,6 +42,9 @@ public class ImageExtensionUtil {
      * @return 返回false标示标示不匹配
      */
     private static boolean compare(byte[] buf, byte[] markBuf) {
+        if (buf.length < markBuf.length) {
+            return false;
+        }
         for (int i = 0; i < markBuf.length; i++) {
             byte b = markBuf[i];
             byte a = buf[i];
