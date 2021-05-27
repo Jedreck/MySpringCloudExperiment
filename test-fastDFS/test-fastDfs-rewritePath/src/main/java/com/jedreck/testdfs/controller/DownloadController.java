@@ -16,6 +16,9 @@ public class DownloadController {
     @Autowired
     private DownloadService downloadService;
 
+    /**
+     * 下载文件 文件下载进度
+     */
     @RequestMapping("")
     public void download(@RequestParam("path") String path, HttpServletResponse response) {
         try {
@@ -26,6 +29,7 @@ public class DownloadController {
             String[] split = path.split("/");
             String fileName = split[split.length - 1];
             response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ";" + "filename*=utf-8''" + fileName);
             downloadService.download(path, response.getOutputStream());
         } catch (Exception e) {
             log.error("下载出错:" + path, e);
