@@ -1,13 +1,12 @@
-package com.jedreck.socketio.test2;
+package com.jedreck.socketio.test3;
 
 import com.corundumstudio.socketio.SocketConfig;
+import com.corundumstudio.socketio.SocketIOServer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.corundumstudio.socketio.SocketIOServer;
-
-//@Configuration
+@Configuration
 public class SocketIOConfig {
 
     @Value("${socketio.host}")

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
+//@Service
 public class SocketIOServiceImpl implements SocketIOService {
 
     // 用来存已连接的客户端
