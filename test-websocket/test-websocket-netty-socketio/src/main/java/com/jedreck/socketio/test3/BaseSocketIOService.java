@@ -3,8 +3,6 @@ package com.jedreck.socketio.test3;
 import cn.hutool.core.util.StrUtil;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.corundumstudio.socketio.listener.ConnectListener;
-import com.corundumstudio.socketio.listener.DisconnectListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,7 +21,7 @@ public abstract class BaseSocketIOService {
      * 已连接的客户端
      * 推送时用来获取对应客户会话信息
      */
-    protected final Map<String, SocketIOClient> clientMap = new ConcurrentHashMap<>();
+    protected static final Map<String, SocketIOClient> clientMap = new ConcurrentHashMap<>();
 
     protected String EVENT_NAME;
 
@@ -33,15 +31,16 @@ public abstract class BaseSocketIOService {
     /**
      * 获取连接时的监听器
      */
-    protected abstract ConnectListener getConnectListener(SocketIOClient socketIOClient);
+    protected abstract void getConnectListener(SocketIOClient socketIOClient);
 
     /**
      * 获取断开连接时的监听器
      */
-    protected abstract DisconnectListener getDisconnectListener(SocketIOClient socketIOClient);
+    protected abstract void getDisconnectListener(SocketIOClient socketIOClient);
 
     /**
      * 注册事件监听器
+     * 前端emit和后端sendMessage的时候会处理
      */
     protected abstract void addEventListener(SocketIOServer socketIOServer);
 
@@ -96,6 +95,8 @@ public abstract class BaseSocketIOService {
 
         // 处理自定义的事件，与连接监听类似
         this.addEventListener(socketServer);
+
+        socketServer.start();
     }
 
     private void stop() {
