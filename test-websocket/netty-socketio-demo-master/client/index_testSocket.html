@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="cn">
+<html>
+
 <head>
 
   <meta charset="utf-8"/>
@@ -42,21 +43,18 @@
 
   <script>
 
-    var userName = 'a' + Math.floor((Math.random() * 1000) + 1);
+    var uuid = Math.floor((Math.random() * 1000) + 1);
     var ip = 'localhost';
-    var eventName = '一个事件';
-    var socket = null;
-    var message = '';
-    var sendTo = '';
-    var jsonObject = {
-      sendTo: sendTo,
-      message: message
-    };
+    var subId = 84;
+    var eventName = 'event_name1';
+    var eventName2 = 'event_name2';
+    var eventName3 = 'event_name3';
+    var jsonObject = {subId: subId};
 
-    // 初始化链接
+    // 1建立连接
+    var socket = null;
     connect();
 
-    // 监听事件
     socket.on('connect', function () {
       output('<span class="connect-msg">Client has connected to the server!</span>');
     });
@@ -65,35 +63,41 @@
       output('<span class="disconnect-msg">The client has disconnected!</span>');
     });
 
-    socket.on('一个事件', function (data) {
+    // 2消息接收
+    socket.on(eventName, function (data) {
       console.log(data)
-      output('<span class="username-msg">' + data.from + ':</span> ' + data.message);
+      output('<span class="username-msg">' + eventName + ':</span> ' + JSON.stringify(data));
+    });
+    socket.on(eventName2, function (data) {
+      console.log(data)
+      output('<span class="username-msg">' + eventName2 + ':</span> ' + JSON.stringify(data));
+    });
+    socket.on(eventName3, function (data) {
+      console.log(data)
+      output('<span class="username-msg">' + eventName3 + ':</span> ' + JSON.stringify(data));
     });
 
-    // 初始化
-    function connect() {
-      socket = io.connect('http://' + ip + ':9099?name=' + userName);
-      sendTo = userName;
-      message = "连接";
-      jsonObject = {sendTo: sendTo, message: message};
-      socket.emit(eventName, jsonObject);
-      output('<span class="username-msg">' + userName + ':</span> ' + message);
-    }
-
-    // 关闭链接
     function sendDisconnect() {
       socket.disconnect();
     }
 
-    // 发送消息
-    function sendMessage() {
-      message = $('#msg').val();
-      sendTo = $('#sendTo').val();
-      $('#msg').val('');
-      jsonObject = {sendTo: sendTo, message: message};
-      socket.emit(eventName, jsonObject);
+    function connect() {
+      socket = io.connect('http://' + ip + ':8081?uuid=' + uuid);
 
-      output('<span class="username-msg">' + userName + ':</span> ' + message);
+      socket.emit(eventName, jsonObject);
+      socket.emit(eventName2, jsonObject);
+      socket.emit(eventName3, jsonObject);
+    }
+
+    // 3消息发送，修改订阅的flowid
+    function sendMessage() {
+      subId = $('#msg').val();
+      $('#msg').val('');
+      jsonObject = {stationId: subId, flowID: subId}
+      console.log(jsonObject);
+      socket.emit(eventName, jsonObject);
+      socket.emit(eventName2, jsonObject);
+      socket.emit(eventName3, jsonObject);
     }
 
     function output(message) {
@@ -103,7 +107,7 @@
     }
 
     $(document).keydown(function (e) {
-      if (e.keyCode === 13) {
+      if (e.keyCode == 13) {
         $('#send').click();
       }
     });
@@ -120,7 +124,6 @@
 </div>
 
 <form class="well form-inline" onsubmit="return false;">
-  <input id="sendTo" class="input-xlarge" type="text" placeholder="send to"/>
   <input id="msg" class="input-xlarge" type="text" placeholder="Type something..."/>
   <button type="button" onClick="sendMessage()" class="btn" id="send">Send</button>
   <button type="button" onClick="sendDisconnect()" class="btn">Disconnect</button>
