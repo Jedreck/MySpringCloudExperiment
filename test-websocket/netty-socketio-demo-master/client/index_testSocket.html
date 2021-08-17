@@ -61,6 +61,7 @@
 
     socket.on('disconnect', function () {
       output('<span class="disconnect-msg">The client has disconnected!</span>');
+      connect();
     });
 
     // 2消息接收
