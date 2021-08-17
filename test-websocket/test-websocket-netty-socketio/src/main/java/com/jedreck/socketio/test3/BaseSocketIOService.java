@@ -21,7 +21,7 @@ public abstract class BaseSocketIOService {
      * 已连接的客户端
      * 推送时用来获取对应客户会话信息
      */
-    protected static final Map<String, SocketIOClient> clientMap = new ConcurrentHashMap<>();
+    protected static final Map<String, SocketIOClient> clientMap = ClientMapSingle.INSTANCE.getMapper();
 
     protected String EVENT_NAME;
 
@@ -104,5 +104,21 @@ public abstract class BaseSocketIOService {
             socketServer.stop();
             socketServer = null;
         }
+    }
+}
+
+/**
+ * 单例模式
+ */
+enum ClientMapSingle {
+    INSTANCE;
+    private final ConcurrentHashMap<String, SocketIOClient> mapper;
+
+    ClientMapSingle() {
+        this.mapper = new ConcurrentHashMap<>();
+    }
+
+    public Map<String, SocketIOClient> getMapper() {
+        return mapper;
     }
 }
