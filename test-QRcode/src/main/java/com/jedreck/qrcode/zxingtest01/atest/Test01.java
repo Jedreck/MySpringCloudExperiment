@@ -77,7 +77,7 @@ public class Test01 {
                     .setLogoStyle(QrCodeOptions.LogoStyle.NORMAL);
             System.out.println("耗时3-->" + (System.currentTimeMillis() - start));
             builder
-                    .setNotes(Arrays.asList("新智认知", "pqygjzzz"))
+                    .setNotes(Arrays.asList("还哦水电费", "pqygjzzz"))
                     .setNoteFont(new Font("思源黑体", Font.PLAIN, 120))
                     .setNoteFontColor(new Color(Integer.parseUnsignedInt("FF000000", 16), true))
                     //                .setNoteOutlineColor(Color.WHITE)
@@ -94,16 +94,17 @@ public class Test01 {
     @Test
     public void test14() throws IOException, WriterException {
         QrCodeGenWrapper.Builder builder = QrCodeGenWrapper.of(T)
-                .setH(1000)
-                .setW(1000);
+                .setH(635)
+                .setW(635);
 
-        builder.setBgImg("https://qr.encdata.cn/mini/beauty_qrcode/416.png")
-//                .setBgOutImg("sky.jpg")
+        builder
+                .setBgImg("https://404.png")
+//                .setBgOutImg("https://404.png")
                 .setDrawBgColor(Color.WHITE)
-                .setBgOutImgW(500)
-                .setBgOutImgH(500)
-                .setBgStartX(250)
-                .setBgStartY(250)
+                .setBgOutImgW(1000)
+                .setBgOutImgH(1000)
+                .setBgStartX(183)
+                .setBgStartY(146)
                 .setBgStyle(QrCodeOptions.BgImgStyle.FILL);
 
         builder.setDetectOutColor(Color.blue)
@@ -120,11 +121,11 @@ public class Test01 {
                 .setLogoPosition(QrCodeOptions.LogoPosition.MIDDLE)
                 .setLogoStyle(QrCodeOptions.LogoStyle.NORMAL);
 
-//        builder.setNotes(Arrays.asList("AAA", "aiosh后发哦你说地扶8q973"))
-//                .setNoteFont(new Font("幼圆", Font.BOLD, 60))
-//                .setNoteFontColor(new Color(Integer.parseUnsignedInt("FF000000",16),true))
+        builder.setNotes(Arrays.asList("爱上对方你欧", "pqygjzzz"))
+                .setNoteFont(new Font("思源黑体", Font.PLAIN, 120))
+                .setNoteFontColor(new Color(Integer.parseUnsignedInt("FF000000", 16), true))
 //                .setNoteOutlineColor(Color.WHITE)
-//                .setNotePosition(QrCodeOptions.NotePosition.MIDDLE);
+                .setNotePosition(QrCodeOptions.NotePosition.DOWN);
 
         builder.setPicType("png");
 
@@ -198,7 +199,7 @@ public class Test01 {
 
         String[] st = new String[s.size()];
 //        BufferedImage image = StringPicture.createImage(s.toArray(st), null, Color.pink, null);
-        BufferedImage image1 = StringPicture.createImageOutline(s.toArray(st), new Font("幼圆", Font.PLAIN, 100), Color.pink, Color.black, null);
+        BufferedImage image1 = StringPicture.createImageOutline(s.toArray(st), new Font("幼圆", Font.PLAIN, 50), Color.pink, Color.black, null);
 //        System.out.println(image.getWidth());
         ImageIO.write(image1, "png", new File(P));
     }

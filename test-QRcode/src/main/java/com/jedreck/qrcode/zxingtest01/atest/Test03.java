@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -40,9 +41,7 @@ public class Test03 {
 
     @Test
     public void t5() throws IOException {
-        int i = 1;
-        for (; i <= 5; i++) {
-            String f = "D:/Desktop/2" + i + ".jpg";
+            String f = "D:/Desktop/aaa.jpg";
             FileInputStream fis = new FileInputStream(f);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             byte[] b = new byte[1024];
@@ -53,8 +52,9 @@ public class Test03 {
             fis.close();
             bos.close();
             BufferedImage rotateImg = ImageRotateUtil.getRotateImg(bos.toByteArray(), null);
-            Thumbnails.of(rotateImg).scale(1).toFile(new File("D:/Desktop/3" + i + ".jpg"));
-        }
+
+            Thumbnails.of(rotateImg).size(1000,1000).outputQuality(1).toFile(new File("D:/Desktop/3.jpg"));
+
     }
 
     @Test
@@ -94,8 +94,10 @@ public class Test03 {
         g2.drawImage(imgRow, null, null);
 
         log.info("use: {} ms", System.currentTimeMillis() - startTime);
-        Thumbnails.of(imgRow).size(500, 500).toFile(new File("D:/Desktop/11.png"));
-        BufferedImage imgResize = ImageLoadUtil.getImageByPath("D:/Desktop/11.png");
+        FileOutputStream fileOutputStream = new FileOutputStream(new File("D:/Desktop/11.jpg"));
+        Thumbnails.of(imgRotate).scale(1).outputQuality(0.95).outputFormat(MediaType.ImageJpg.getExt()).toOutputStream(fileOutputStream);
+        fileOutputStream.close();
+//        BufferedImage imgResize = ImageLoadUtil.getImageByPath("D:/Desktop/11.png");
         log.debug("debug");
     }
 
