@@ -4,6 +4,8 @@ server:
 spring:
   profiles:
     active: dev
+  application:
+    name: testLog
 
 # 方法一：根据对应的包设置级别
 logging:
@@ -16,4 +18,4 @@ logging:
     com.jedreck.**: debug
   # 输出路径
   file:
-    path: /testLog
+    path: /jj/${spring.application.name}
