@@ -167,7 +167,7 @@
             <!--日志文档保留天数-->
             <maxHistory>15</maxHistory>
         </rollingPolicy>
-        <!-- 此日志文档只记录DEBUG级别的 -->
+        <!-- 此日志文档记录DEBUG级别以上的 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
         </filter>
@@ -209,6 +209,7 @@
     </springProfile>
 
     <root level="info">
+        <appender-ref ref="JEDRECK_FILE"/>
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEBUG_FILE"/>
         <appender-ref ref="INFO_FILE"/>
